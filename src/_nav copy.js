@@ -27,39 +27,23 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Upload',
+    name: 'Theme',
   },
   {
     component: CNavItem,
-    name: 'Upload File Excel',
-    to: '/Upload/UploadDailyTrxFile',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavTitle,
-    name: 'Monitoring',
-  },
-  {
-    component: CNavItem,
-    name: 'Jurnal Harian',
-    to: '/Monitoring/JurnalHarian',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Selisih Data',
-    to: '/Monitoring/SelisihData',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavTitle,
-    name: 'Components',
+    name: 'Colors',
+    to: '/theme/colors',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Typography',
     to: '/theme/typography',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: 'Components',
   },
   {
     component: CNavGroup,

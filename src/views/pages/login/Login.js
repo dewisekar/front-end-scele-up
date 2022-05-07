@@ -16,9 +16,9 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilBank } from '@coreui/icons'
 //import { getUsername } from '../../../utils/sqlservice'
-import authenticateUsername from '../../../utils/axios-request'
+import { authenticateUsername } from '../../../utils/axios-request'
 
-const Login = (setUser) => {
+const Login = (props) => {
   //const [success, setSuccess] = useState(false)
   const [company, setCompany] = useState('')
   const [username, setUsername] = useState('')
@@ -37,7 +37,7 @@ const Login = (setUser) => {
           let tokenString = sessionStorage.getItem('user')
           //let userToken = JSON.parse(tokenString)
           console.log(tokenString)
-          setUser(username)
+          props.setUser(username)
           navigate('/dashboard')
         }
       })

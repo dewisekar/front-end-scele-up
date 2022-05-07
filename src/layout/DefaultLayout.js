@@ -1,7 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 
 const DefaultLayout = () => {
+  let navigate = useNavigate()
+  let tokenstring = sessionStorage.getItem('user')
+  // if (!tokenstring) {
+  //   console.log('user not login')
+  //   return <Login />
+  // }
+
+  useEffect(() => {
+    if (!tokenstring) {
+      navigate('/login')
+    }
+  }, [])
+
   return (
     <div>
       <AppSidebar />
