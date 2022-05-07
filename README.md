@@ -1,3 +1,4 @@
+
 [![@coreui coreui](https://img.shields.io/badge/@coreui%20-coreui-lightgrey.svg?style=flat-square)](https://github.com/coreui/coreui)
 [![npm package][npm-coreui-badge]][npm-coreui]
 [![NPM downloads][npm-coreui-download]][npm-coreui]  
@@ -47,8 +48,8 @@ CoreUI is meant to be the UX game changer. Pure & transparent code is devoid of 
 
 ## Quick Start
 
-- [Download the latest release](https://github.com/coreui/coreui-free-react-admin-template/archive/refs/heads/main.zip)
-- Clone the repo: `git clone https://github.com/coreui/coreui-free-react-admin-template.git`
+- [Download the latest release](https://github.com/alfamousts/front-end-scele-up/archive/refs/heads/main.zip)
+- Clone the repo: `git clone https://github.com/alfamousts/front-end-scele-up
 
 ### Instalation
 
@@ -131,43 +132,11 @@ coreui-free-react-admin-template
 └── package.json
 ```
 
-## Documentation
-
-The documentation for the CoreUI Admin Template is hosted at our website [CoreUI for React](https://coreui.io/react/)
-
-## Versioning
-
-For transparency into our release cycle and in striving to maintain backward compatibility, CoreUI Free Admin Template is maintained under [the Semantic Versioning guidelines](http://semver.org/).
-
-See [the Releases section of our project](https://github.com/coreui/coreui-free-react-admin-template/releases) for changelogs for each release version.
-
 ## Creators
 
-**Łukasz Holeczek**
-* <https://twitter.com/lukaszholeczek>
-* <https://github.com/mrholek>
-* <https://github.com/coreui>
+**Tsaqif Alfatan Nugraha**
+* <https://linkedin.com/in/tsaqif-alfatan>
+* <https://github.com/alfamousts>
 
-**CoreUI team**
-* https://github.com/orgs/coreui/people
-
-## Community
-
-Get updates on CoreUI's development and chat with the project maintainers and community members.
-
-- Follow [@core_ui on Twitter](https://twitter.com/core_ui).
-- Read and subscribe to [CoreUI Blog](https://blog.coreui.ui/).
-
-## Copyright and License
-
-copyright 2021 creativeLabs Łukasz Holeczek.   
-
- 
-Code released under [the MIT license](https://github.com/coreui/coreui-free-react-admin-template/blob/master/LICENSE).
-There is only one limitation you can't can’t re-distribute the CoreUI as stock. You can’t do this if you modify the CoreUI. In past we faced some problems with persons who tried to sell CoreUI based templates.
-
-## Support CoreUI Development
-
-CoreUI is an MIT licensed open source project and completely free to use. However, the amount of effort needed to maintain and develop new features for the project is not sustainable without proper financial backing. You can support development by buying [CoreUI Pro Version](https://coreui.io/pro/).
-
-We're also open to conversations regarding custom sponsorship / consulting arrangements. Get in touch on [Twitter](https://twitter.com/lukaszholeczek).
+**Jiera Full Stack Team**
+x
