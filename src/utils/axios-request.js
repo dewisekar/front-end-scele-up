@@ -57,6 +57,70 @@ const insertDailyFile = async (filename, channel, ismarketplace, uploaddate) => 
   }
 }
 
+const getDailyFile = async (uploaddate) => {
+  let data = JSON.stringify({
+    Date: uploaddate,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/getDailyFile', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const getJournalJualByDate = async (uploaddate) => {
+  let data = JSON.stringify({
+    Date: uploaddate,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/getJournalJualByDate', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const getTop100JournalJualToday = async () => {
+  // let data = JSON.stringify({
+  //   Date: uploaddate,
+  // })
+  try {
+    const res = await axios.get(baseUrl + '/GetTop100JournalJualToday', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const getFormatJournalJual = async () => {
+  // let data = JSON.stringify({
+  //   Date: uploaddate,
+  // })
+  try {
+    const res = await axios.get(baseUrl + '/getFormatJournalJual', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const uploadFile = async (formData) => {
   try {
     const res = await axios.post(baseUrl + '/uploadFile', formData, {
@@ -71,6 +135,15 @@ const uploadFile = async (formData) => {
   }
 }
 
-export { authenticateUsername, checkDailyFile, uploadFile, insertDailyFile }
+export {
+  authenticateUsername,
+  checkDailyFile,
+  uploadFile,
+  insertDailyFile,
+  getDailyFile,
+  getTop100JournalJualToday,
+  getJournalJualByDate,
+  getFormatJournalJual,
+}
 
 // export default authenticateUsername

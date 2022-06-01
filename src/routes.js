@@ -50,6 +50,8 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const UploadDailyTrxFile = React.lazy(() => import('./views/upload/UploadDailyTrxFile'))
+const MonDailyTrxFile = React.lazy(() => import('./views/upload/MonDailyTrxFile'))
+const MonJournalJual = React.lazy(() => import('./views/monitoring/MonJournalJual'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -97,6 +99,8 @@ const routes = [
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
   { path: '/Upload/UploadDailyTrxFile', name: 'UploadDailyTrxFile', element: UploadDailyTrxFile },
+  { path: '/Upload/MonDailyTrxFile', name: 'MonDailyTrxFile', element: MonDailyTrxFile },
+  { path: '/Monitoring/MonJournalJual', name: 'MonJournalJual', element: MonJournalJual },
 ]
 
 export default routes

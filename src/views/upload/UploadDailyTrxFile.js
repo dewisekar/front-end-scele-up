@@ -51,7 +51,8 @@ const UploadDailyTrxFile = () => {
   }
   const handleOnSubmit = () => {
     let channel = marketplace == 'Manual' ? textInputManual : marketplace
-    let filename = channel + '_' + format(fileDate, 'yyyyMMdd')
+    //let filename = selectedFile.name
+    let filename = channel + '_' + format(fileDate, 'yyyyMMdd') + '_' + selectedFile.name
     let isMarketplace = 'Manual' ? 'Y' : 'N'
     console.log('channel:', channel)
     console.log('filename:', filename)
@@ -63,7 +64,13 @@ const UploadDailyTrxFile = () => {
         if (result.status === 'false') {
           console.log('result', result)
           const formData = new FormData()
-          formData.append('myFile', selectedFile, filename + '.' + selectedFile.name.split('.')[1])
+          console.log(selectedFile.name.split('.'))
+          formData.append(
+            'myFile',
+            selectedFile,
+            // filename + '.' + selectedFile.name.split('.')[selectedFile.name.split('.').length - 1],
+            filename,
+          )
           let resUpload = uploadFile(formData)
           try {
             resUpload.then(function (result) {

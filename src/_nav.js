@@ -31,8 +31,14 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Upload File Excel',
+    name: 'Upload File Trx Daily',
     to: '/Upload/UploadDailyTrxFile',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'File Trx Daily',
+    to: '/Upload/MonDailyTrxFile',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
   },
   {
@@ -41,8 +47,8 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Jurnal Harian',
-    to: '/Monitoring/JurnalHarian',
+    name: 'Jurnal Jual Harian',
+    to: '/Monitoring/MonJournalJual',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
   },
   {
