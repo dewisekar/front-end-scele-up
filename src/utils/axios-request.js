@@ -135,6 +135,24 @@ const uploadFile = async (formData) => {
   }
 }
 
+const handleDownloadTemplate = async () => {
+  try {
+    const res = await axios.get(baseUrl + '/downloadTenplate', {
+      responseType: 'blob',
+    })
+
+    return res.data
+  } catch (err) {
+    console.log(err)
+  }
+  // axios
+  //   .get(url, {
+  //     responseType: 'blob',
+  //   })
+  //   .then((res) => {
+  //     fileDownload(res.data, filename)
+  //   })
+}
 export {
   authenticateUsername,
   checkDailyFile,
@@ -144,6 +162,7 @@ export {
   getTop100JournalJualToday,
   getJournalJualByDate,
   getFormatJournalJual,
+  handleDownloadTemplate,
 }
 
 // export default authenticateUsername

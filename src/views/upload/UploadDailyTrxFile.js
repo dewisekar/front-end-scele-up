@@ -15,8 +15,14 @@ import {
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { DocsCallout, DocsExample } from 'src/components'
-import { checkDailyFile, uploadFile, insertDailyFile } from '../../utils/axios-request'
+import {
+  checkDailyFile,
+  uploadFile,
+  insertDailyFile,
+  handleDownloadTemplate,
+} from '../../utils/axios-request'
 import { format } from 'date-fns'
+import fileDownload from 'js-file-download'
 
 const UploadDailyTrxFile = () => {
   //fungsi
@@ -109,6 +115,18 @@ const UploadDailyTrxFile = () => {
     else*/ setSelectedFile(file)
   }
 
+  const handleDownload = () => {
+    let resDownload = handleDownloadTemplate()
+    try {
+      //fileDownload(resDownload, 'template.csv')
+      resDownload.then(function (result) {
+        fileDownload(result, 'template.xlsx')
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   //state
   const [fileDate, setFileDate] = useState(new Date())
   const [marketplace, setMarketPlace] = useState('default')
@@ -169,17 +187,8 @@ const UploadDailyTrxFile = () => {
                 >
                   Submit
                 </CButton>
-                {/* <Link
-                  to="../../../public/files/Contoh File yang akan diupload.xlsx"
-                  target="_blank"
-                  download
-                >
-                  Download Format File
-                </Link> */}
-                <a href={templateFileDir} download>
-                  Download Template
-                </a>
               </div>
+              <button onClick={handleDownload}>Download Template</button>
             </div>
             {isErrorMessage > 0 && (
               <TextErrorMessage IsError={isErrorMessage} Message={errorMessage} />
