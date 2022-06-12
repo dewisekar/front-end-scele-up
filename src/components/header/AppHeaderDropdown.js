@@ -22,7 +22,7 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
-import avatar8 from './../../assets/images/avatars/8.jpg'
+import avatar8 from './../../assets/images/avatars/logo_jiera.jpg'
 
 const AppHeaderDropdown = () => {
   return (
@@ -35,30 +35,30 @@ const AppHeaderDropdown = () => {
         <CDropdownItem href="#">
           <CIcon icon={cilBell} className="me-2" />
           Updates
-          <CBadge color="info" className="ms-2">
+          {/* <CBadge color="info" className="ms-2">
             42
-          </CBadge>
+          </CBadge> */}
         </CDropdownItem>
         <CDropdownItem href="#">
           <CIcon icon={cilEnvelopeOpen} className="me-2" />
           Messages
-          <CBadge color="success" className="ms-2">
+          {/* <CBadge color="success" className="ms-2">
             42
-          </CBadge>
+          </CBadge> */}
         </CDropdownItem>
         <CDropdownItem href="#">
           <CIcon icon={cilTask} className="me-2" />
           Tasks
-          <CBadge color="danger" className="ms-2">
+          {/* <CBadge color="danger" className="ms-2">
             42
-          </CBadge>
+          </CBadge> */}
         </CDropdownItem>
         <CDropdownItem href="#">
           <CIcon icon={cilCommentSquare} className="me-2" />
           Comments
-          <CBadge color="warning" className="ms-2">
+          {/* <CBadge color="warning" className="ms-2">
             42
-          </CBadge>
+          </CBadge> */}
         </CDropdownItem>
         <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
         <CDropdownItem href="#">
@@ -72,16 +72,16 @@ const AppHeaderDropdown = () => {
         <CDropdownItem href="#">
           <CIcon icon={cilCreditCard} className="me-2" />
           Payments
-          <CBadge color="secondary" className="ms-2">
+          {/* <CBadge color="secondary" className="ms-2">
             42
-          </CBadge>
+          </CBadge> */}
         </CDropdownItem>
         <CDropdownItem href="#">
           <CIcon icon={cilFile} className="me-2" />
           Projects
-          <CBadge color="primary" className="ms-2">
+          {/* <CBadge color="primary" className="ms-2">
             42
-          </CBadge>
+          </CBadge> */}
         </CDropdownItem>
         <CDropdownDivider />
         <CDropdownItem href="#">

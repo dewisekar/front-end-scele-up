@@ -86,11 +86,9 @@ const ScanForSent = () => {
               }}
             />
           </CCardBody>
-
-          {isErrorMessage > 0 && (
-            <TextErrorMessage IsError={isErrorMessage} Message={errorMessage} />
-          )}
         </CCard>
+
+        {isErrorMessage > 0 && <TextErrorMessage IsError={isErrorMessage} Message={errorMessage} />}
       </CCol>
     </CRow>
   )
