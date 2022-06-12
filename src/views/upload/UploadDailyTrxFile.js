@@ -52,7 +52,7 @@ const UploadDailyTrxFile = () => {
   const handleOnSubmit = () => {
     let channel = marketplace == 'Manual' ? textInputManual : marketplace
     //let filename = selectedFile.name
-    let filename = channel + '_' + format(fileDate, 'yyyyMMdd') + '_' + selectedFile.name
+    let filename = /*channel + '_' + format(fileDate, 'yyyyMMdd') + '_' +*/ selectedFile.name
     let isMarketplace = 'Manual' ? 'Y' : 'N'
     console.log('channel:', channel)
     console.log('filename:', filename)
@@ -149,13 +149,13 @@ const UploadDailyTrxFile = () => {
                 <option value="Manual">Pilih manual</option>
               </CFormSelect>
               {!hideInputManual && <InputManual />}
-              <CFormLabel htmlFor="formFile">Pilih Tanggal</CFormLabel>
+              {/* <CFormLabel htmlFor="formFile">Pilih Tanggal</CFormLabel>
 
               <DatePicker
                 className="mb-3 text-center"
                 selected={fileDate}
                 onChange={(date: Date) => setFileDate(date)}
-              />
+              /> */}
               <CFormLabel htmlFor="formFile">Upload File</CFormLabel>
               <CFormInput className="mb-4" type="file" id="formFile" onChange={handleFileInput} />
               <div className="d-grid gap-2">
