@@ -1,6 +1,8 @@
 import axios from 'axios'
+import configData from '../appconfig.json'
 
-const baseUrl = 'http://localhost:5000'
+//const baseUrl = 'http://localhost:5000'
+const baseUrl = configData.MW_SERVER_URL
 
 const authenticateUsername = async (username, company, password) => {
   let data = JSON.stringify({
