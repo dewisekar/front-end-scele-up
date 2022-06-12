@@ -52,6 +52,8 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const UploadDailyTrxFile = React.lazy(() => import('./views/upload/UploadDailyTrxFile'))
 const MonDailyTrxFile = React.lazy(() => import('./views/upload/MonDailyTrxFile'))
 const MonJournalJual = React.lazy(() => import('./views/monitoring/MonJournalJual'))
+const ScanForPrint = React.lazy(() => import('./views/scan/ScanForPrint'))
+const ScanForSent = React.lazy(() => import('./views/scan/ScanForSent'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -101,6 +103,8 @@ const routes = [
   { path: '/Upload/UploadDailyTrxFile', name: 'UploadDailyTrxFile', element: UploadDailyTrxFile },
   { path: '/Upload/MonDailyTrxFile', name: 'MonDailyTrxFile', element: MonDailyTrxFile },
   { path: '/Monitoring/MonJournalJual', name: 'MonJournalJual', element: MonJournalJual },
+  { path: '/Scan/ScanForPrint', name: 'ScanForPrint', element: ScanForPrint },
+  { path: '/Scan/ScanForSent', name: 'ScanForSend', element: ScanForSent },
 ]
 
 export default routes

@@ -155,6 +155,24 @@ const handleDownloadTemplate = async () => {
   //     fileDownload(res.data, filename)
   //   })
 }
+
+const checkAndUpdateInvoiceForScan = async (invoice, action) => {
+  let data = JSON.stringify({
+    Invoice: invoice,
+    Action: action,
+    Date: new Date(),
+  })
+  try {
+    const res = await axios.post(baseUrl + '/checkAndUpdateInvoiceForScan', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
 export {
   authenticateUsername,
   checkDailyFile,
@@ -165,6 +183,7 @@ export {
   getJournalJualByDate,
   getFormatJournalJual,
   handleDownloadTemplate,
+  checkAndUpdateInvoiceForScan,
 }
 
 // export default authenticateUsername

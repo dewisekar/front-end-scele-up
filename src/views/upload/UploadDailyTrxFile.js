@@ -136,7 +136,7 @@ const UploadDailyTrxFile = () => {
   const [selectedFile, setSelectedFile] = useState(null)
   const [isErrorMessage, setIsErrorMessage] = useState(0)
   const [errorMessage, setErrorMessage] = useState('')
-  const templateFileDir = './../../public/files/Contoh File yang akan diupload.xlsx'
+  //const templateFileDir = './../../public/files/Contoh File yang akan diupload.xlsx'
 
   return (
     <CRow>
