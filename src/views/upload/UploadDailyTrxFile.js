@@ -118,6 +118,7 @@ const UploadDailyTrxFile = () => {
   const [selectedFile, setSelectedFile] = useState(null)
   const [isErrorMessage, setIsErrorMessage] = useState(0)
   const [errorMessage, setErrorMessage] = useState('')
+  const templateFileDir = './../../public/files/Contoh File yang akan diupload.xlsx'
 
   return (
     <CRow>
@@ -168,6 +169,16 @@ const UploadDailyTrxFile = () => {
                 >
                   Submit
                 </CButton>
+                {/* <Link
+                  to="../../../public/files/Contoh File yang akan diupload.xlsx"
+                  target="_blank"
+                  download
+                >
+                  Download Format File
+                </Link> */}
+                <a href={templateFileDir} download>
+                  Download Template
+                </a>
               </div>
             </div>
             {isErrorMessage > 0 && (
