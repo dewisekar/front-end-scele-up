@@ -107,7 +107,7 @@ const routes = [
   { path: '/Monitoring/MonJournalJual', name: 'MonJournalJual', element: MonJournalJual },
   { path: '/Scan/ScanForPrint', name: 'ScanForPrint', element: ScanForPrint },
   { path: '/Scan/ScanForSent', name: 'ScanForSend', element: ScanForSent },
-  { path: '/Monitoring/SelisihData', name: 'SelisihData', element: MonSelisih },
+  { path: '/Monitoring/SelisihData', name: 'Kontrol Pengiriman', element: MonSelisih },
   { path: '/Logout', name: 'Logout', element: Logout },
 ]
 

@@ -69,7 +69,7 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Selisih Data',
+    name: 'Kontrol Pengiriman',
     to: '/Monitoring/SelisihData',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
   },

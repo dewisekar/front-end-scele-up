@@ -25,7 +25,7 @@ const MonSelisih = () => {
     <div>
       <CCard className="mb-4">
         <CCardHeader>
-          <strong>Selisih harian:</strong> {/*<small>File input</small>*/}
+          <strong>Kontrol Pengiriman</strong> {/*<small>File input</small>*/}
         </CCardHeader>
         <CCardBody>
           <CFormLabel htmlFor="formFile">Pilih Tanggal</CFormLabel>
@@ -34,7 +34,7 @@ const MonSelisih = () => {
             selected={fileDate}
             onChange={(date: Date) => setFileDate(date)}
           />
-          <CFormLabel htmlFor="formFile">Jenis Selisih</CFormLabel>
+          <CFormLabel htmlFor="formFile">Pilih Jenis Data</CFormLabel>
           <CFormSelect
             className="mb-3"
             aria-label="Large select example"
@@ -43,8 +43,10 @@ const MonSelisih = () => {
               setMarketPlace(e.target.value)
             }}
           >
-            <option value="PRINT">Perbedaan data yang diprint</option>
-            <option value="SEND">Perbedaan data yang dikirim</option>
+            <option value="ALL">Seluruh Data</option>
+            <option value="PRINTANDSEND">Data yang sudah diprint dan dikirim</option>
+            <option value="PRINT">Data yang sudah diprint namun belum dikirim</option>
+            <option value="NOT YET">Data yang belum diprint dan belum dikirim</option>
           </CFormSelect>
           <CButton
             color="secondary"
