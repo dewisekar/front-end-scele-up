@@ -13,10 +13,17 @@ import {
   CFormSelect,
 } from '@coreui/react'
 
+import {
+  checkDailyFile,
+  uploadFile,
+  insertDailyFile,
+  handleDownloadTemplate,
+} from '../../utils/axios-request'
+
 import DatePicker from 'react-datepicker'
 const MonSelisih = () => {
   const [fileDate, setFileDate] = useState(new Date())
-  const [marketplace, setMarketPlace] = useState('default')
+  const [jenisData, setjenisData] = useState('ALL')
 
   const handleOnSubmit = () => {
     console.log('tes')
@@ -38,15 +45,15 @@ const MonSelisih = () => {
           <CFormSelect
             className="mb-3"
             aria-label="Large select example"
-            value={marketplace}
+            value={jenisData}
             onChange={(e) => {
-              setMarketPlace(e.target.value)
+              setjenisData(e.target.value)
             }}
           >
             <option value="ALL">Seluruh Data</option>
             <option value="PRINTANDSEND">Data yang sudah diprint dan dikirim</option>
             <option value="PRINT">Data yang sudah diprint namun belum dikirim</option>
-            <option value="NOT YET">Data yang belum diprint dan belum dikirim</option>
+            <option value="NOTYET">Data yang belum diprint dan belum dikirim</option>
           </CFormSelect>
           <CButton
             color="secondary"
