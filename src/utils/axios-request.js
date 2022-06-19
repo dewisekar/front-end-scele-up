@@ -173,6 +173,39 @@ const checkAndUpdateInvoiceForScan = async (invoice, action) => {
     console.error(err)
   }
 }
+
+const getKontrolPengirimanByDate = async (uploaddate, action) => {
+  let data = JSON.stringify({
+    Date: uploaddate,
+    Action: action,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/getKontrolPengirimanByDate', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const getFormatTableGeneral = async (action) => {
+  let data = JSON.stringify({
+    Action: action,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/getFormatTableGeneral', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
 export {
   authenticateUsername,
   checkDailyFile,
@@ -184,6 +217,8 @@ export {
   getFormatJournalJual,
   handleDownloadTemplate,
   checkAndUpdateInvoiceForScan,
+  getKontrolPengirimanByDate,
+  getFormatTableGeneral,
 }
 
 // export default authenticateUsername
