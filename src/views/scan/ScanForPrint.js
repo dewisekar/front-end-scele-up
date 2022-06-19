@@ -23,13 +23,13 @@ const ScanForPrint = () => {
       res.then(function (result) {
         console.log(result.status)
         if (result.status === 'true') {
-          alert('Invoice ' + textInput + ' berhasil di update untuk di print')
+          //alert('Invoice ' + textInput + ' berhasil di update untuk di print')
           setErrorMessage('Invoice ' + textInput + ' berhasil di update untuk di print')
           setIsErrorMessage(2)
         } else {
-          alert(
-            'Invoice ' + textInput + ' gagal di update untuk dicetak, \r\n error:' + result.message,
-          )
+          // alert(
+          //   'Invoice ' + textInput + ' gagal di update untuk dicetak, \r\n error:' + result.message,
+          // )
           setErrorMessage(
             'Invoice ' +
               textInput +
