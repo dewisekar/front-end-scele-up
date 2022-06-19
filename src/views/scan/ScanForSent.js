@@ -23,11 +23,11 @@ const ScanForSent = () => {
       res.then(function (result) {
         console.log(result.status)
         if (result.status === 'true') {
-          alert('Invoice ' + textInput + ' berhasil di update untuk di kirim')
+          //alert('Invoice ' + textInput + ' berhasil di update untuk di kirim')
           setErrorMessage('Invoice ' + textInput + ' berhasil di update untuk di kirim')
           setIsErrorMessage(2)
         } else {
-          alert('Invoice ' + textInput + ' gagal di update untuk dikirim, error:' + result.message)
+          //alert('Invoice ' + textInput + ' gagal di update untuk dikirim, error:' + result.message)
           setErrorMessage(
             'Invoice ' + textInput + ' gagal di update untuk dikirim, error:' + result.message,
           )
@@ -62,7 +62,7 @@ const ScanForSent = () => {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Scan Print</strong> {/*<small>File input</small>*/}
+            <strong>Scan Send</strong> {/*<small>File input</small>*/}
           </CCardHeader>
           <CCardBody>
             <CFormLabel htmlFor="formFile">Input invoice Untuk dikirim</CFormLabel>
