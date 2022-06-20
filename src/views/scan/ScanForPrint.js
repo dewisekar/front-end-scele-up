@@ -13,28 +13,25 @@ import {
   CFormSelect,
 } from '@coreui/react'
 
-import { checkAndUpdateInvoiceForScan } from '../../utils/axios-request'
+import { checkAndUpdateResiForScan } from '../../utils/axios-request'
 
 const ScanForPrint = () => {
   //function
   const handleOnEnterPressed = () => {
-    let res = checkAndUpdateInvoiceForScan(textInput, 'PRINT')
+    let res = checkAndUpdateResiForScan(textInput, 'PRINT')
     try {
       res.then(function (result) {
         console.log(result.status)
         if (result.status === 'true') {
           //alert('Invoice ' + textInput + ' berhasil di update untuk di print')
-          setErrorMessage('Invoice ' + textInput + ' berhasil di update untuk di print')
+          setErrorMessage('Resi ' + textInput + ' berhasil di update untuk di print')
           setIsErrorMessage(2)
         } else {
           // alert(
           //   'Invoice ' + textInput + ' gagal di update untuk dicetak, \r\n error:' + result.message,
           // )
           setErrorMessage(
-            'Invoice ' +
-              textInput +
-              ' gagal di update untuk dicetak, \r\n  error:' +
-              result.message,
+            'Resi ' + textInput + ' gagal di update untuk dicetak, \r\n  error:' + result.message,
           )
           setIsErrorMessage(1)
         }
@@ -70,11 +67,11 @@ const ScanForPrint = () => {
             <strong>Scan Print</strong> {/*<small>File input</small>*/}
           </CCardHeader>
           <CCardBody>
-            <CFormLabel htmlFor="formFile">Input Invoice Untuk dicetak</CFormLabel>
+            <CFormLabel htmlFor="formFile">Input Resi Untuk dicetak</CFormLabel>
             <CFormInput
               autoFocus="autofocus"
               type="text"
-              placeholder="Nomor Invoice"
+              placeholder="Kode Resi"
               aria-label="default input example"
               value={textInput}
               onChange={(e) => {

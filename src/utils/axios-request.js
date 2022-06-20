@@ -156,14 +156,14 @@ const handleDownloadTemplate = async () => {
   //   })
 }
 
-const checkAndUpdateInvoiceForScan = async (invoice, action) => {
+const checkAndUpdateResiForScan = async (invoice, action) => {
   let data = JSON.stringify({
     Invoice: invoice,
     Action: action,
     Date: new Date(),
   })
   try {
-    const res = await axios.post(baseUrl + '/checkAndUpdateInvoiceForScan', data, {
+    const res = await axios.post(baseUrl + '/CheckAndUpdateResiForScan', data, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -216,7 +216,7 @@ export {
   getJournalJualByDate,
   getFormatJournalJual,
   handleDownloadTemplate,
-  checkAndUpdateInvoiceForScan,
+  checkAndUpdateResiForScan,
   getKontrolPengirimanByDate,
   getFormatTableGeneral,
 }
