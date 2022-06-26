@@ -8,7 +8,7 @@ const AppFooter = () => {
         <a href="http://erpbyjiera.com" target="_blank" rel="noopener noreferrer">
           ERP BY JIERA
         </a>
-        <span className="ms-1">&copy; 2022 CreativeLabs.</span>
+        <span className="ms-1">&copy; 2022 AlphaLabs.</span>
       </div>
       {/* <div className="ms-auto">
         <span className="me-1">Powered by</span>

@@ -42,6 +42,18 @@ const _nav = [
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
   },
   {
+    component: CNavItem,
+    name: 'Upload File Resi',
+    to: '/Upload/UploadResiFile',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Monitoring File Resi',
+    to: '/Upload/MonFileResi',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
     component: CNavTitle,
     name: 'Kontrol Pengiriman',
   },

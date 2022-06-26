@@ -40,6 +40,24 @@ const checkDailyFile = async (filename, channel, ismarketplace) => {
   }
 }
 
+const isExistFileResi = async (filename, channel, ismarketplace) => {
+  let data = JSON.stringify({
+    Filename: filename,
+    Channel: channel,
+    IsMarketplace: ismarketplace,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/isExistFileResi', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const insertDailyFile = async (filename, channel, ismarketplace, uploaddate) => {
   let data = JSON.stringify({
     Filename: filename,
@@ -59,12 +77,48 @@ const insertDailyFile = async (filename, channel, ismarketplace, uploaddate) => 
   }
 }
 
+const insertDailyFileResi = async (filename, channel, ismarketplace, uploaddate) => {
+  let data = JSON.stringify({
+    Filename: filename,
+    Channel: channel,
+    IsMarketplace: ismarketplace,
+    Date: uploaddate,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/insertDailyFileResi', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const getDailyFile = async (uploaddate) => {
   let data = JSON.stringify({
     Date: uploaddate,
   })
   try {
     const res = await axios.post(baseUrl + '/getDailyFile', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const getFileResi = async (startDate, endDate) => {
+  let data = JSON.stringify({
+    StartDate: startDate,
+    EndDate: endDate,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/getFileResi', data, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -174,9 +228,10 @@ const checkAndUpdateResiForScan = async (invoice, action) => {
   }
 }
 
-const getKontrolPengirimanByDate = async (uploaddate, action) => {
+const getKontrolPengirimanByDate = async (orderDate, processDate, action) => {
   let data = JSON.stringify({
-    Date: uploaddate,
+    OrderDate: orderDate,
+    ProcessDate: processDate,
     Action: action,
   })
   try {
@@ -212,6 +267,7 @@ export {
   uploadFile,
   insertDailyFile,
   getDailyFile,
+  getFileResi,
   getTop100JournalJualToday,
   getJournalJualByDate,
   getFormatJournalJual,
@@ -219,6 +275,8 @@ export {
   checkAndUpdateResiForScan,
   getKontrolPengirimanByDate,
   getFormatTableGeneral,
+  isExistFileResi,
+  insertDailyFileResi,
 }
 
 // export default authenticateUsername

@@ -34,7 +34,8 @@ const MonSelisih = () => {
 
   const handleOnSubmit = () => {
     try {
-      let res = getKontrolPengirimanByDate(fileDate, jenisData)
+      console.log('fileDate:', fileDate, ',processDate:', processDate, ',jenisData:', jenisData)
+      let res = getKontrolPengirimanByDate(fileDate, processDate, jenisData)
       res.then(function (result) {
         console.log(result)
         if (result.status === 'true') {
@@ -82,6 +83,7 @@ const MonSelisih = () => {
 
   //state
   const [fileDate, setFileDate] = useState(new Date())
+  const [processDate, setProcessDate] = useState(new Date())
   const [jenisData, setjenisData] = useState('ALL')
   const [hideTable, setHideTable] = useState(true)
   const [dataTable, setDataTable] = useState(null)
@@ -96,12 +98,40 @@ const MonSelisih = () => {
           <strong>Kontrol Pengiriman</strong> {/*<small>File input</small>*/}
         </CCardHeader>
         <CCardBody>
-          <CFormLabel htmlFor="formFile">Pilih Tanggal</CFormLabel>
-          <DatePicker
-            className="mb-3 text-center"
-            selected={fileDate}
-            onChange={(date: Date) => setFileDate(date)}
-          />
+          <CRow className="mb-2">
+            <CCol sm="auto">
+              <CFormLabel htmlFor="formFile">Pilih Tanggal Order.</CFormLabel>
+            </CCol>
+            <CCol sm="auto">
+              <DatePicker
+                className="text-center"
+                selected={fileDate}
+                onChange={(date: Date) => setFileDate(date)}
+              />
+            </CCol>
+            <CCol sm="auto">
+              <CButton size="sm" color="dark" type="reset" onClick={() => setFileDate('')}>
+                Kosongkan Tanggal Order
+              </CButton>
+            </CCol>
+          </CRow>
+          <CRow className="mb-2">
+            <CCol sm="auto">
+              <CFormLabel htmlFor="formFile">Pilih Tanggal Proses</CFormLabel>
+            </CCol>
+            <CCol sm="auto">
+              <DatePicker
+                className="text-center"
+                selected={processDate}
+                onChange={(date: Date) => setProcessDate(date)}
+              />
+            </CCol>
+            <CCol sm={6} lg={3}>
+              <CButton size="sm" color="dark" type="reset" onClick={() => setProcessDate('')}>
+                Kosongkan Tanggal Proses
+              </CButton>
+            </CCol>
+          </CRow>
           <CFormLabel htmlFor="formFile">Pilih Jenis Data</CFormLabel>
           <CFormSelect
             className="mb-3"
@@ -133,7 +163,7 @@ const MonSelisih = () => {
       {!hideTable && (
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Kontrol Pengiriman Tanggal {format(fileDate, 'dd-MM-yyyy')}</strong>{' '}
+            <strong>Data Kontrol Pengiriman</strong>{' '}
           </CCardHeader>
           <CCardBody>
             <DatatablePage data={dataTable} />
