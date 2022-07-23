@@ -43,16 +43,18 @@ const MonFileResi = () => {
               <CTableHeaderCell scope="col">Channel</CTableHeaderCell>
 
               <CTableHeaderCell scope="col">Status File</CTableHeaderCell>
+              <CTableHeaderCell scope="col">ERROR MESSAGE</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
 
           <CTableBody>
-            {props.data.map(({ FILENAME, CHANNEL, STATUSDESC }, index) => (
+            {props.data.map(({ FILENAME, CHANNEL, STATUSFILE, ERRMSG }, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
                 <CTableDataCell>{FILENAME}</CTableDataCell>
                 <CTableDataCell>{CHANNEL}</CTableDataCell>
-                <CTableDataCell>{STATUSDESC}</CTableDataCell>
+                <CTableDataCell>{STATUSFILE}</CTableDataCell>
+                <CTableDataCell>{ERRMSG}</CTableDataCell>
               </CTableRow>
             ))}
           </CTableBody>
@@ -77,6 +79,8 @@ const MonFileResi = () => {
             setIsErrorMessage(0)
             setErrorMessage('')
           } else {
+            setHideTable(true)
+            setDataTable(null)
             setIsErrorMessage(1)
             setErrorMessage('Tidak ada file yang ditemukan pada rentang waktu')
           }

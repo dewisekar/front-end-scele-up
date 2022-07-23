@@ -6,7 +6,7 @@ import {
   CCardHeader,
   CCol,
   CForm,
-  CFormInput,
+  CFormCheck,
   CFormLabel,
   CFormTextarea,
   CRow,
@@ -35,7 +35,35 @@ const MonSelisih = () => {
   const handleOnSubmit = () => {
     try {
       console.log('fileDate:', fileDate, ',processDate:', processDate, ',jenisData:', jenisData)
-      let res = getKontrolPengirimanByDate(fileDate, processDate, jenisData)
+      let odStart = orderDateStart
+      let odEnd = orderDateEnd
+      let pdStart = processDateStart
+      let pdEnd = processDateEnd
+      let checkByOd = '1'
+      let checkByPd = '1'
+
+      if (tanggalOrderCheckBox == false) {
+        odStart = ''
+        odEnd = ''
+        checkByOd = '0'
+      }
+
+      if (tanggalProsesCheckBox == false) {
+        pdStart = ''
+        pdEnd = ''
+        checkByPd = '0'
+      }
+
+      //let res = getKontrolPengirimanByDate(fileDate, processDate, jenisData)
+      let res = getKontrolPengirimanByDate(
+        odStart,
+        odEnd,
+        pdStart,
+        pdEnd,
+        checkByOd,
+        checkByPd,
+        jenisData,
+      )
       res.then(function (result) {
         console.log(result)
         if (result.status === 'true') {
@@ -82,15 +110,21 @@ const MonSelisih = () => {
   }
 
   //state
-  const [fileDate, setFileDate] = useState(new Date())
-  const [processDate, setProcessDate] = useState(new Date())
+  const [orderDateStart, setOrderDateStart] = useState(new Date())
+  const [orderDateEnd, setOrderDateEnd] = useState(new Date())
+  const [processDateStart, setProcessDateStart] = useState(new Date())
+  const [processDateEnd, setProcessDateEnd] = useState(new Date())
   const [jenisData, setjenisData] = useState('ALL')
   const [hideTable, setHideTable] = useState(true)
   const [dataTable, setDataTable] = useState(null)
   const [isErrorMessage, setIsErrorMessage] = useState(0)
   const [errorMessage, setErrorMessage] = useState('')
   const [formatTable, setFormatTable] = useState(null)
+  const [tanggalOrderCheckBox, setTanggalOrderCheckBox] = useState(true)
+  const [tanggalProsesCheckBox, setTanggalProsesCheckBox] = useState(true)
 
+  const [fileDate, setFileDate] = useState(new Date())
+  const [processDate, setProcessDate] = useState(new Date())
   return (
     <div>
       <CCard className="mb-4">
@@ -98,40 +132,62 @@ const MonSelisih = () => {
           <strong>Kontrol Pengiriman</strong> {/*<small>File input</small>*/}
         </CCardHeader>
         <CCardBody>
-          <CRow className="mb-2">
-            <CCol sm="auto">
-              <CFormLabel htmlFor="formFile">Pilih Tanggal Order.</CFormLabel>
-            </CCol>
-            <CCol sm="auto">
+          <div className="mb-4">
+            <CFormLabel htmlFor="formFile">Pilih filter yang digunakan:</CFormLabel>
+            <CFormCheck
+              id="tanggalOrderCheck"
+              label="Tanggal Order"
+              defaultChecked={tanggalOrderCheckBox}
+              onChange={() => setTanggalOrderCheckBox(!tanggalOrderCheckBox)}
+            />
+            <CFormCheck
+              id="tanggalProsesCheck"
+              label="Tanggal Proses"
+              defaultChecked={tanggalProsesCheckBox}
+              onChange={() => setTanggalProsesCheckBox(!tanggalProsesCheckBox)}
+            />
+            <CFormCheck label="Jenis Data" defaultChecked disabled />
+          </div>
+          {tanggalOrderCheckBox && (
+            <div className="mb-2">
+              <CFormLabel htmlFor="formFile">Pilih Tanggal Order Awal:</CFormLabel>
               <DatePicker
                 className="text-center"
-                selected={fileDate}
-                onChange={(date: Date) => setFileDate(date)}
+                selected={orderDateStart}
+                onChange={(date: Date) => setOrderDateStart(date)}
               />
-            </CCol>
-            <CCol sm="auto">
-              <CButton size="sm" color="dark" type="reset" onClick={() => setFileDate('')}>
-                Kosongkan Tanggal Order
-              </CButton>
-            </CCol>
-          </CRow>
-          <CRow className="mb-2">
-            <CCol sm="auto">
-              <CFormLabel htmlFor="formFile">Pilih Tanggal Proses</CFormLabel>
-            </CCol>
-            <CCol sm="auto">
+            </div>
+          )}
+          {tanggalOrderCheckBox && (
+            <div className="mb-4">
+              <CFormLabel htmlFor="formFile">Pilih Tanggal Order Akhir:</CFormLabel>
               <DatePicker
                 className="text-center"
-                selected={processDate}
-                onChange={(date: Date) => setProcessDate(date)}
+                selected={orderDateEnd}
+                onChange={(date: Date) => setOrderDateEnd(date)}
               />
-            </CCol>
-            <CCol sm={6} lg={3}>
-              <CButton size="sm" color="dark" type="reset" onClick={() => setProcessDate('')}>
-                Kosongkan Tanggal Proses
-              </CButton>
-            </CCol>
-          </CRow>
+            </div>
+          )}
+          {tanggalProsesCheckBox && (
+            <div className="mb-2">
+              <CFormLabel htmlFor="formFile">Pilih Tanggal Proses Awal:</CFormLabel>
+              <DatePicker
+                className="text-center"
+                selected={processDateStart}
+                onChange={(date: Date) => setProcessDateStart(date)}
+              />
+            </div>
+          )}
+          {tanggalProsesCheckBox && (
+            <div className="mb-4">
+              <CFormLabel htmlFor="formFile">Pilih Tanggal Proses Akhir:</CFormLabel>
+              <DatePicker
+                className="text-center"
+                selected={processDateEnd}
+                onChange={(date: Date) => setProcessDateEnd(date)}
+              />
+            </div>
+          )}
           <CFormLabel htmlFor="formFile">Pilih Jenis Data</CFormLabel>
           <CFormSelect
             className="mb-3"

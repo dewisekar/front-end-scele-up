@@ -23,7 +23,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { DocsCallout, DocsExample } from 'src/components'
 import { getJournalJualByDate, getFormatJournalJual } from '../../utils/axios-request'
 import { format } from 'date-fns'
-import { MDBDataTable } from 'mdbreact'
+import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 
 const loading = (
   <div className="pt-3 text-center">
@@ -117,7 +117,13 @@ const MonJournalJual = () => {
         columns: formatTable,
         rows: props.data,
       }
-      return <MDBDataTable scrollX striped bordered data={dataInput} />
+      console.log(formatTable)
+      return (
+        <MDBDataTable scrollX striped bordered data={dataInput}>
+          <MDBTableHead columns={dataInput.columns} />
+          <MDBTableBody rows={dataInput.rows} />
+        </MDBDataTable>
+      )
     } else {
       return (
         <div className="text-danger">

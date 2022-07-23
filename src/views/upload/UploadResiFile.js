@@ -140,7 +140,7 @@ const UploadResiFile = () => {
 
   //state
   const [fileDate, setFileDate] = useState(new Date())
-  const [marketplace, setMarketPlace] = useState('default')
+  const [marketplace, setMarketPlace] = useState('Tiktok')
   const [hideInputManual, setHideInputManual] = useState(true)
   const [textInputManual, setTextInputManual] = useState()
   const [cursorInputManual, setCursorInputManual] = useState(null)
@@ -155,6 +155,11 @@ const UploadResiFile = () => {
         <CCard className="mb-4">
           <CCardHeader>
             <strong>Input File Resi</strong> {/*<small>File input</small>*/}
+          </CCardHeader>
+          <CCardHeader>
+            baru tersedia fitur scrapping resi tiktok,
+            <br />
+            <strong>jangan upload file resi shopee !!</strong>
           </CCardHeader>
           <CCardBody>
             <div className="mb-3">
@@ -173,9 +178,9 @@ const UploadResiFile = () => {
                 }}
               >
                 {/* <option value="default">Pilih Marketplace</option> */}
-                <option value="Shopee">Shopee</option>
+                {/* <option value="Shopee">Shopee</option> */}
                 <option value="Tiktok">Tiktok</option>
-                <option value="Tokopedia">Tokopedia</option>
+                {/* <option value="Tokopedia">Tokopedia</option> */}
                 {/* <option value="Manual">Pilih manual</option> */}
               </CFormSelect>
               {!hideInputManual && <InputManual />}

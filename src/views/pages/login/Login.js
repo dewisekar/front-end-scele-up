@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Modal } from 'react-bootstrap'
 import {
   CButton,
   CCard,
@@ -23,8 +24,22 @@ const Login = (props) => {
   const [company, setCompany] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [show, setShow] = useState(false)
 
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
   let navigate = useNavigate()
+
+  const ErrorModal = () => {
+    return (
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Sorry</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Server is under maintenance!</Modal.Body>
+      </Modal>
+    )
+  }
   const handleOnSubmit = () => {
     // let isError = true
     // let countError = 0
@@ -46,11 +61,13 @@ const Login = (props) => {
             props.setUser(username)
             navigate('/dashboard')
           } else {
-            alert('Login failed')
+            //alert('Login failed')
+            handleShow()
           }
         } else {
           //countError += 1
-          alert('Login failed')
+          handleShow()
+          //alert('Website Under Maintenance')
         }
       })
     } catch (err) {
@@ -61,6 +78,7 @@ const Login = (props) => {
   }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+      <ErrorModal />
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>

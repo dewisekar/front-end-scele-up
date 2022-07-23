@@ -5,7 +5,7 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
-  CForm,
+  CBadge,
   CFormInput,
   CFormLabel,
   CFormTextarea,
@@ -81,7 +81,13 @@ const UploadDailyTrxFile = () => {
           try {
             resUpload.then(function (result) {
               if (result.status === 'true') {
-                let rescheckDailyFile = insertDailyFile(filename, channel, isMarketplace, fileDate)
+                let rescheckDailyFile = insertDailyFile(
+                  filename,
+                  channel,
+                  isMarketplace,
+                  fileDate,
+                  totalRows,
+                )
                 try {
                   rescheckDailyFile.then(function (result) {
                     console.log('insert success:', result)
@@ -102,6 +108,14 @@ const UploadDailyTrxFile = () => {
             setIsErrorMessage(1)
             setErrorMessage(err.toString())
           }
+        } else {
+          setIsErrorMessage(1)
+          setErrorMessage(
+            'file ' +
+              selectedFile.name +
+              ' sudah pernah di upload pada tanggal ' +
+              format(new Date(result.UPLOADDATE), 'dd-MM-yyyy HH:mm'),
+          )
         }
       })
     } catch (err) {
@@ -132,6 +146,7 @@ const UploadDailyTrxFile = () => {
   const [marketplace, setMarketPlace] = useState('default')
   const [hideInputManual, setHideInputManual] = useState(true)
   const [textInputManual, setTextInputManual] = useState()
+  const [totalRows, setTotalRows] = useState('')
   const [cursorInputManual, setCursorInputManual] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
   const [isErrorMessage, setIsErrorMessage] = useState(0)
@@ -177,7 +192,22 @@ const UploadDailyTrxFile = () => {
               /> */}
               <CFormLabel htmlFor="formFile">Upload File</CFormLabel>
               <CFormInput className="mb-4" type="file" id="formFile" onChange={handleFileInput} />
-              <div className="d-grid gap-2">
+              <CFormInput
+                className="mb-4"
+                autoFocus="autofocus"
+                type="text"
+                placeholder="total baris dalam excel"
+                aria-label="default input example"
+                value={totalRows}
+                onChange={(e) => {
+                  setCursorInputManual(e.target.selectionStart)
+                  setTotalRows(e.target.value)
+                }}
+                onFocus={(e) => {
+                  e.target.selectionStart = cursorInputManual
+                }}
+              />
+              <div className="d-grid gap-2 mb-4">
                 <CButton
                   color="secondary"
                   active={'active' === 'active'}
@@ -188,7 +218,9 @@ const UploadDailyTrxFile = () => {
                   Submit
                 </CButton>
               </div>
-              <button onClick={handleDownload}>Download Template</button>
+              <CButton color="secondary" onClick={handleDownload}>
+                Download Template <CBadge color="info">new</CBadge>
+              </CButton>
             </div>
             {isErrorMessage > 0 && (
               <TextErrorMessage IsError={isErrorMessage} Message={errorMessage} />

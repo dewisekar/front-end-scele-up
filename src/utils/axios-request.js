@@ -58,12 +58,13 @@ const isExistFileResi = async (filename, channel, ismarketplace) => {
   }
 }
 
-const insertDailyFile = async (filename, channel, ismarketplace, uploaddate) => {
+const insertDailyFile = async (filename, channel, ismarketplace, uploaddate, totalRows) => {
   let data = JSON.stringify({
     Filename: filename,
     Channel: channel,
     IsMarketplace: ismarketplace,
     Date: uploaddate,
+    TotalRows: totalRows,
   })
   try {
     const res = await axios.post(baseUrl + '/insertDailyFile', data, {
@@ -96,9 +97,10 @@ const insertDailyFileResi = async (filename, channel, ismarketplace, uploaddate)
   }
 }
 
-const getDailyFile = async (uploaddate) => {
+const getDailyFile = async (startDate, endDate) => {
   let data = JSON.stringify({
-    Date: uploaddate,
+    StartDate: startDate,
+    EndDate: endDate,
   })
   try {
     const res = await axios.post(baseUrl + '/getDailyFile', data, {
@@ -228,11 +230,23 @@ const checkAndUpdateResiForScan = async (invoice, action) => {
   }
 }
 
-const getKontrolPengirimanByDate = async (orderDate, processDate, action) => {
+const getKontrolPengirimanByDate = async (
+  odStart,
+  odEnd,
+  pdStart,
+  pdEnd,
+  checkByOd,
+  checkByPd,
+  jenisData,
+) => {
   let data = JSON.stringify({
-    OrderDate: orderDate,
-    ProcessDate: processDate,
-    Action: action,
+    OdStart: odStart,
+    OdEnd: odEnd,
+    PdStart: pdStart,
+    PdEnd: pdEnd,
+    CheckByOd: checkByOd,
+    CheckByPd: checkByPd,
+    Action: jenisData,
   })
   try {
     const res = await axios.post(baseUrl + '/getKontrolPengirimanByDate', data, {
