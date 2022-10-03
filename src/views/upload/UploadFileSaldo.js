@@ -5,7 +5,7 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
-  CForm,
+  CBadge,
   CFormInput,
   CFormLabel,
   CFormTextarea,
@@ -63,10 +63,10 @@ const UploadResiFile = () => {
     console.log('channel:', channel)
     console.log('filename:', filename)
     console.log('isMarketplace:', isMarketplace)
-    if (selectedFile.name.split('.')[selectedFile.name.split('.').length - 1] !== 'pdf') {
-      console.log('invalid file extension, must be a pdf')
+    if (selectedFile.name.split('.')[selectedFile.name.split('.').length - 1] !== 'xlsx') {
+      console.log('invalid file extension, must be a xlsx')
       setIsErrorMessage(1)
-      setErrorMessage('invalid file extension, must be a pdf')
+      setErrorMessage('invalid file extension, must be a xlsx')
       return
     }
 
@@ -164,13 +164,13 @@ const UploadResiFile = () => {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Input File Resi</strong> {/*<small>File input</small>*/}
+            <strong>Input File Saldo</strong> {/*<small>File input</small>*/}
           </CCardHeader>
-          <CCardHeader>
+          {/* <CCardHeader>
             baru tersedia fitur scrapping resi tiktok,
             <br />
             <strong>jangan upload file resi shopee !!</strong>
-          </CCardHeader>
+          </CCardHeader> */}
           <CCardBody>
             <div className="mb-3">
               <CFormLabel htmlFor="formFile">Pilih Marketplace</CFormLabel>
@@ -187,10 +187,10 @@ const UploadResiFile = () => {
                   }
                 }}
               >
-                {/* <option value="default">Pilih Marketplace</option> */}
-                {/* <option value="Shopee">Shopee</option> */}
+                <option value="default">Pilih Marketplace</option>
+                <option value="Shopee">Shopee</option>
                 <option value="Tiktok">Tiktok</option>
-                {/* <option value="Tokopedia">Tokopedia</option> */}
+                <option value="Tokopedia">Tokopedia</option>
                 {/* <option value="Manual">Pilih manual</option> */}
               </CFormSelect>
               {!hideInputManual && <InputManual />}
@@ -206,7 +206,7 @@ const UploadResiFile = () => {
                 className="mb-4"
                 autoFocus="autofocus"
                 type="text"
-                placeholder="total resi dalam pdf"
+                placeholder="total rows dalam excel"
                 aria-label="default input example"
                 value={totalPages}
                 onChange={(e) => {
@@ -218,7 +218,7 @@ const UploadResiFile = () => {
                 }}
               />
               <CFormInput className="mb-4" type="file" id="formFile" onChange={handleFileInput} />
-              <div className="d-grid gap-2">
+              <div className="d-grid gap-2 mb-4">
                 <CButton
                   color="secondary"
                   active={'active' === 'active'}
@@ -229,7 +229,9 @@ const UploadResiFile = () => {
                   Submit
                 </CButton>
               </div>
-              {/* <button onClick={handleDownload}>Download Template</button> */}
+              <CButton color="secondary" onClick={handleDownload}>
+                Download Template
+              </CButton>
             </div>
             {isErrorMessage > 0 && (
               <TextErrorMessage IsError={isErrorMessage} Message={errorMessage} />

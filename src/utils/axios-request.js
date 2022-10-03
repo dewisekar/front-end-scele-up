@@ -78,12 +78,13 @@ const insertDailyFile = async (filename, channel, ismarketplace, uploaddate, tot
   }
 }
 
-const insertDailyFileResi = async (filename, channel, ismarketplace, uploaddate) => {
+const insertDailyFileResi = async (filename, channel, ismarketplace, uploaddate, totalpages) => {
   let data = JSON.stringify({
     Filename: filename,
     Channel: channel,
     IsMarketplace: ismarketplace,
     Date: uploaddate,
+    TotalPages: totalpages,
   })
   try {
     const res = await axios.post(baseUrl + '/insertDailyFileResi', data, {
@@ -275,6 +276,23 @@ const getFormatTableGeneral = async (action) => {
     console.error(err)
   }
 }
+
+const getRekapPengirimanByMonth = async (month) => {
+  let data = JSON.stringify({
+    Month: month,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/getRekapPengirimanByMonth', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 export {
   authenticateUsername,
   checkDailyFile,
@@ -291,6 +309,7 @@ export {
   getFormatTableGeneral,
   isExistFileResi,
   insertDailyFileResi,
+  getRekapPengirimanByMonth,
 }
 
 // export default authenticateUsername

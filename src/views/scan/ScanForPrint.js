@@ -24,7 +24,7 @@ import { format } from 'date-fns'
 const ScanForPrint = () => {
   //function
   const handleOnEnterPressed = () => {
-    var resMsg = ''
+    let resMsg = ''
     //var objResi = { resi: textInput, result: resMsg }
     try {
       let res = checkAndUpdateResiForScan(textInput, 'PRINT')
@@ -34,7 +34,7 @@ const ScanForPrint = () => {
           //alert('Invoice ' + textInput + ' berhasil di update untuk di print')
           resMsg = 'Resi ' + textInput + ' berhasil di update untuk di print'
           setErrorMessage(resMsg)
-          //setArrScan([...arrScan, { resi: textInput, result: resMsg }])
+          setArrScan([...arrScan, { resi: textInput, result: resMsg }])
           setIsErrorMessage(2)
         } else {
           // alert(
@@ -42,16 +42,18 @@ const ScanForPrint = () => {
           // )
           resMsg = 'Resi ' + textInput + ' gagal di update untuk dicetak -  error:' + result.message
           setErrorMessage(resMsg)
-          //setArrScan([...arrScan, { resi: textInput, result: resMsg }])
+          setArrScan([...arrScan, { resi: textInput, result: resMsg }])
           setIsErrorMessage(1)
         }
       })
     } catch (err) {
       resMsg = 'Resi ' + textInput + ' gagal di update untuk dicetak - error:' + err
       setErrorMessage(resMsg)
+      setArrScan([...arrScan, { resi: textInput, result: resMsg }])
       setIsErrorMessage(1)
     }
-    setArrScan([...arrScan, { resi: textInput, result: resMsg }])
+    console.log(errorMessage)
+    console.log(arrScan)
     setTextInput('')
   }
   const TextErrorMessage = (props) => {
@@ -170,7 +172,7 @@ const ScanForPrint = () => {
           </CCardBody>
         </CCard>
         {isErrorMessage > 0 && <TextErrorMessage IsError={isErrorMessage} Message={errorMessage} />}
-        {!hideTable && (
+        {/* {!hideTable && (
           <CCard className="mb-4">
             <CCardHeader>
               <strong>Hasil scan</strong>{' '}
@@ -179,7 +181,15 @@ const ScanForPrint = () => {
               <GenerateTable data={arrScan} />
             </CCardBody>
           </CCard>
-        )}
+        )} */}
+        <CCard className="mb-4">
+          <CCardHeader>
+            <strong>Hasil scan</strong>{' '}
+          </CCardHeader>
+          <CCardBody>
+            <GenerateTable data={arrScan} />
+          </CCardBody>
+        </CCard>
         {!hideTable && (
           <CCard className="mb-4">
             {/* <CCardHeader>

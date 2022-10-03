@@ -51,6 +51,7 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const UploadDailyTrxFile = React.lazy(() => import('./views/upload/UploadDailyTrxFile'))
 const UploadResiFile = React.lazy(() => import('./views/upload/UploadResiFile'))
+const UploadFileSaldo = React.lazy(() => import('./views/upload/UploadFileSaldo'))
 const MonDailyTrxFile = React.lazy(() => import('./views/upload/MonDailyTrxFile'))
 const MonFileResi = React.lazy(() => import('./views/upload/MonFileResi'))
 const MonJournalJual = React.lazy(() => import('./views/monitoring/MonJournalJual'))
@@ -58,6 +59,7 @@ const ScanForPrint = React.lazy(() => import('./views/scan/ScanForPrint'))
 const ScanForSent = React.lazy(() => import('./views/scan/ScanForSent'))
 const MonSelisih = React.lazy(() => import('./views/monitoring/MonSelisih'))
 const Logout = React.lazy(() => import('./views/pages/logout/Logout'))
+const RekapPengiriman = React.lazy(() => import('./views/dashboard/RekapPengiriman'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -108,11 +110,13 @@ const routes = [
   { path: '/Upload/MonDailyTrxFile', name: 'MonDailyTrxFile', element: MonDailyTrxFile },
   { path: '/Upload/UploadResiFile', name: 'Upload File Resi', element: UploadResiFile },
   { path: '/Upload/MonFileResi', name: 'Monitoring File Resi', element: MonFileResi },
+  { path: '/Upload/UploadFileSaldo', name: 'Upload File Saldo', element: UploadFileSaldo },
   { path: '/Monitoring/MonJournalJual', name: 'MonJournalJual', element: MonJournalJual },
   { path: '/Scan/ScanForPrint', name: 'ScanForPrint', element: ScanForPrint },
   { path: '/Scan/ScanForSent', name: 'ScanForSend', element: ScanForSent },
   { path: '/Monitoring/SelisihData', name: 'Kontrol Pengiriman', element: MonSelisih },
   { path: '/Logout', name: 'Logout', element: Logout },
+  { path: '/rekapPengiriman', name: 'RekapPengiriman', element: RekapPengiriman },
 ]
 
 export default routes

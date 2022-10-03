@@ -19,7 +19,15 @@ const _nav = [
     component: CNavItem,
     name: 'Dashboard',
     to: '/dashboard',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',
+      text: 'FUTURE',
+    },
+  },
+  {
+    component: CNavItem,
+    name: 'Rekap Pengiriman',
+    to: '/rekapPengiriman',
     badge: {
       color: 'info',
       text: 'NEW',
@@ -51,6 +59,12 @@ const _nav = [
     component: CNavItem,
     name: 'Monitoring File Resi',
     to: '/Upload/MonFileResi',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Upload File Resi',
+    to: '/Upload/UploadFileSaldo',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
   },
   {

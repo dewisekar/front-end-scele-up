@@ -43,20 +43,47 @@ const MonFileResi = () => {
               <CTableHeaderCell scope="col">Channel</CTableHeaderCell>
 
               <CTableHeaderCell scope="col">Status File</CTableHeaderCell>
-              <CTableHeaderCell scope="col">ERROR MESSAGE</CTableHeaderCell>
+
+              <CTableHeaderCell scope="col">TGL UPLOAD</CTableHeaderCell>
+
+              <CTableHeaderCell scope="col">TOTAL PAGES</CTableHeaderCell>
+
+              <CTableHeaderCell scope="col">TOTAL RESI SUKSES UPDATE</CTableHeaderCell>
+
+              <CTableHeaderCell scope="col">ERROR PAGES</CTableHeaderCell>
+
+              <CTableHeaderCell scope="col">STATUS Description</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
 
           <CTableBody>
-            {props.data.map(({ FILENAME, CHANNEL, STATUSFILE, ERRMSG }, index) => (
-              <CTableRow key={index}>
-                <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                <CTableDataCell>{FILENAME}</CTableDataCell>
-                <CTableDataCell>{CHANNEL}</CTableDataCell>
-                <CTableDataCell>{STATUSFILE}</CTableDataCell>
-                <CTableDataCell>{ERRMSG}</CTableDataCell>
-              </CTableRow>
-            ))}
+            {props.data.map(
+              (
+                {
+                  FILENAME,
+                  CHANNEL,
+                  STATUSFILE,
+                  TGL_UPLOAD,
+                  TOTALPAGES,
+                  TOTALPAGESINSERTED,
+                  ERRORPAGES,
+                  ERRMSG,
+                },
+                index,
+              ) => (
+                <CTableRow key={index}>
+                  <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
+                  <CTableDataCell>{FILENAME}</CTableDataCell>
+                  <CTableDataCell>{CHANNEL}</CTableDataCell>
+                  <CTableDataCell>{STATUSFILE}</CTableDataCell>
+                  <CTableDataCell>{TGL_UPLOAD}</CTableDataCell>
+                  <CTableDataCell>{TOTALPAGES}</CTableDataCell>
+                  <CTableDataCell>{TOTALPAGESINSERTED}</CTableDataCell>
+                  <CTableDataCell>{ERRORPAGES}</CTableDataCell>
+                  <CTableDataCell>{ERRMSG}</CTableDataCell>
+                </CTableRow>
+              ),
+            )}
           </CTableBody>
         </CTable>
       </div>

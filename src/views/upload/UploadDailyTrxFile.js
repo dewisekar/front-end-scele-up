@@ -114,7 +114,7 @@ const UploadDailyTrxFile = () => {
             'file ' +
               selectedFile.name +
               ' sudah pernah di upload pada tanggal ' +
-              format(new Date(result.UPLOADDATE), 'dd-MM-yyyy HH:mm'),
+              format(new Date(result.UPLOADDATE), 'dd-MM-yyyy'),
           )
         }
       })
