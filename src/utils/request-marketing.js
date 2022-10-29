@@ -37,5 +37,34 @@ const insertNewKOL = async (
     console.error(err)
   }
 }
-
-export { insertNewKOL }
+const getFormatListKol = async () => {
+  // let data = JSON.stringify({
+  //   Date: uploaddate,
+  // })
+  try {
+    const res = await axios.get(baseUrl + '/getFormatListKol', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+const getListKol = async () => {
+  // let data = JSON.stringify({
+  //   Date: uploaddate,
+  // })
+  try {
+    const res = await axios.get(baseUrl + '/getListKol', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+export { insertNewKOL, getFormatListKol, getListKol }

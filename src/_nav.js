@@ -135,6 +135,27 @@ const _nav = [
   },
   {
     component: CNavTitle,
+    name: 'Maintain Kontrak Kol',
+    level: ['MK'],
+  },
+  {
+    component: CNavItem,
+    name: 'Add KOL Contract',
+    // to: '/Upload/UploadDailyTrxFile',
+    to: '/MaintainKontrakKol/InputNewContract',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK'],
+  },
+  {
+    component: CNavItem,
+    name: 'List KOL Contract',
+    // to: '/Upload/UploadDailyTrxFile',
+    to: '/MaintainKontrakKol/ListKontrak',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK'],
+  },
+  {
+    component: CNavTitle,
     name: 'Logout',
     level: ['WH', 'MK'],
   },
