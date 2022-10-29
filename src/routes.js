@@ -60,6 +60,7 @@ const ScanForSent = React.lazy(() => import('./views/scan/ScanForSent'))
 const MonSelisih = React.lazy(() => import('./views/monitoring/MonSelisih'))
 const Logout = React.lazy(() => import('./views/pages/logout/Logout'))
 const RekapPengiriman = React.lazy(() => import('./views/dashboard/RekapPengiriman'))
+const InputNewKol = React.lazy(() => import('./views/maintainkol/InputNewKol'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -117,6 +118,7 @@ const routes = [
   { path: '/Monitoring/SelisihData', name: 'Kontrol Pengiriman', element: MonSelisih },
   { path: '/Logout', name: 'Logout', element: Logout },
   { path: '/rekapPengiriman', name: 'RekapPengiriman', element: RekapPengiriman },
+  { path: '/MaintainKol/InputNewKol', name: 'InputNewKol', element: InputNewKol },
 ]
 
 export default routes

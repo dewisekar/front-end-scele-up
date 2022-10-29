@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler, CAvatar } from '@coreui/react'
@@ -16,10 +16,18 @@ import avatar8 from 'src/assets/images/avatars/logo_jiera.jpg'
 // sidebar nav config
 import navigation from '../_nav'
 
-const AppSidebar = () => {
+const AppSidebar = (props) => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  const [filteredNav, setfilteredNav] = useState([])
+
+  useEffect(() => {
+    let user_level = props.user_level
+    console.log(user_level)
+    setfilteredNav(navigation.filter((navList) => navList['level'].indexOf(user_level) > -1))
+    // console.log(filteredNav)
+  }, [])
 
   return (
     <CSidebar
@@ -37,7 +45,8 @@ const AppSidebar = () => {
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
-          <AppSidebarNav items={navigation} />
+          {/* <AppSidebarNav items={navigation} /> */}
+          <AppSidebarNav items={filteredNav} />
         </SimpleBar>
       </CSidebarNav>
       <CSidebarToggler

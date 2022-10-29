@@ -54,10 +54,10 @@ const Login = (props) => {
             //isError = false
             //setSuccess(true)
             sessionStorage.setItem('user', JSON.stringify(username))
-
+            sessionStorage.setItem('level_id', result.LEVEL_ID)
             let tokenString = sessionStorage.getItem('user')
             //let userToken = JSON.parse(tokenString)
-            console.log(tokenString)
+            //console.log(tokenString)
             props.setUser(username)
             navigate('/dashboard')
           } else {
