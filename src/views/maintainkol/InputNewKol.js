@@ -296,7 +296,6 @@ const InputNewKol = () => {
               <CFormInput
                 autoFocus="autofocus"
                 type="text"
-                pattern="[0-9]*"
                 placeholder="Input nomor rekening"
                 aria-label="default input example"
                 value={NorekKOL}

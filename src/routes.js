@@ -62,6 +62,8 @@ const Logout = React.lazy(() => import('./views/pages/logout/Logout'))
 const RekapPengiriman = React.lazy(() => import('./views/dashboard/RekapPengiriman'))
 const InputNewKol = React.lazy(() => import('./views/maintainkol/InputNewKol'))
 const ListKol = React.lazy(() => import('./views/maintainkol/ListKol'))
+const InputNewContract = React.lazy(() => import('./views/maintainkol/InputNewContract'))
+const ListKontrak = React.lazy(() => import('./views/maintainkol/ListKontrak'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -121,6 +123,12 @@ const routes = [
   { path: '/rekapPengiriman', name: 'RekapPengiriman', element: RekapPengiriman },
   { path: '/MaintainKol/InputNewKol', name: 'InputNewKol', element: InputNewKol },
   { path: '/MaintainKol/ListKol', name: 'ListKol', element: ListKol },
+  {
+    path: '/MaintainKontrakKol/InputNewContract',
+    name: 'InputNewContract',
+    element: InputNewContract,
+  },
+  { path: '/MaintainKontrakKol/ListKontrak', name: 'ListKontrak', element: ListKontrak },
 ]
 
 export default routes
