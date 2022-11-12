@@ -28,6 +28,8 @@ const insertNewKOL = async (
   NoWhatsapp,
   AlamatKOL,
   NorekKOL,
+  KTP,
+  Bank,
   user,
 ) => {
   let data = JSON.stringify({
@@ -39,6 +41,8 @@ const insertNewKOL = async (
     NoWhatsapp: NoWhatsapp,
     AlamatKOL: AlamatKOL,
     NorekKOL: NorekKOL,
+    KTP: KTP,
+    Bank: Bank,
     User: user,
   })
   try {
@@ -136,8 +140,8 @@ const insertNewKontrak = async (
   subMedia,
   bookingSlot,
   biayaKerjaSama,
-  picAwal,
-  fileMou,
+  manager,
+  // fileMou,
   tanggalAwalKerjaSama,
   tanggalAkhirKerjaSama,
   user,
@@ -147,14 +151,92 @@ const insertNewKontrak = async (
     SubMedia: subMedia,
     BookingSlot: bookingSlot,
     BiayaKerjaSama: biayaKerjaSama,
-    PicAwal: picAwal,
-    FileMou: fileMou,
+    Manager: manager,
+    // FileMou: fileMou,
     TanggalAwalKerjaSama: tanggalAwalKerjaSama,
     TanggalAkhirKerjaSama: tanggalAkhirKerjaSama,
     User: user,
   })
   try {
     const res = await axios.post(baseUrl + '/insertNewKontrak', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const insertNewBrief = async (tema, konsep, script, refLink, user) => {
+  let data = JSON.stringify({
+    Tema: tema,
+    Konsep: konsep,
+    Script: script,
+    RefLink: refLink,
+    User: user,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/insertNewBrief', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const insertNewManager = async (managerName, noWhatsApp, email, alias, Roles, NoKTP, user) => {
+  let data = JSON.stringify({
+    ManagerName: managerName,
+    NoWhatsApp: noWhatsApp,
+    Email: email,
+    Alias: alias,
+    Roles: Roles,
+    NoKTP: NoKTP,
+    User: user,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/insertNewManager', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const insertNewPost = async (kontrakId, managerId, briefId, linkPost, user) => {
+  let data = JSON.stringify({
+    KontrakId: kontrakId,
+    ManagerId: managerId,
+    BriefId: briefId,
+    LinkPost: linkPost,
+    User: user,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/insertNewPost', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const getFormatList = async (menu) => {
+  // let data = JSON.stringify({
+  //   Date: uploaddate,
+  // })
+  try {
+    const res = await axios.get(baseUrl + '/getFormatList?menu=' + menu, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -173,4 +255,8 @@ export {
   getSubMediaById,
   insertNewKontrak,
   getRequestByUri,
+  insertNewBrief,
+  insertNewManager,
+  getFormatList,
+  insertNewPost,
 }

@@ -21,12 +21,12 @@ const loading = (
   </div>
 )
 
-const ListKontrak = () => {
+const ListBrief = () => {
   useEffect(() => {
-    let resGetFormatListKontrak = getRequestByUri('/getFormatListKontrak')
+    let resGetFormatListBrief = getRequestByUri('/getFormatListBrief')
     try {
-      resGetFormatListKontrak.then(function (result) {
-        console.log('resGetFormatListKontrak:', result.status)
+      resGetFormatListBrief.then(function (result) {
+        console.log('getFormatListBrief:', result.status)
         if (result.status === 'true') {
           setFormatTable(result.message)
         }
@@ -35,10 +35,10 @@ const ListKontrak = () => {
       console.log(err)
     }
 
-    let resGetListKontrak = getRequestByUri('/getListKontrak')
+    let resGetListBrief = getRequestByUri('/getListBrief')
     try {
-      resGetListKontrak.then(function (result) {
-        console.log('resGetListKontrak:', result.status)
+      resGetListBrief.then(function (result) {
+        console.log('resGetListBrief:', result.status)
         if (result.status === 'true') {
           setDataTable(result.message)
         }
@@ -78,7 +78,7 @@ const ListKontrak = () => {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>List Kontrak</strong> {/*<small>File input</small>*/}
+              <strong>List Brief</strong> {/*<small>File input</small>*/}
             </CCardHeader>
             <CCardBody>
               <DatatablePage data={dataTable} />
@@ -90,4 +90,4 @@ const ListKontrak = () => {
   )
 }
 
-export default ListKontrak
+export default ListBrief

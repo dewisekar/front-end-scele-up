@@ -13,7 +13,7 @@ import {
   CFormSelect,
 } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
-import { getRequestByUri } from '../../utils/request-marketing'
+import { getRequestByUri, getFormatList } from '../../utils/request-marketing'
 
 const loading = (
   <div className="pt-3 text-center">
@@ -21,12 +21,12 @@ const loading = (
   </div>
 )
 
-const ListKontrak = () => {
+const ListManager = () => {
   useEffect(() => {
-    let resGetFormatListKontrak = getRequestByUri('/getFormatListKontrak')
+    let resGetFormatListManager = getFormatList('manager')
     try {
-      resGetFormatListKontrak.then(function (result) {
-        console.log('resGetFormatListKontrak:', result.status)
+      resGetFormatListManager.then(function (result) {
+        console.log('getFormatListManager:', result.status)
         if (result.status === 'true') {
           setFormatTable(result.message)
         }
@@ -35,10 +35,10 @@ const ListKontrak = () => {
       console.log(err)
     }
 
-    let resGetListKontrak = getRequestByUri('/getListKontrak')
+    let resGetListManager = getRequestByUri('/getListManager')
     try {
-      resGetListKontrak.then(function (result) {
-        console.log('resGetListKontrak:', result.status)
+      resGetListManager.then(function (result) {
+        console.log('resGetListManager:', result.status)
         if (result.status === 'true') {
           setDataTable(result.message)
         }
@@ -78,7 +78,7 @@ const ListKontrak = () => {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>List Kontrak</strong> {/*<small>File input</small>*/}
+              <strong>List Manager</strong> {/*<small>File input</small>*/}
             </CCardHeader>
             <CCardBody>
               <DatatablePage data={dataTable} />
@@ -90,4 +90,4 @@ const ListKontrak = () => {
   )
 }
 
-export default ListKontrak
+export default ListManager

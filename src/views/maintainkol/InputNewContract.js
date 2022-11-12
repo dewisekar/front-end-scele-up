@@ -15,8 +15,9 @@ import {
   getKolDetailById,
   getSubMediaById,
   insertNewKontrak,
+  getRequestByUri,
 } from '../../utils/request-marketing'
-import GeneralFormInput from '../../utils/GeneralFormInput'
+import { GeneralFormInput } from '../../utils/GeneralFormInput'
 // import ControlledInput from '../../utils/GeneralFormInput'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -82,10 +83,9 @@ const InputNewContract = () => {
     let subMedia = ShowRequestInputRef.current.getJenisSubMedia()
     let bookingSlot = ShowRequestInputRef.current.getBookingSlot()
     let biayaKerjaSama = ShowRequestInputRef.current.getBiayaKerjaSama()
-    let picAwal = ShowRequestInputRef.current.getPicAwal()
-    let fileMou = ShowRequestInputRef.current.getFileMou()
     let tanggalAwalKerjaSama = ShowRequestInputRef.current.getTanggalAwalKerjaSama()
     let tanggalAkhirKerjaSama = ShowRequestInputRef.current.getTanggalAkhirKerjaSama()
+    let managerKOL = ShowRequestInputRef.current.getManagerKOL()
     if (subMedia == 'default') {
       setErrorMessage('Please select sub media')
       setModalTitle('Submit Error')
@@ -98,12 +98,8 @@ const InputNewContract = () => {
       setErrorMessage('Please input biaya kerjasama')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (picAwal == '') {
-      setErrorMessage('Please input pic awal')
-      setModalTitle('Submit Error')
-      handleShow()
-    } else if (fileMou == '') {
-      setErrorMessage('Please input link file MoU')
+    } else if (managerKOL == 'default') {
+      setErrorMessage('Please select manager')
       setModalTitle('Submit Error')
       handleShow()
     } else {
@@ -114,8 +110,7 @@ const InputNewContract = () => {
           subMedia,
           bookingSlot,
           biayaKerjaSama,
-          picAwal,
-          fileMou,
+          managerKOL,
           format(tanggalAwalKerjaSama, 'yyyy-MM-dd'),
           format(tanggalAkhirKerjaSama, 'yyyy-MM-dd'),
           user,
@@ -178,6 +173,8 @@ const InputNewContract = () => {
     const [jenisSubMedia, setJenisSubMedia] = useState('default')
     const [tanggalAwalKerjaSama, setTanggalAwalKerjaSama] = useState(new Date())
     const [tanggalAkhirKerjaSama, setTanggalAkhirKerjaSama] = useState(new Date())
+    const [managerList, setManagerList] = useState(null)
+    const [managerKol, setManagerKol] = useState('default')
 
     useEffect(() => {
       let resGetSubMediaById = getSubMediaById(id)
@@ -186,6 +183,18 @@ const InputNewContract = () => {
           console.log('resGetSubMediaById:', result.message)
           if (result.status === 'true') {
             setSubMediaList(result.message)
+          }
+        })
+      } catch (err) {
+        console.log(err)
+      }
+
+      let resGetListManager = getRequestByUri('/getListManager')
+      try {
+        resGetListManager.then(function (result) {
+          console.log('resGetListManager:', result.status)
+          if (result.status === 'true') {
+            setManagerList(result.message)
           }
         })
       } catch (err) {
@@ -234,6 +243,12 @@ const InputNewContract = () => {
       },
       resetTanggalAkhirKerjaSama: () => {
         setTanggalAkhirKerjaSama(new Date())
+      },
+      getManagerKOL: () => {
+        return managerKol
+      },
+      resetManagerKOL: () => {
+        setManagerKol('default')
       },
     }))
     return (
@@ -299,7 +314,7 @@ const InputNewContract = () => {
               />
             </CCol>
           </CRow>
-          <CRow className="mb-1">
+          {/* <CRow className="mb-1">
             <CCol xs={2}>
               <div className="p-2 border bg-light">PIC Awal</div>
             </CCol>
@@ -314,8 +329,29 @@ const InputNewContract = () => {
                 }}
               />
             </CCol>
-          </CRow>
+          </CRow> */}
           <CRow className="mb-1">
+            <CCol xs={2}>
+              <div className="p-2 border bg-light">Pilih Manager</div>
+            </CCol>
+            <CCol xs={10}>
+              <CFormSelect
+                aria-label="Large select example"
+                onChange={(e) => {
+                  setManagerKol(e.target.value)
+                }}
+              >
+                <option value="default">Pilih Manager</option>
+                {managerList != null &&
+                  managerList.map((value, index) => (
+                    <option key={index} value={value['Manager Id']}>
+                      {value['Manager Name']}
+                    </option>
+                  ))}
+              </CFormSelect>
+            </CCol>
+          </CRow>
+          {/* <CRow className="mb-1">
             <CCol xs={2}>
               <div className="p-2 border bg-light">Link file MoU</div>
             </CCol>
@@ -330,7 +366,7 @@ const InputNewContract = () => {
                 }}
               />
             </CCol>
-          </CRow>
+          </CRow> */}
           <CRow className="mb-1">
             <CCol xs={2}>
               <div className="p-2 border bg-light">Tanggal Awal Kerjasama</div>

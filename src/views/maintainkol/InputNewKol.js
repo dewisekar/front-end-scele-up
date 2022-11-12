@@ -24,6 +24,7 @@ const InputNewKol = () => {
   const [jenisEndorse, setJenisEndorse] = useState('default')
   const [jenisPlatform, setJenisPlatform] = useState('default')
   const [kategoriKOL, setKategoriKOL] = useState('default')
+  const [kodeBank, setKodeBank] = useState('default')
   const [namaKOL, setNamaKol] = useState('')
   const [cursorNamaKOL, setCursorNamaKol] = useState(null)
   const [usernameKOL, setUserNamaKol] = useState('')
@@ -34,6 +35,8 @@ const InputNewKol = () => {
   const [AlamatKOL, setAlamatKOL] = useState('')
   const [cursorNorekKOL, setCursorNorekKOL] = useState(null)
   const [NorekKOL, setNorekKOL] = useState('')
+  const [cursorNoKTP, setCursorNoKTP] = useState(null)
+  const [noKTP, setNoKTP] = useState('')
   const [listJenisEndorse, setListJenisEndorse] = useState([
     'ED',
     'BA',
@@ -65,6 +68,15 @@ const InputNewKol = () => {
     'Viral no irisan influencer',
     'Racun',
   ])
+  const [listBank, setListBank] = useState([
+    'BCA',
+    'BANK MANDIRI',
+    'BNI',
+    'BRI',
+    'BTN',
+    'BANK MEGA',
+    'BTPN',
+  ])
   const [show, setShow] = useState(false)
   const [errMessage, setErrorMessage] = useState('')
   const [modalTitle, setModalTitle] = useState('')
@@ -74,6 +86,8 @@ const InputNewKol = () => {
     setJenisEndorse('default')
     setJenisPlatform('default')
     setKategoriKOL('default')
+    setKodeBank('default')
+    setNoKTP('')
     setNamaKol('')
     setUserNamaKol('')
     setNoWhatsapp('')
@@ -109,8 +123,16 @@ const InputNewKol = () => {
       setErrorMessage('Please input no rekening KOL')
       setModalTitle('Submit Error')
       handleShow()
+    } else if (kodeBank == 'default') {
+      setErrorMessage('Please input bank')
+      setModalTitle('Submit Error')
+      handleShow()
     } else if (AlamatKOL == '') {
       setErrorMessage('Please input alamat KOL')
+      setModalTitle('Submit Error')
+      handleShow()
+    } else if (noKTP == '') {
+      setErrorMessage('Please input nomor KTP')
       setModalTitle('Submit Error')
       handleShow()
     } else {
@@ -125,6 +147,8 @@ const InputNewKol = () => {
           NoWhatsapp,
           AlamatKOL,
           NorekKOL,
+          noKTP,
+          kodeBank,
           user,
         )
         resInsertNewKOL.then(function (result) {
@@ -168,169 +192,220 @@ const InputNewKol = () => {
             <strong>Input New Kol</strong> {/*<small>File input</small>*/}
           </CCardHeader>
           <CCardBody>
-            <div>
-              <CFormLabel htmlFor="formFile">Pilih Jenis KOL</CFormLabel>
-              <CFormSelect
-                className="mb-3"
-                aria-label="Large select example"
-                onChange={(e) => {
-                  setJenisEndorse(e.target.value)
-                  // if (e.target.value === 'Manual') {
-                  //   setHideInputManual(false)
-                  // } else {
-                  //   setHideInputManual(true)
-                  // }
-                }}
-              >
-                <option value="default">Pilih Jenis</option>
-                {listJenisEndorse.map((value) => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </CFormSelect>
-            </div>
-            <div>
-              <CFormLabel htmlFor="formFile">Pilih Jenis Platform</CFormLabel>
-              <CFormSelect
-                className="mb-3"
-                aria-label="Large select example"
-                onChange={(e) => {
-                  setJenisPlatform(e.target.value)
-                  // if (e.target.value === 'Manual') {
-                  //   setHideInputManual(false)
-                  // } else {
-                  //   setHideInputManual(true)
-                  // }
-                }}
-              >
-                <option value="default">Pilih Jenis</option>
-                {listPlatform.map((value) => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </CFormSelect>
-            </div>
-            <div>
-              <CFormLabel htmlFor="formFile">Pilih Kategori KOL</CFormLabel>
-              <CFormSelect
-                className="mb-3"
-                aria-label="Large select example"
-                onChange={(e) => {
-                  setKategoriKOL(e.target.value)
-                  // if (e.target.value === 'Manual') {
-                  //   setHideInputManual(false)
-                  // } else {
-                  //   setHideInputManual(true)
-                  // }
-                }}
-              >
-                <option value="default">Pilih Jenis</option>
-                {listKategoriKol.map((value) => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </CFormSelect>
-            </div>
-            <div className="mb-3">
-              <CFormLabel htmlFor="formFile">Nama KOL</CFormLabel>
-              <CFormInput
-                autoFocus="autofocus"
-                type="text"
-                placeholder="Input nama KOL"
-                aria-label="default input example"
-                value={namaKOL}
-                onChange={(e) => {
-                  setCursorNamaKol(e.target.selectionStart)
-                  setNamaKol(e.target.value)
-                }}
-                onFocus={(e) => {
-                  e.target.selectionStart = cursorNamaKOL
-                }}
-              />
-            </div>
-            <div>
-              <CFormLabel htmlFor="formFile">Username KOL</CFormLabel>
-              <CFormInput
-                autoFocus="autofocus"
-                type="text"
-                placeholder="Input uername KOL"
-                aria-label="default input example"
-                value={usernameKOL}
-                onChange={(e) => {
-                  setCursorUsernameKol(e.target.selectionStart)
-                  setUserNamaKol(e.target.value)
-                }}
-                onFocus={(e) => {
-                  e.target.selectionStart = cursorUsernameKOL
-                }}
-              />
-              <br />
-            </div>
-            <div>
-              <CFormLabel htmlFor="formFile">No Whatsapp</CFormLabel>
-              <CFormInput
-                autoFocus="autofocus"
-                type="text"
-                pattern="[0-9]*"
-                placeholder="Input nomor whatsapp"
-                aria-label="default input example"
-                value={NoWhatsapp}
-                onChange={(e) => {
-                  const re = /^[0-9\b]+$/
-                  if (e.target.value === '' || re.test(e.target.value)) {
-                    setCursorNoWhatsapp(e.target.selectionStart)
-                    setNoWhatsapp(e.target.value)
-                  }
-                }}
-                onFocus={(e) => {
-                  e.target.selectionStart = cursorNoWhatsapp
-                }}
-              />
-              <br />
-            </div>
-            <div>
-              <CFormLabel htmlFor="formFile">No Rekening</CFormLabel>
-              <CFormInput
-                autoFocus="autofocus"
-                type="text"
-                placeholder="Input nomor rekening"
-                aria-label="default input example"
-                value={NorekKOL}
-                onChange={(e) => {
-                  const re = /^[0-9\b]+$/
-                  if (e.target.value === '' || re.test(e.target.value)) {
-                    setCursorNorekKOL(e.target.selectionStart)
-                    setNorekKOL(e.target.value)
-                  }
-                }}
-                onFocus={(e) => {
-                  e.target.selectionStart = cursorNorekKOL
-                }}
-              />
-              <br />
-            </div>
-            <div>
-              <CFormLabel htmlFor="formFile">Alamat KOL</CFormLabel>
-              <CFormInput
-                autoFocus="autofocus"
-                type="text"
-                placeholder="Input Alamat KOL"
-                aria-label="default input example"
-                value={AlamatKOL}
-                onChange={(e) => {
-                  setCursorAlamatKOL(e.target.selectionStart)
-                  setAlamatKOL(e.target.value)
-                }}
-                onFocus={(e) => {
-                  e.target.selectionStart = cursorAlamatKOL
-                }}
-              />
-              <br />
-            </div>
-            <div className="d-grid gap-2">
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">Pilih Jenis KOL</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormSelect
+                  aria-label="Large select example"
+                  onChange={(e) => {
+                    setJenisEndorse(e.target.value)
+                  }}
+                >
+                  <option value="default">Pilih Jenis</option>
+                  {listJenisEndorse.map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </CFormSelect>
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">Pilih Jenis Platform</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormSelect
+                  aria-label="Large select example"
+                  onChange={(e) => {
+                    setJenisPlatform(e.target.value)
+                  }}
+                >
+                  <option value="default">Pilih Jenis Platform</option>
+                  {listPlatform.map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </CFormSelect>
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">Pilih Kategori KOL</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormSelect
+                  aria-label="Large select example"
+                  onChange={(e) => {
+                    setKategoriKOL(e.target.value)
+                  }}
+                >
+                  <option value="default">Pilih Kategori</option>
+                  {listKategoriKol.map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </CFormSelect>
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">Nama KOL</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormInput
+                  autoFocus="autofocus"
+                  type="text"
+                  placeholder="Input nama KOL"
+                  aria-label="default input example"
+                  value={namaKOL}
+                  onChange={(e) => {
+                    setCursorNamaKol(e.target.selectionStart)
+                    setNamaKol(e.target.value)
+                  }}
+                  onFocus={(e) => {
+                    e.target.selectionStart = cursorNamaKOL
+                  }}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">Username KOL</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormInput
+                  autoFocus="autofocus"
+                  type="text"
+                  placeholder="Input uername KOL"
+                  aria-label="default input example"
+                  value={usernameKOL}
+                  onChange={(e) => {
+                    setCursorUsernameKol(e.target.selectionStart)
+                    setUserNamaKol(e.target.value)
+                  }}
+                  onFocus={(e) => {
+                    e.target.selectionStart = cursorUsernameKOL
+                  }}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">No Whatsapp</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormInput
+                  autoFocus="autofocus"
+                  type="text"
+                  pattern="[0-9]*"
+                  placeholder="Input nomor whatsapp"
+                  aria-label="default input example"
+                  value={NoWhatsapp}
+                  onChange={(e) => {
+                    const re = /^[0-9\b]+$/
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      setCursorNoWhatsapp(e.target.selectionStart)
+                      setNoWhatsapp(e.target.value)
+                    }
+                  }}
+                  onFocus={(e) => {
+                    e.target.selectionStart = cursorNoWhatsapp
+                  }}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">No Rekening</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormInput
+                  autoFocus="autofocus"
+                  type="text"
+                  placeholder="Input nomor rekening"
+                  aria-label="default input example"
+                  value={NorekKOL}
+                  onChange={(e) => {
+                    const re = /^[0-9\b]+$/
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      setCursorNorekKOL(e.target.selectionStart)
+                      setNorekKOL(e.target.value)
+                    }
+                  }}
+                  onFocus={(e) => {
+                    e.target.selectionStart = cursorNorekKOL
+                  }}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">Pilih Bank</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormSelect
+                  aria-label="Large select example"
+                  onChange={(e) => {
+                    setKodeBank(e.target.value)
+                  }}
+                >
+                  <option value="default">Pilih Bank</option>
+                  {listBank.map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </CFormSelect>
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">Alamat KOL</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormInput
+                  autoFocus="autofocus"
+                  type="text"
+                  placeholder="Input Alamat KOL"
+                  aria-label="default input example"
+                  value={AlamatKOL}
+                  onChange={(e) => {
+                    setCursorAlamatKOL(e.target.selectionStart)
+                    setAlamatKOL(e.target.value)
+                  }}
+                  onFocus={(e) => {
+                    e.target.selectionStart = cursorAlamatKOL
+                  }}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={3}>
+                <div className="p-2 border bg-light">No. KTP</div>
+              </CCol>
+              <CCol xs={9}>
+                <CFormInput
+                  autoFocus="autofocus"
+                  type="text"
+                  placeholder="Input No. KTP"
+                  aria-label="default input example"
+                  value={noKTP}
+                  onChange={(e) => {
+                    setCursorNoKTP(e.target.selectionStart)
+                    setNoKTP(e.target.value)
+                  }}
+                  onFocus={(e) => {
+                    e.target.selectionStart = cursorNoKTP
+                  }}
+                />
+              </CCol>
+            </CRow>
+            <div className="d-grid gap-2 mt-4">
               <CButton
                 color="secondary"
                 active={'active' === 'active'}

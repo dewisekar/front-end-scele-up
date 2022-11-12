@@ -64,6 +64,11 @@ const InputNewKol = React.lazy(() => import('./views/maintainkol/InputNewKol'))
 const ListKol = React.lazy(() => import('./views/maintainkol/ListKol'))
 const InputNewContract = React.lazy(() => import('./views/maintainkol/InputNewContract'))
 const ListKontrak = React.lazy(() => import('./views/maintainkol/ListKontrak'))
+const InputNewBrief = React.lazy(() => import('./views/maintainkol/InputNewBrief'))
+const ListBrief = React.lazy(() => import('./views/maintainkol/ListBrief'))
+const InputNewManager = React.lazy(() => import('./views/maintainkol/InputNewManager'))
+const ListManager = React.lazy(() => import('./views/maintainkol/ListManager'))
+const InputNewPost = React.lazy(() => import('./views/maintainkol/InputNewPost'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -110,25 +115,50 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
-  { path: '/Upload/UploadDailyTrxFile', name: 'UploadDailyTrxFile', element: UploadDailyTrxFile },
-  { path: '/Upload/MonDailyTrxFile', name: 'MonDailyTrxFile', element: MonDailyTrxFile },
+  {
+    path: '/Upload/UploadDailyTrxFile',
+    name: 'Upload Daily Transaction File',
+    element: UploadDailyTrxFile,
+  },
+  {
+    path: '/Upload/MonDailyTrxFile',
+    name: 'Monitoring Daily Transaction File',
+    element: MonDailyTrxFile,
+  },
   { path: '/Upload/UploadResiFile', name: 'Upload File Resi', element: UploadResiFile },
   { path: '/Upload/MonFileResi', name: 'Monitoring File Resi', element: MonFileResi },
   { path: '/Upload/UploadFileSaldo', name: 'Upload File Saldo', element: UploadFileSaldo },
-  { path: '/Monitoring/MonJournalJual', name: 'MonJournalJual', element: MonJournalJual },
-  { path: '/Scan/ScanForPrint', name: 'ScanForPrint', element: ScanForPrint },
-  { path: '/Scan/ScanForSent', name: 'ScanForSend', element: ScanForSent },
+  { path: '/Monitoring/MonJournalJual', name: 'Monitoring Journal Jual', element: MonJournalJual },
+  { path: '/Scan/ScanForPrint', name: 'Scan For Print', element: ScanForPrint },
+  { path: '/Scan/ScanForSent', name: 'Scan For Send', element: ScanForSent },
   { path: '/Monitoring/SelisihData', name: 'Kontrol Pengiriman', element: MonSelisih },
   { path: '/Logout', name: 'Logout', element: Logout },
-  { path: '/rekapPengiriman', name: 'RekapPengiriman', element: RekapPengiriman },
-  { path: '/MaintainKol/InputNewKol', name: 'InputNewKol', element: InputNewKol },
-  { path: '/MaintainKol/ListKol', name: 'ListKol', element: ListKol },
+  { path: '/rekapPengiriman', name: 'Rekap Pengiriman', element: RekapPengiriman },
+  { path: '/MaintainKol/InputNewKol', name: 'Input New Kol', element: InputNewKol },
+  { path: '/MaintainKol/ListKol', name: 'List Kol', element: ListKol },
   {
     path: '/MaintainKontrakKol/InputNewContract',
-    name: 'InputNewContract',
+    name: 'Input New Contract',
     element: InputNewContract,
   },
-  { path: '/MaintainKontrakKol/ListKontrak', name: 'ListKontrak', element: ListKontrak },
+  { path: '/MaintainKontrakKol/ListKontrak', name: 'List Kontrak', element: ListKontrak },
+  {
+    path: '/MaintainKontrakKol/InputNewBrief',
+    name: 'Input New Brief',
+    element: InputNewBrief,
+  },
+  { path: '/MaintainKontrakKol/ListBrief', name: 'List Brief', element: ListBrief },
+  {
+    path: '/MaintainKol/InputNewManager',
+    name: 'Input New Manager',
+    element: InputNewManager,
+  },
+  { path: '/MaintainKol/ListManager', name: 'List Manager', element: ListManager },
+  {
+    path: '/MaintainKol/InputNewPost',
+    name: 'Input New Post',
+    element: InputNewPost,
+  },
 ]
 
 export default routes
