@@ -76,5 +76,11 @@ const GeneralTextArea = React.memo(function GeneralTextArea(props) {
   )
 })
 
-export { GeneralFormInput, GeneralTextArea }
+const convertDataToSelectOptions = (data, valueName, labelName) => {
+  let newData = []
+  data.map((item, index) => newData.push({ value: item[valueName], label: item[labelName] }))
+  return newData
+}
+
+export { GeneralFormInput, GeneralTextArea, convertDataToSelectOptions }
 // export default GeneralFormInput

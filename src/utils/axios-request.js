@@ -194,6 +194,25 @@ const uploadFile = async (formData) => {
   }
 }
 
+const generalDownload = async (endpoint) => {
+  try {
+    const res = await axios.get(baseUrl + endpoint, {
+      responseType: 'blob',
+    })
+
+    return res.data
+  } catch (err) {
+    console.log(err)
+  }
+  // axios
+  //   .get(url, {
+  //     responseType: 'blob',
+  //   })
+  //   .then((res) => {
+  //     fileDownload(res.data, filename)
+  //   })
+}
+
 const handleDownloadTemplate = async () => {
   try {
     const res = await axios.get(baseUrl + '/downloadTenplate', {
@@ -310,6 +329,7 @@ export {
   isExistFileResi,
   insertDailyFileResi,
   getRekapPengirimanByMonth,
+  generalDownload,
 }
 
 // export default authenticateUsername

@@ -1,8 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow, CFormSelect } from '@coreui/react'
-import { GeneralFormInput, GeneralTextArea } from '../../utils/GeneralFormInput'
-import { insertNewBrief } from '../../utils/request-marketing'
+import {
+  GeneralFormInput,
+  GeneralTextArea,
+  convertDataToSelectOptions,
+} from '../../utils/GeneralFormInput'
+import { insertNewBrief, getRequestByUri } from '../../utils/request-marketing'
+import Select from 'react-select'
 
 const InputNewBrief = () => {
   const [tema, setTema] = useState('')
@@ -14,12 +19,34 @@ const InputNewBrief = () => {
   const [modalTitle, setModalTitle] = useState('')
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+  const [managerList, setManagerList] = useState(null)
+  const [managerKol, setManagerKol] = useState(null)
+  const [state, setState] = useState({})
+
+  useEffect(() => {
+    let resGetListManager = getRequestByUri('/getListManager')
+    try {
+      resGetListManager.then(function (result) {
+        console.log('resGetListManager:', result.status)
+        if (result.status === 'true') {
+          setManagerList(result.message)
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
+
+    return () => {
+      setState({}) // This worked for me
+    }
+  }, [])
 
   const resetAllVariable = () => {
     setTema('')
     setKonsep('')
     setScript('')
     setRefLink('')
+    setManagerKol(null)
   }
 
   const handleOnSumbit = () => {
@@ -39,10 +66,21 @@ const InputNewBrief = () => {
       setErrorMessage('Please input link referensi video')
       setModalTitle('Submit Error')
       handleShow()
+    } else if (managerKol == null) {
+      setErrorMessage('Pilih manager terlebih dahulu')
+      setModalTitle('Submit Error')
+      handleShow()
     } else {
       try {
         let user = sessionStorage.getItem('user')
-        let resInsertNewBrief = insertNewBrief(tema, konsep, script, refLink, user)
+        let resInsertNewBrief = insertNewBrief(
+          tema,
+          konsep,
+          script,
+          refLink,
+          managerKol.value,
+          user,
+        )
         resInsertNewBrief.then(function (result) {
           if (result.status === 'true') {
             setModalTitle('Submit Success')
@@ -147,6 +185,24 @@ const InputNewBrief = () => {
                 />
               </CCol>
             </CRow>
+            {managerList && (
+              <CRow className="mb-1">
+                <CCol xs={2}>
+                  <div className="p-2 border bg-light">Pilih Manager KOL</div>
+                </CCol>
+                <CCol xs={10}>
+                  <Select
+                    options={convertDataToSelectOptions(managerList, 'Manager Id', 'Manager Name')}
+                    placeholder="Pilih Manager"
+                    value={managerKol}
+                    onChange={(e) => {
+                      // console.log(e)
+                      setManagerKol(e)
+                    }}
+                  />
+                </CCol>
+              </CRow>
+            )}
             <CRow className="mt-4">
               <CButton
                 color="secondary"

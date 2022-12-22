@@ -17,18 +17,74 @@ import {
   insertNewKontrak,
   getRequestByUri,
 } from '../../utils/request-marketing'
+import { generalDownload } from '../../utils/axios-request'
 import { GeneralFormInput } from '../../utils/GeneralFormInput'
 // import ControlledInput from '../../utils/GeneralFormInput'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { format } from 'date-fns'
-
+import fileDownload from 'js-file-download'
+import { trackPromise, usePromiseTracker } from 'react-promise-tracker'
+import { Bars } from 'react-loader-spinner'
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
   </div>
 )
 
+const LoadingIndicator = (props) => {
+  const { promiseInProgress } = usePromiseTracker()
+
+  return (
+    promiseInProgress && (
+      <div
+        style={{
+          width: '100%',
+          height: '100',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'fixed',
+          top: '0',
+          bottom: '0',
+          left: '0',
+          right: '0',
+          zIndex: '1',
+        }}
+      >
+        {/* <Loader type="ThreeDots" color="#2BAD60" height="100" width="100" /> */}
+        <Bars
+          height="80"
+          width="80"
+          color="#8a93a2"
+          ariaLabel="bars-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+      </div>
+    )
+  )
+}
+
+const calculateDP = (biaya, DP) => {
+  let biayaInt = parseInt(biaya, 10)
+  let DPInt = parseInt(DP, 10)
+  let DPCalc = (biayaInt * DPInt) / 100
+  return DPCalc
+}
+
+const formatCurrency = (numString) => {
+  let curr = numString.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  // curr = 'Rp ' + curr
+  return curr
+}
+
+const unFormatCurrency = (numString) => {
+  // let num = numString.replace('Rp ', '')
+  let num = numString.replace(/\./g, '')
+  return num
+}
 const InputNewContract = () => {
   useEffect(() => {
     let resGetALLKolName = getALLKolName()
@@ -56,6 +112,10 @@ const InputNewContract = () => {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
+  const [showButtonDownloadFIle, setShowButtonDownloadFIle] = useState(false)
+  const [fileId, setFileId] = useState(null)
+  const [disableBtnDwnld, setDisableBtnDwnld] = useState(false)
+
   const inputNameHandle = (value) => {
     if (value != null) {
       let id = value.ID
@@ -76,8 +136,7 @@ const InputNewContract = () => {
       setIsViewDetailData(false)
     }
   }
-
-  const handleOnSubmit = () => {
+  const handleOnSubmit_backup = () => {
     console.log('tes masuk sini ga')
     let user = sessionStorage.getItem('user')
     let subMedia = ShowRequestInputRef.current.getJenisSubMedia()
@@ -118,12 +177,35 @@ const InputNewContract = () => {
         resInsertNewKontrak.then(function (result) {
           if (result.status === 'true') {
             setModalTitle('Submit Success')
-            setErrorMessage(
+            let errorMessage =
               'Insert new kontrak success, Kontrak ID : ' +
-                result.kontrakId +
-                ', Kontrak Ke : ' +
-                result.kontrakKe,
-            )
+              result.kontrakId +
+              ', Kontrak Ke : ' +
+              result.kontrakKe
+
+            if (result.filename !== undefined) {
+              console.log('test')
+              let fileKontrak = result.filename
+              let resDownloadFile = generalDownload('/downloadFile?file=' + fileKontrak)
+              try {
+                resDownloadFile.then(function (result) {
+                  console.log('resDownloadFile: ', result)
+                  if (result !== undefined) {
+                    let fileOnly = fileKontrak.split('/')[fileKontrak.split('/').length - 1]
+                    console.log('fileOnly:', fileOnly)
+                    fileDownload(result, fileOnly)
+                  }
+                })
+              } catch (err) {
+                console.log(err)
+              }
+            } else {
+              errorMessage = errorMessage + '\n File still being processed'
+              setShowButtonDownloadFIle(true)
+              setFileId(result.FILE_ID)
+            }
+            // let fileName = result.filename
+            setErrorMessage(errorMessage)
             handleShow()
             console.log('success')
             resetAllVariable()
@@ -141,6 +223,105 @@ const InputNewContract = () => {
       }
     }
   }
+
+  const handleOnSubmit = () => {
+    console.log('tes masuk sini ga')
+    let user = sessionStorage.getItem('user')
+    let subMedia = ShowRequestInputRef.current.getJenisSubMedia()
+    let bookingSlot = ShowRequestInputRef.current.getBookingSlot()
+    let biayaKerjaSama = ShowRequestInputRef.current.getBiayaKerjaSama()
+    let DPKerjaSama = ShowRequestInputRef.current.getDPKerjaSama()
+    let tanggalAwalKerjaSama = ShowRequestInputRef.current.getTanggalAwalKerjaSama()
+    let tanggalAkhirKerjaSama = ShowRequestInputRef.current.getTanggalAkhirKerjaSama()
+    let managerKOL = ShowRequestInputRef.current.getManagerKOL()
+    if (subMedia == 'default') {
+      setErrorMessage('Please select sub media')
+      setModalTitle('Submit Error')
+      handleShow()
+    } else if (bookingSlot == '') {
+      setErrorMessage('Please input booking slot')
+      setModalTitle('Submit Error')
+      handleShow()
+    } else if (biayaKerjaSama == '') {
+      setErrorMessage('Please input biaya kerjasama')
+      setModalTitle('Submit Error')
+      handleShow()
+    } else if (managerKOL == 'default') {
+      setErrorMessage('Please select manager')
+      setModalTitle('Submit Error')
+      handleShow()
+    } else if (DPKerjaSama == '') {
+      setErrorMessage('Please input DP kerjasama')
+      setModalTitle('Submit Error')
+      handleShow()
+    } else if (parseInt(DPKerjaSama, 10) > 100 || parseInt(DPKerjaSama, 10) <= 0) {
+      setErrorMessage('DP Tidak Valid')
+      setModalTitle('Submit Error')
+      handleShow()
+    } else {
+      console.log('masuk sini mba')
+      try {
+        trackPromise(
+          insertNewKontrak(
+            id,
+            subMedia,
+            bookingSlot,
+            biayaKerjaSama,
+            DPKerjaSama,
+            managerKOL,
+            format(tanggalAwalKerjaSama, 'yyyy-MM-dd'),
+            format(tanggalAkhirKerjaSama, 'yyyy-MM-dd'),
+            user,
+          )
+            .then(function (result) {
+              if (result.status === 'true') {
+                setModalTitle('Submit Success')
+                let errorMessage =
+                  'Insert new kontrak success, Kontrak ID : ' +
+                  result.kontrakId +
+                  ', Kontrak Ke : ' +
+                  result.kontrakKe
+
+                if (result.filename !== undefined) {
+                  console.log('test')
+                  let fileKontrak = result.filename
+                  trackPromise(
+                    generalDownload('/downloadFile?file=' + fileKontrak).then(function (result) {
+                      console.log('resDownloadFile: ', result)
+                      if (result !== undefined) {
+                        let fileOnly = fileKontrak.split('/')[fileKontrak.split('/').length - 1]
+                        console.log('fileOnly:', fileOnly)
+                        fileDownload(result, fileOnly)
+                      }
+                    }),
+                  ).catch((error) => console.error(error))
+                } else {
+                  errorMessage = errorMessage + '\n File still being processed'
+                  setShowButtonDownloadFIle(true)
+                  setFileId(result.FILE_ID)
+                }
+                // let fileName = result.filename
+                setErrorMessage(errorMessage)
+                handleShow()
+                console.log('success')
+                resetAllVariable()
+              } else {
+                setModalTitle('Submit Error')
+                setErrorMessage('Gagal Insert New KOL')
+                handleShow()
+                console.log('err')
+              }
+            })
+            .catch((error) => console.error(error)),
+        )
+      } catch (err) {
+        console.log(err)
+        setErrorMessage(err)
+        setShow(true)
+      }
+    }
+  }
+
   const ErrorModal = () => {
     return (
       <Modal show={show} onHide={handleClose}>
@@ -148,8 +329,45 @@ const InputNewContract = () => {
           <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>{errMessage}</Modal.Body>
+        {showButtonDownloadFIle && (
+          <Modal.Body>
+            <CButton color="light" disabled={disableBtnDwnld} onClick={downloadFile}>
+              Check File
+            </CButton>
+          </Modal.Body>
+        )}
       </Modal>
     )
+  }
+
+  const downloadFile = () => {
+    let resGetFileName = getRequestByUri('/checkFileStatus?FileId=' + fileId.toString())
+    try {
+      resGetFileName.then(function (result) {
+        console.log('checkFileStatus:', result)
+        if (result !== undefined) {
+          if (result.status === 'true') {
+            let filename = result.filename
+            let resDownloadFile = generalDownload('/downloadFile?file=' + filename)
+            try {
+              resDownloadFile.then(function (result) {
+                console.log('resDownloadFile: ', result)
+                if (result !== undefined) {
+                  let fileOnly = filename.split('/')[filename.split('/').length - 1]
+                  console.log('fileOnly:', fileOnly)
+                  fileDownload(result, fileOnly)
+                  setDisableBtnDwnld(true)
+                }
+              })
+            } catch (err) {
+              console.log(err)
+            }
+          }
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const resetAllVariable = () => {
@@ -160,6 +378,7 @@ const InputNewContract = () => {
     ShowRequestInputRef.current.resetTanggalAwalKerjaSama()
     ShowRequestInputRef.current.resetTanggalAkhirKerjaSama()
     ShowRequestInputRef.current.resetJenisSubMedia()
+    ShowRequestInputRef.current.resetDPKerjaSama()
     setIsViewDetailData(false)
   }
 
@@ -167,6 +386,7 @@ const InputNewContract = () => {
     const { onSubmit, id, ...rest } = props
     const [bookingSlot, setBookingSlot] = useState('')
     const [biayaKerjaSama, setBiayaKerjaSama] = useState('')
+    const [DPKerjaSama, setDPKerjaSama] = useState('')
     const [picAwal, setPicAwal] = useState('')
     const [fileMou, setFileMou] = useState('')
     const [subMediaList, setSubMediaList] = useState(null)
@@ -219,6 +439,12 @@ const InputNewContract = () => {
       },
       resetBiayaKerjaSama: () => {
         setBiayaKerjaSama('')
+      },
+      getDPKerjaSama: () => {
+        return DPKerjaSama
+      },
+      resetDPKerjaSama: () => {
+        setDPKerjaSama('')
       },
       getPicAwal: () => {
         return picAwal
@@ -306,30 +532,45 @@ const InputNewContract = () => {
                 // autoFocus="autofocus"
                 type="text"
                 placeholder="input biaya kerja sama" //"Input uername KOL"
-                value={biayaKerjaSama}
+                value={formatCurrency(biayaKerjaSama)}
                 onChange={(event) => {
-                  setBiayaKerjaSama(event.target.value)
+                  // console.log('event.target.value', event.target.value)
+                  // console.log('unformat', unFormatCurrency(event.target.value))
+                  setBiayaKerjaSama(unFormatCurrency(event.target.value))
                 }}
-                regexInput={/^[0-9\b]+$/}
+                // regexInput={/^[0-9\b]+$/}
               />
             </CCol>
           </CRow>
-          {/* <CRow className="mb-1">
+          <CRow className="mb-1">
             <CCol xs={2}>
-              <div className="p-2 border bg-light">PIC Awal</div>
+              <div className="p-2 border bg-light">DP Kerjasama (%)</div>
             </CCol>
             <CCol xs={10}>
               <GeneralFormInput
                 // autoFocus="autofocus"
                 type="text"
-                placeholder="input pic awal" //"Input uername KOL"
-                value={picAwal}
+                placeholder="input DP kerja sama dalam persentase" //"Input uername KOL"
+                value={DPKerjaSama}
                 onChange={(event) => {
-                  setPicAwal(event.target.value)
+                  setDPKerjaSama(event.target.value)
                 }}
+                regexInput={/^[0-9\b]+$/}
               />
             </CCol>
-          </CRow> */}
+          </CRow>
+          {biayaKerjaSama != '' && DPKerjaSama != '' && (
+            <CRow className="mb-1">
+              <CCol xs={2}>
+                <div className="p-2 border bg-light">Total DP</div>
+              </CCol>
+              <CCol xs={10}>
+                <div className="p-2 border bg-light">
+                  {formatCurrency(calculateDP(biayaKerjaSama, DPKerjaSama).toString())}
+                </div>
+              </CCol>
+            </CRow>
+          )}
           <CRow className="mb-1">
             <CCol xs={2}>
               <div className="p-2 border bg-light">Pilih Manager</div>
@@ -472,34 +713,35 @@ const InputNewContract = () => {
     )
   }
   return (
-    // <Suspense fallback={loading}>
-    <CRow>
-      <ErrorModal />
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Input new contract</strong>
-          </CCardHeader>
-          <CCardBody>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={listKolName}
-              sx={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Please input KOL name" size="small" />
-              )}
-              onChange={(event, value) => inputNameHandle(value)}
-            />
-          </CCardBody>
-        </CCard>
-        {isViewDetailDatta && detailData != null && <ShowDetailData />}
-        {isViewDetailDatta && detailData != null && (
-          <ShowRequestInput ref={ShowRequestInputRef} onSubmit={handleOnSubmit} id={id} />
-        )}
-      </CCol>
-    </CRow>
-    // </Suspense>
+    <Suspense fallback={loading}>
+      <LoadingIndicator />
+      <CRow>
+        <ErrorModal />
+        <CCol xs={12}>
+          <CCard className="mb-4">
+            <CCardHeader>
+              <strong>Input new contract</strong>
+            </CCardHeader>
+            <CCardBody>
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={listKolName}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Please input KOL name" size="small" />
+                )}
+                onChange={(event, value) => inputNameHandle(value)}
+              />
+            </CCardBody>
+          </CCard>
+          {isViewDetailDatta && detailData != null && <ShowDetailData />}
+          {isViewDetailDatta && detailData != null && (
+            <ShowRequestInput ref={ShowRequestInputRef} onSubmit={handleOnSubmit} id={id} />
+          )}
+        </CCol>
+      </CRow>
+    </Suspense>
   )
 }
 

@@ -11,6 +11,7 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+  cilSatelite,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -197,26 +198,54 @@ const _nav = [
     level: ['MK', 'MKSU'],
   },
   {
-    component: CNavTitle,
+    component: CNavGroup,
     name: 'Maintain Post',
+    icon: <CIcon icon={cilSatelite} customClassName="nav-icon" />,
     level: ['MK', 'MKSU'],
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add Post',
+        to: '/MaintainKol/InputNewPost',
+      },
+      {
+        component: CNavItem,
+        name: 'Input Post Review Manual',
+        to: '/MaintainKol/InputPostReviewManual',
+      },
+      {
+        component: CNavItem,
+        name: 'List Post',
+        to: '/MaintainKol/ListPost',
+      },
+      // {
+      //   component: CNavItem,
+      //   name: 'Test',
+      //   to: '/MaintainKol/TestPost',
+      // },
+    ],
   },
-  {
-    component: CNavItem,
-    name: 'Add Post',
-    // to: '/Upload/UploadDailyTrxFile',
-    to: '/MaintainKol/InputNewPost',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    level: ['MKSU', 'MK'],
-  },
-  {
-    component: CNavItem,
-    name: 'Input Post Review Manual',
-    // to: '/Upload/UploadDailyTrxFile',
-    to: '/MaintainKol/InputPostReviewManual',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    level: ['MKSU', 'MK'],
-  },
+  // {
+  //   component: CNavTitle,
+  //   name: 'Maintain Post',
+  //   level: ['MK', 'MKSU'],
+  // },
+  // {
+  //   component: CNavItem,
+  //   name: 'Add Post',
+  //   // to: '/Upload/UploadDailyTrxFile',
+  //   to: '/MaintainKol/InputNewPost',
+  //   icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  //   level: ['MKSU', 'MK'],
+  // },
+  // {
+  //   component: CNavItem,
+  //   name: 'Input Post Review Manual',
+  //   // to: '/Upload/UploadDailyTrxFile',
+  //   to: '/MaintainKol/InputPostReviewManual',
+  //   icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  //   level: ['MKSU', 'MK'],
+  // },
   {
     component: CNavTitle,
     name: 'Logout',

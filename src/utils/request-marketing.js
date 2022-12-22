@@ -3,6 +3,7 @@ import configData from '../appconfig.json'
 
 //const baseUrl = 'http://localhost:5000'
 const baseUrl = configData.MW_SERVER_URL
+const pythonUrl = configData.PYTHON_SERVER_URL
 const getRequestByUri = async (endpoint) => {
   // let data = JSON.stringify({
   //   Date: uploaddate,
@@ -140,6 +141,7 @@ const insertNewKontrak = async (
   subMedia,
   bookingSlot,
   biayaKerjaSama,
+  DP,
   manager,
   // fileMou,
   tanggalAwalKerjaSama,
@@ -151,6 +153,7 @@ const insertNewKontrak = async (
     SubMedia: subMedia,
     BookingSlot: bookingSlot,
     BiayaKerjaSama: biayaKerjaSama,
+    DP: DP,
     Manager: manager,
     // FileMou: fileMou,
     TanggalAwalKerjaSama: tanggalAwalKerjaSama,
@@ -169,12 +172,13 @@ const insertNewKontrak = async (
   }
 }
 
-const insertNewBrief = async (tema, konsep, script, refLink, user) => {
+const insertNewBrief = async (tema, konsep, script, refLink, managerId, user) => {
   let data = JSON.stringify({
     Tema: tema,
     Konsep: konsep,
     Script: script,
     RefLink: refLink,
+    ManagerId: managerId,
     User: user,
   })
   try {
@@ -211,12 +215,30 @@ const insertNewManager = async (managerName, noWhatsApp, email, alias, Roles, No
   }
 }
 
-const insertNewPost = async (kontrakId, managerId, briefId, linkPost, user) => {
+const insertNewPost = async (
+  kontrakId,
+  managerId,
+  briefId,
+  tglPostKontrak,
+  tglPostReal,
+  linkPost,
+  jumlahLike,
+  jumlahView,
+  jumlahShare,
+  jumlahComment,
+  user,
+) => {
   let data = JSON.stringify({
     KontrakId: kontrakId,
     ManagerId: managerId,
     BriefId: briefId,
+    TglPostKontrak: tglPostKontrak,
+    TglPostReal: tglPostReal,
     LinkPost: linkPost,
+    JumlahLike: jumlahLike,
+    JumlahView: jumlahView,
+    JumlahShare: jumlahShare,
+    JumlahComment: jumlahComment,
     User: user,
   })
   try {
@@ -246,6 +268,72 @@ const getFormatList = async (menu) => {
     console.error(err)
   }
 }
+
+const getVideoAndUserStats = async (linkPost) => {
+  let data = JSON.stringify({
+    video_url: linkPost,
+  })
+  try {
+    const res = await axios.post(pythonUrl + '/getTiktokVideoWithUserStats/', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const execSPWithoutInput = async (SPName) => {
+  let data = JSON.stringify({
+    SPName: SPName,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/execSPWithoutInput/', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const execSPWithInput = async (SPName, Input) => {
+  let data = JSON.stringify({
+    SPName: SPName,
+    Input: Input,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/execSPWithInput/', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const updatePostStatsById = async (Id) => {
+  let data = JSON.stringify({
+    Id: Id,
+  })
+  try {
+    const res = await axios.post(baseUrl + '/updatePostStatsById/', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 export {
   insertNewKOL,
   getFormatListKol,
@@ -259,4 +347,8 @@ export {
   insertNewManager,
   getFormatList,
   insertNewPost,
+  getVideoAndUserStats,
+  execSPWithoutInput,
+  execSPWithInput,
+  updatePostStatsById,
 }
