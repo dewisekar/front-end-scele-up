@@ -198,32 +198,30 @@ const _nav = [
     level: ['MK', 'MKSU'],
   },
   {
-    component: CNavGroup,
+    component: CNavTitle,
     name: 'Maintain Post',
-    icon: <CIcon icon={cilSatelite} customClassName="nav-icon" />,
     level: ['MK', 'MKSU'],
-    items: [
-      {
-        component: CNavItem,
-        name: 'Add Post',
-        to: '/MaintainKol/InputNewPost',
-      },
-      {
-        component: CNavItem,
-        name: 'Input Post Review Manual',
-        to: '/MaintainKol/InputPostReviewManual',
-      },
-      {
-        component: CNavItem,
-        name: 'List Post',
-        to: '/MaintainKol/ListPost',
-      },
-      // {
-      //   component: CNavItem,
-      //   name: 'Test',
-      //   to: '/MaintainKol/TestPost',
-      // },
-    ],
+  },
+  {
+    component: CNavItem,
+    name: 'Add Post',
+    to: '/MaintainKol/InputNewPost',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+  },
+  {
+    component: CNavItem,
+    name: 'Input Post Review Manual',
+    to: '/MaintainKol/InputPostReviewManual',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+  },
+  {
+    component: CNavItem,
+    name: 'List Post',
+    to: '/MaintainKol/ListPost',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
   },
   // {
   //   component: CNavTitle,

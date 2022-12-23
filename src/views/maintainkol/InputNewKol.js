@@ -386,13 +386,13 @@ const InputNewKol = () => {
             </CRow>
             <CRow className="mb-1">
               <CCol xs={3}>
-                <div className="p-2 border bg-light">No. KTP</div>
+                <div className="p-2 border bg-light">NIK</div>
               </CCol>
               <CCol xs={9}>
                 <CFormInput
                   autoFocus="autofocus"
                   type="text"
-                  placeholder="Input No. KTP"
+                  placeholder="Input NIK"
                   aria-label="default input example"
                   value={noKTP}
                   onChange={(e) => {

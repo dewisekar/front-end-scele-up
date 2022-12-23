@@ -550,7 +550,7 @@ const InputNewContract = () => {
               <GeneralFormInput
                 // autoFocus="autofocus"
                 type="text"
-                placeholder="input DP kerja sama dalam persentase" //"Input uername KOL"
+                placeholder="input DP kerja sama dalam persentase (jika fullpayment maka isi dengan angka 100)" //"Input uername KOL"
                 value={DPKerjaSama}
                 onChange={(event) => {
                   setDPKerjaSama(event.target.value)

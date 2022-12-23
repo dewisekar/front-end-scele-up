@@ -44,7 +44,7 @@ const InputNewManager = () => {
       setModalTitle('Submit Error')
       handleShow()
     } else if (noKTP == '') {
-      setErrorMessage('Please input KTP number')
+      setErrorMessage('Please input NIK number')
       setModalTitle('Submit Error')
       handleShow()
     } else if (email == '') {
@@ -127,7 +127,7 @@ const InputNewManager = () => {
                 <GeneralFormInput
                   // autoFocus="autofocus"
                   type="text"
-                  placeholder="input alias (only 1 word, cannot be separated by spaces)" //"Input uername KOL"
+                  placeholder="input alias (only 1 word, cannot separated by spaces)" //"Input uername KOL"
                   value={alias}
                   onChange={(event) => {
                     setAlias(event.target.value)
@@ -174,13 +174,13 @@ const InputNewManager = () => {
             </CRow>
             <CRow className="mb-1">
               <CCol xs={2}>
-                <div className="p-2 border bg-light">No. KTP</div>
+                <div className="p-2 border bg-light">NIK</div>
               </CCol>
               <CCol xs={10}>
                 <GeneralFormInput
                   // autoFocus="autofocus"
                   type="text"
-                  placeholder="input manager No. KTP" //"Input uername KOL"
+                  placeholder="input manager NIK" //"Input uername KOL"
                   value={noKTP}
                   onChange={(event) => {
                     setNoKTP(event.target.value)

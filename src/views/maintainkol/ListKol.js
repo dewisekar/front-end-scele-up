@@ -57,8 +57,8 @@ const ListKol = () => {
       console.log(formatTable)
       return (
         <MDBDataTable scrollX striped bordered data={dataInput}>
-          <MDBTableHead columns={dataInput.columns} />
-          <MDBTableBody rows={dataInput.rows} />
+          {/* <MDBTableHead columns={dataInput.columns} />
+          <MDBTableBody rows={dataInput.rows} /> */}
         </MDBDataTable>
       )
     } else {
