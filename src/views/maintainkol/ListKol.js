@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import { MDBDataTable } from 'mdbreact'
 import { getFormatListKol, getListKol } from '../../utils/request-marketing'
-import { LoadingAnimation } from 'src/components'
+import { LoadingAnimation, NoDataAvailable } from 'src/components'
 
 const ListKol = () => {
   const [formatTable, setFormatTable] = useState(null)
@@ -74,13 +74,9 @@ const ListKol = () => {
           <MDBTableBody rows={dataInput.rows} /> */}
         </MDBDataTable>
       )
-    } else {
-      return (
-        <div className="text-center">
-          <h6>No data available</h6>
-        </div>
-      )
     }
+
+    return <NoDataAvailable />
   }
 
   return <>{isLoading ? renderLoadingAnimation() : renderContent()}</>

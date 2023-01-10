@@ -8,6 +8,7 @@ import DocsCallout from './DocsCallout'
 import DocsLink from './DocsLink'
 import DocsExample from './DocsExample'
 import LoadingAnimation from './LoadingAnimation'
+import NoDataAvailable from './NoDataAvailable'
 
 export {
   AppBreadcrumb,
@@ -20,4 +21,5 @@ export {
   DocsLink,
   DocsExample,
   LoadingAnimation,
+  NoDataAvailable,
 }
