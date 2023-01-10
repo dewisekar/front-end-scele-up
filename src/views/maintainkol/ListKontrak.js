@@ -1,27 +1,14 @@
 import React, { useState, useEffect, Suspense } from 'react'
-import {
-  CButton,
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CBadge,
-  CFormInput,
-  CFormLabel,
-  CFormTextarea,
-  CRow,
-  CFormSelect,
-} from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 import { getRequestByUri } from '../../utils/request-marketing'
-
-const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
-  </div>
-)
+import { LoadingAnimation } from '../../components'
 
 const ListKontrak = () => {
+  const [formatTable, setFormatTable] = useState(null)
+  const [dataTable, setDataTable] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
     let resGetFormatListKontrak = getRequestByUri('/getFormatListKontrak')
     try {
@@ -41,12 +28,38 @@ const ListKontrak = () => {
         console.log('resGetListKontrak:', result.status)
         if (result.status === 'true') {
           setDataTable(result.message)
+          setIsLoading(false)
         }
       })
     } catch (err) {
       console.log(err)
     }
   }, [])
+
+  const renderLoadingAnimation = () => {
+    return (
+      <CRow>
+        <LoadingAnimation />
+      </CRow>
+    )
+  }
+
+  const renderTable = () => {
+    return (
+      <CRow>
+        <CCol xs={12}>
+          <CCard className="mb-4">
+            <CCardHeader>
+              <strong>List Kontrak</strong> {/*<small>File input</small>*/}
+            </CCardHeader>
+            <CCardBody>
+              <DatatablePage data={dataTable} />
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+    )
+  }
 
   const DatatablePage = (props) => {
     if (formatTable != null) {
@@ -63,31 +76,14 @@ const ListKontrak = () => {
       )
     } else {
       return (
-        <div className="text-danger">
-          <h6>Can not find format</h6>
+        <div className="text-center">
+          <h6>No data available</h6>
         </div>
       )
     }
   }
-  const [formatTable, setFormatTable] = useState(null)
-  const [dataTable, setDataTable] = useState(null)
 
-  return (
-    <Suspense fallback={loading}>
-      <CRow>
-        <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardHeader>
-              <strong>List Kontrak</strong> {/*<small>File input</small>*/}
-            </CCardHeader>
-            <CCardBody>
-              <DatatablePage data={dataTable} />
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
-    </Suspense>
-  )
+  return <>{isLoading ? renderLoadingAnimation() : renderTable()}</>
 }
 
 export default ListKontrak
