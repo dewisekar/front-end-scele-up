@@ -204,6 +204,13 @@ const _nav = [
   },
   {
     component: CNavItem,
+    name: 'Post Calendar',
+    to: '/MaintainKol/PostCalendar',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+  },
+  {
+    component: CNavItem,
     name: 'Add Post',
     to: '/MaintainKol/InputNewPost',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,

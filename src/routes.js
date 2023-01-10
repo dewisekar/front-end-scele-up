@@ -71,7 +71,8 @@ const ListManager = React.lazy(() => import('./views/maintainkol/ListManager'))
 const InputNewPost = React.lazy(() => import('./views/maintainkol/InputNewPost'))
 const ListPost = React.lazy(() => import('./views/maintainkol/ListPost'))
 const ViewPost = React.lazy(() => import('./views/maintainkol/ViewPost'))
-const TestPost = React.lazy(() => import('./views/maintainkol/TestPost'))
+const PostCalendar = React.lazy(() => import('./views/maintainkol/PostCalendar'))
+// const TestPost = React.lazy(() => import('./views/maintainkol/TestPost'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -173,10 +174,16 @@ const routes = [
     element: ViewPost,
   },
   {
-    path: '/MaintainKol/TestPost',
-    name: 'Test Post',
-    element: TestPost,
+    path: '/MaintainKol/PostCalendar',
+    name: 'Post Calendar',
+    element: PostCalendar,
   },
+  // },
+  // {
+  //   path: '/MaintainKol/TestPost',
+  //   name: 'Test Post',
+  //   element: TestPost,
+  // },
 ]
 
 export default routes
