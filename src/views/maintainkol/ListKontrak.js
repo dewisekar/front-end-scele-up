@@ -28,8 +28,8 @@ const ListKontrak = () => {
         console.log('resGetListKontrak:', result.status)
         if (result.status === 'true') {
           setDataTable(result.message)
-          setIsLoading(false)
         }
+        setIsLoading(false)
       })
     } catch (err) {
       console.log(err)
