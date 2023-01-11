@@ -1,11 +1,11 @@
 import React, { useEffect, useState, Suspense } from 'react'
 import { Modal } from 'react-bootstrap'
-import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow, CFormSelect } from '@coreui/react'
+import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { convertDataToSelectOptions } from '../../utils/GeneralFormInput'
 import Select from 'react-select'
-import { getRequestByUri, insertNewPost, getVideoAndUserStats } from '../../utils/request-marketing'
+import { getRequestByUri, insertNewPost } from '../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
 
 const findKolIdByKontrakId = (kontrakList, KontrakId) => {
@@ -18,28 +18,24 @@ const findKolIdByKontrakId = (kontrakList, KontrakId) => {
 }
 const InputNewPost = () => {
   const [state, setState] = useState({})
-  const [tanggalUpKontrak, setTanggalUpKontrak] = useState(new Date())
-  const [tanggalUpReal, setTanggalUpReal] = useState(new Date())
+  const today = new Date()
+  const [tanggalUpKontrak, setTanggalUpKontrak] = useState(today)
   const [kontrakKol, setKontrakKol] = useState(null)
   const [managerKol, setManagerKol] = useState(null)
   const [briefCode, setBriefCode] = useState(null)
   const [linkPost, setLinkPost] = useState('')
-  const [productAttached, setProductAttached] = useState('default')
+  const errorTitle = 'Submit Error'
 
-  const [productList, setProductList] = useState(null)
   const [kolList, setKolList] = useState(null)
   const [managerList, setManagerList] = useState(null)
   const [briefCodeList, setBriefCodeList] = useState(null)
-  const [kolDetail, setKolDetail] = useState(null) //need to reset
+  const [kolDetail, setKolDetail] = useState(null)
 
   const [show, setShow] = useState(false)
   const [errMessage, setErrorMessage] = useState('')
   const [modalTitle, setModalTitle] = useState('')
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-  const [isLinkFound, setIsLinkFound] = useState(false)
-  const [postDetail, setPostDetail] = useState(null)
-  const [userDetail, setUserDetail] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -49,11 +45,13 @@ const InputNewPost = () => {
         console.log('resGetListKontrakIteration:', result.status)
         if (result.status === 'true') {
           setKolList(result.message)
+          console.log('ini hasil fetch', result.message)
         }
       })
     } catch (err) {
       console.log(err)
     }
+
     let resGetListManager = getRequestByUri('/getListManager')
     try {
       resGetListManager.then(function (result) {
@@ -65,6 +63,7 @@ const InputNewPost = () => {
     } catch (err) {
       console.log(err)
     }
+
     let resGetListBrief = getRequestByUri('/getListBrief')
     try {
       resGetListBrief.then(function (result) {
@@ -89,131 +88,60 @@ const InputNewPost = () => {
     setLinkPost('')
   }
 
-  const handleResetLinkPost = () => {
-    setIsLinkFound(false)
-    setPostDetail(null)
-    setUserDetail(null)
-    setLinkPost('')
-  }
-  const handleCheckLinkPost = () => {
-    if (linkPost == '') {
-      setErrorMessage('Please fill link post')
-      setModalTitle('Submit Error')
-      handleShow()
-    } else if (kolDetail == null || kolDetail.USERNAME == null) {
-      setErrorMessage('Please select KOL First')
-      setModalTitle('Submit Error')
-      handleShow()
-    } else {
-      console.log('linkPost:', linkPost)
-      let resGetVideoAndUserStats = getVideoAndUserStats(linkPost)
-      try {
-        resGetVideoAndUserStats.then(function (result) {
-          console.log('resGetVideoAndUserStats:', result.status)
-          if (result.status == true) {
-            setIsLinkFound(true)
-            let resultVideo = {
-              View: result.data.video.viewCount,
-              Like: result.data.video.likeCount,
-              Share: result.data.video.shareCount,
-              Comment: result.data.video.commentCount,
-            }
-            let resultUser = {
-              Followers: result.data.user.followerCount,
-              Like: result.data.user.likeCount,
-              Username: result.data.author.id,
-              UserFullName: result.data.author.username,
-            }
-            setPostDetail(resultVideo)
-            setUserDetail(resultUser)
-          } else {
-            setErrorMessage(result.message)
-            setModalTitle('Check Error')
-            handleShow()
-          }
-        })
-      } catch (err) {
-        console.log(err)
-        setErrorMessage('Can not find post')
-        setModalTitle('Check Error')
-        handleShow()
-      }
-    }
+  const handleResetForm = () => {
+    setKontrakKol(null)
+    setManagerKol(null)
+    setBriefCode(null)
+    setKolDetail(null)
+    setTanggalUpKontrak(today)
   }
 
   const handleOnSubmit = () => {
     if (kontrakKol == null) {
       setErrorMessage('Please select KOL')
-      setModalTitle('Submit Error')
+      setModalTitle(errorTitle)
       handleShow()
     } else if (managerKol == null) {
       setErrorMessage('Please select manager')
-      setModalTitle('Submit Error')
+      setModalTitle(errorTitle)
       handleShow()
     } else if (briefCode == null) {
       setErrorMessage('Please select brief')
-      setModalTitle('Submit Error')
-      handleShow()
-    } else if (linkPost == '') {
-      setErrorMessage('Please fill link post')
-      setModalTitle('Submit Error')
-      handleShow()
-    } else if (isLinkFound != true) {
-      setErrorMessage('Please fill link post')
-      setModalTitle('Submit Error')
+      setModalTitle(errorTitle)
       handleShow()
     } else {
       let user = sessionStorage.getItem('user')
-      let resInsertNewPost = insertNewPost(
-        kontrakKol.value,
-        managerKol.value,
-        briefCode.value,
+      const payload = {
+        kontrakKol: kontrakKol.value,
+        managerKol: managerKol.value,
+        briefCode: briefCode.value,
         tanggalUpKontrak,
-        tanggalUpReal,
-        linkPost,
-        postDetail.Like,
-        postDetail.View,
-        postDetail.Share,
-        postDetail.Comment,
         user,
-      )
+      }
+      console.log('ini payload', payload)
+      // let resInsertNewPost = insertNewPost(
+      //   kontrakKol.value,
+      //   managerKol.value,
+      //   briefCode.value,
+      //   tanggalUpKontrak,
+      //   user,
+      // )
       try {
-        resInsertNewPost.then(function (result) {
-          console.log('resInsertNewPost:', result.status)
-          if (result.status === 'true') {
-            setModalTitle('Submit Success')
-            setErrorMessage('Insert new post success, Post Id : ' + result.postId)
-            handleShow()
-            console.log('success')
-            resetAllVariable()
-          }
-        })
+        // resInsertNewPost.then(function (result) {
+        //   console.log('resInsertNewPost:', result.status)
+        //   if (result.status === 'true') {
+        //     setModalTitle('Submit Success')
+        //     setErrorMessage('Insert new post success, Post Id : ' + result.postId)
+        //     handleShow()
+        //     console.log('success')
+        //     resetAllVariable()
+        //   }
+        // })
       } catch (err) {
         console.log(err)
       }
     }
   }
-
-  // const handleSelectedKol = (index) => {
-  //   if (index == 'default') {
-  //     setKolDetail(null)
-  //   } else {
-  //     let kolId = kolList[index]['Kol Id']
-  //     let kontrakId = kolList[index]['Kontrak Id']
-  //     setKontrakKol(kontrakId)
-  //     let resGetKolDetail = getRequestByUri('/getKolDetail?Id=' + kolId.toString())
-  //     try {
-  //       resGetKolDetail.then(function (result) {
-  //         console.log('resGetKolDetail:', result.status)
-  //         if (result.status === 'true') {
-  //           setKolDetail(result.message)
-  //         }
-  //       })
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   }
-  // }
 
   const handleSelectedKol = (Id) => {
     if (Id != null) {
@@ -244,7 +172,10 @@ const InputNewPost = () => {
     return (
       <CRow className="mb-1">
         <CCol xs={3}>
-          <div className="p-2 border bg-light">Pilih KOL</div>
+          <div className="p-2 border bg-light">
+            Pilih KOL <br></br>
+            <small className="text-info">Nama KOL - Platform - Kontrak Ke</small>
+          </div>
         </CCol>
         <CCol xs={9}>
           <Select
@@ -357,6 +288,68 @@ const InputNewPost = () => {
     )
   }
 
+  const renderNumberOfSlot = () => {
+    return (
+      <CRow className="mb-1">
+        <CCol xs={3}>
+          <div className="p-2 border bg-light">Username</div>
+        </CCol>
+        <CCol xs={9}>
+          <div className="p-2 border bg-light">{kolDetail.USERNAME}</div>
+        </CCol>
+      </CRow>
+    )
+  }
+
+  const renderPostDate = () => {
+    return (
+      <CRow className="mb-1">
+        <CCol xs={3}>
+          <div className="p-2 border bg-light">Tanggal up sesuai kontrak</div>
+        </CCol>
+        <CCol xs={9}>
+          <div>
+            <DatePicker
+              selected={tanggalUpKontrak}
+              onChange={(date: Date) => setTanggalUpKontrak(date)}
+            />
+          </div>
+        </CCol>
+      </CRow>
+    )
+  }
+
+  const renderSubmitButton = () => {
+    return (
+      <CRow className="mt-4">
+        <CCol xs={10}>
+          <CButton
+            color="info"
+            active={'active' === 'active'}
+            variant="outline"
+            key="1"
+            className="w-100"
+            onClick={handleOnSubmit}
+          >
+            Submit
+          </CButton>
+        </CCol>
+        <CCol xs={2}>
+          <CButton
+            color="secondary"
+            active={'active' === 'active'}
+            variant="outline"
+            key="1"
+            onClick={handleResetForm}
+            className="w-100"
+          >
+            Reset
+          </CButton>
+        </CCol>
+      </CRow>
+    )
+  }
+
   const renderForm = () => {
     return (
       <CCardBody>
@@ -364,30 +357,8 @@ const InputNewPost = () => {
         {kolDetail && renderChosenKolDetail()}
         {managerList && renderManager()}
         {briefCodeList && renderBriefCode()}
-        <CRow className="mb-1">
-          <CCol xs={3}>
-            <div className="p-2 border bg-light">Tanggal up sesuai kontrak</div>
-          </CCol>
-          <CCol xs={9}>
-            <div className="p-2">
-              <DatePicker
-                selected={tanggalUpKontrak}
-                onChange={(date: Date) => setTanggalUpKontrak(date)}
-              />
-            </div>
-          </CCol>
-        </CRow>
-        <CRow className="mt-4">
-          <CButton
-            color="secondary"
-            active={'active' === 'active'}
-            variant="outline"
-            key="1"
-            onClick={handleOnSubmit}
-          >
-            Submit
-          </CButton>
-        </CRow>
+        {renderPostDate()}
+        {renderSubmitButton()}
       </CCardBody>
     )
   }
@@ -404,7 +375,7 @@ const InputNewPost = () => {
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
-                <strong>Input new post</strong>
+                <strong>Input New Post Plan</strong>
               </CCardHeader>
               {renderForm()}
             </CCard>
