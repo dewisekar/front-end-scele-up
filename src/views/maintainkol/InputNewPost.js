@@ -128,13 +128,13 @@ const InputNewPost = () => {
     try {
       resInsertNewPost.then(function (result) {
         console.log('resInsertNewPost:', result.status)
-        // if (result.status === 'true') {
-        //   setModalTitle('Submit Success')
-        //   setErrorMessage('Insert new post success, Post Id : ' + result.postId)
-        //   handleShow()
-        //   console.log('success')
-        //   handleResetForm()
-        // }
+        if (result.status === 'true') {
+          setModalTitle('Submit Success')
+          setErrorMessage('Insert new post success, Post Id : ' + result.postId)
+          handleShow()
+          console.log('success')
+          handleResetForm()
+        }
       })
     } catch (err) {
       console.log(err)
