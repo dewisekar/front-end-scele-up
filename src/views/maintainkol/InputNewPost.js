@@ -3,19 +3,10 @@ import { Modal } from 'react-bootstrap'
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow, CFormSelect } from '@coreui/react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import {
-  GeneralFormInput,
-  GeneralTextArea,
-  convertDataToSelectOptions,
-} from '../../utils/GeneralFormInput'
+import { convertDataToSelectOptions } from '../../utils/GeneralFormInput'
 import Select from 'react-select'
 import { getRequestByUri, insertNewPost, getVideoAndUserStats } from '../../utils/request-marketing'
-
-const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
-  </div>
-)
+import { LoadingAnimation } from 'src/components'
 
 const findKolIdByKontrakId = (kontrakList, KontrakId) => {
   let foundArr = kontrakList.filter((item) => item['Kontrak Id'] == KontrakId)
@@ -49,6 +40,7 @@ const InputNewPost = () => {
   const [isLinkFound, setIsLinkFound] = useState(false)
   const [postDetail, setPostDetail] = useState(null)
   const [userDetail, setUserDetail] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     let resGetListKontrakIteration = getRequestByUri('/getListKontrakIteration')
@@ -80,6 +72,7 @@ const InputNewPost = () => {
         if (result.status === 'true') {
           setBriefCodeList(result.message)
         }
+        setIsLoading(false)
       })
     } catch (err) {
       console.log(err)
@@ -224,6 +217,7 @@ const InputNewPost = () => {
 
   const handleSelectedKol = (Id) => {
     if (Id != null) {
+      setIsLoading(true)
       let kolId = findKolIdByKontrakId(kolList, Id)
       if (kolId != null) {
         let resGetKolDetail = getRequestByUri('/getKolDetail?Id=' + kolId.toString())
@@ -240,23 +234,184 @@ const InputNewPost = () => {
       } else {
         console.log('Warning kolId is null')
       }
+      setIsLoading(false)
     } else {
       console.log('Warning id is null')
     }
-    // let kolId = kolList[index]['Kol Id']
-    // let kontrakId = kolList[index]['Kontrak Id']
-    // setKontrakKol(kontrakId)
-    // let resGetKolDetail = getRequestByUri('/getKolDetail?Id=' + kolId.toString())
-    // try {
-    //   resGetKolDetail.then(function (result) {
-    //     console.log('resGetKolDetail:', result.status)
-    //     if (result.status === 'true') {
-    //       setKolDetail(result.message)
-    //     }
-    //   })
-    // } catch (err) {
-    //   console.log(err)
-    // }
+  }
+
+  const renderKolDropdown = () => {
+    return (
+      <CRow className="mb-1">
+        <CCol xs={3}>
+          <div className="p-2 border bg-light">Pilih KOL</div>
+        </CCol>
+        <CCol xs={9}>
+          <Select
+            options={convertDataToSelectOptions(kolList, 'Kontrak Id', 'Kontrak Name')}
+            placeholder="Pilih KOL"
+            value={kontrakKol}
+            isClearable={true}
+            onChange={(e) => {
+              setKontrakKol(e)
+              if (e != null) {
+                handleSelectedKol(e.value)
+              } else {
+                setKolDetail(null)
+              }
+            }}
+          />
+        </CCol>
+      </CRow>
+    )
+  }
+
+  const renderKolUsername = () => {
+    return (
+      <CRow className="mb-1">
+        <CCol xs={3}>
+          <div className="p-2 border bg-light">Username</div>
+        </CCol>
+        <CCol xs={9}>
+          <div className="p-2 border bg-light">{kolDetail.USERNAME}</div>
+        </CCol>
+      </CRow>
+    )
+  }
+
+  const renderKolPlatform = () => {
+    return (
+      <CRow className="mb-1">
+        <CCol xs={3}>
+          <div className="p-2 border bg-light">Platform</div>
+        </CCol>
+        <CCol xs={9}>
+          <div className="p-2 border bg-light">{kolDetail.PLATFORM}</div>
+        </CCol>
+      </CRow>
+    )
+  }
+
+  const renderKolName = () => {
+    return (
+      <CRow className="mb-1">
+        <CCol xs={3}>
+          <div className="p-2 border bg-light">Nama</div>
+        </CCol>
+        <CCol xs={9}>
+          <div className="p-2 border bg-light">{kolDetail.NAME}</div>
+        </CCol>
+      </CRow>
+    )
+  }
+
+  const renderChosenKolDetail = () => {
+    return (
+      <>
+        {renderKolUsername()}
+        {renderKolPlatform()}
+        {renderKolName()}
+      </>
+    )
+  }
+
+  const renderManager = () => {
+    return (
+      <CRow className="mb-1">
+        <CCol xs={3}>
+          <div className="p-2 border bg-light">Pilih Manager KOL</div>
+        </CCol>
+        <CCol xs={9}>
+          <Select
+            options={convertDataToSelectOptions(managerList, 'Manager Id', 'Manager Name')}
+            placeholder="Pilih Manager"
+            value={managerKol}
+            onChange={(e) => {
+              // console.log(e)
+              setManagerKol(e)
+            }}
+          />
+        </CCol>
+      </CRow>
+    )
+  }
+
+  const renderBriefCode = () => {
+    return (
+      <CRow className="mb-1">
+        <CCol xs={3}>
+          <div className="p-2 border bg-light">Pilih Brief</div>
+        </CCol>
+        <CCol xs={9}>
+          <Select
+            options={convertDataToSelectOptions(briefCodeList, 'Brief Id', 'Brief Code Tema')}
+            placeholder="Pilih Brief"
+            value={briefCode}
+            onChange={(e) => {
+              // console.log(e)
+              setBriefCode(e)
+            }}
+          />
+        </CCol>
+      </CRow>
+    )
+  }
+
+  const renderForm = () => {
+    return (
+      <CCardBody>
+        {kolList && renderKolDropdown()}
+        {kolDetail && renderChosenKolDetail()}
+        {managerList && renderManager()}
+        {briefCodeList && renderBriefCode()}
+        <CRow className="mb-1">
+          <CCol xs={3}>
+            <div className="p-2 border bg-light">Tanggal up sesuai kontrak</div>
+          </CCol>
+          <CCol xs={9}>
+            <div className="p-2">
+              <DatePicker
+                selected={tanggalUpKontrak}
+                onChange={(date: Date) => setTanggalUpKontrak(date)}
+              />
+            </div>
+          </CCol>
+        </CRow>
+        <CRow className="mt-4">
+          <CButton
+            color="secondary"
+            active={'active' === 'active'}
+            variant="outline"
+            key="1"
+            onClick={handleOnSubmit}
+          >
+            Submit
+          </CButton>
+        </CRow>
+      </CCardBody>
+    )
+  }
+
+  const renderLoadingAnimation = () => {
+    return <LoadingAnimation />
+  }
+
+  const renderContent = () => {
+    return (
+      <Suspense>
+        <CRow>
+          <ErrorModal />
+          <CCol xs={12}>
+            <CCard className="mb-4">
+              <CCardHeader>
+                <strong>Input new post</strong>
+              </CCardHeader>
+              {renderForm()}
+            </CCard>
+          </CCol>
+        </CRow>
+      </Suspense>
+    )
   }
 
   const ErrorModal = () => {
@@ -269,328 +424,8 @@ const InputNewPost = () => {
       </Modal>
     )
   }
-  return (
-    <Suspense fallback={loading}>
-      <CRow>
-        <ErrorModal />
-        <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardHeader>
-              <strong>Input new post</strong>
-            </CCardHeader>
-            <CCardBody>
-              {/* <CRow className="mb-1">
-                <CCol xs={3}>
-                  <div className="p-2 border bg-light">Pilih KOL</div>
-                </CCol>
-                <CCol xs={9}>
-                  <CFormSelect
-                    aria-label="Large select example"
-                    onChange={(e) => {
-                      // console.log(e.target.value)
-                      // setKontrakKol(e.target.value)
-                      handleSelectedKol(e.target.value)
-                      // if (e.target.value === 'Manual') {
-                      //   setHideInputManual(false)
-                      // } else {
-                      //   setHideInputManual(true)
-                      // }
-                    }}
-                  >
-                    <option value="default">Pilih KOL</option>
-                    {kolList != null &&
-                      kolList.map((value, index) => (
-                        <option key={value['Kontrak Id']} value={index}>
-                          {value['Kontrak Name']}
-                        </option>
-                      ))}
-                  </CFormSelect>
-                </CCol>
-              </CRow> */}
-              {kolList && (
-                <CRow className="mb-1">
-                  <CCol xs={3}>
-                    <div className="p-2 border bg-light">Pilih KOL</div>
-                  </CCol>
-                  <CCol xs={9}>
-                    <Select
-                      options={convertDataToSelectOptions(kolList, 'Kontrak Id', 'Kontrak Name')}
-                      placeholder="Pilih KOL"
-                      value={kontrakKol}
-                      isClearable={true}
-                      onChange={(e) => {
-                        // console.log(e)
-                        setKontrakKol(e)
-                        if (e != null) {
-                          handleSelectedKol(e.value)
-                        } else {
-                          setKolDetail(null)
-                        }
-                      }}
-                    />
-                  </CCol>
-                </CRow>
-              )}
-              {kolDetail != null && kolDetail.USERNAME != null && (
-                <CRow className="mb-1">
-                  <CCol xs={3}>
-                    <div className="p-2 border bg-light">Username</div>
-                  </CCol>
-                  <CCol xs={9}>
-                    <div className="p-2 border bg-light">{kolDetail.USERNAME}</div>
-                  </CCol>
-                </CRow>
-              )}
-              {kolDetail != null && kolDetail.PLATFORM != null && (
-                <CRow className="mb-1">
-                  <CCol xs={3}>
-                    <div className="p-2 border bg-light">Platform</div>
-                  </CCol>
-                  <CCol xs={9}>
-                    <div className="p-2 border bg-light">{kolDetail.PLATFORM}</div>
-                  </CCol>
-                </CRow>
-              )}
-              {kolDetail != null && kolDetail.NAME != null && (
-                <CRow className="mb-1">
-                  <CCol xs={3}>
-                    <div className="p-2 border bg-light">Nama</div>
-                  </CCol>
-                  <CCol xs={9}>
-                    <div className="p-2 border bg-light">{kolDetail.NAME}</div>
-                  </CCol>
-                </CRow>
-              )}
-              {/* <CRow className="mb-1">
-                <CCol xs={3}>
-                  <div className="p-2 border bg-light">Pilih Manager KOL</div>
-                </CCol>
-                <CCol xs={9}>
-                  <CFormSelect
-                    aria-label="Large select example"
-                    onChange={(e) => {
-                      setManagerKol(e.target.value)
-                    }}
-                  >
-                    <option value="default">Pilih Manager</option>
-                    {managerList != null &&
-                      managerList.map((value, index) => (
-                        <option key={index} value={value['Manager Id']}>
-                          {value['Manager Name']}
-                        </option>
-                      ))}
-                  </CFormSelect>
-                </CCol>
-              </CRow> */}
-              {managerList && (
-                <CRow className="mb-1">
-                  <CCol xs={3}>
-                    <div className="p-2 border bg-light">Pilih Manager KOL</div>
-                  </CCol>
-                  <CCol xs={9}>
-                    <Select
-                      options={convertDataToSelectOptions(
-                        managerList,
-                        'Manager Id',
-                        'Manager Name',
-                      )}
-                      placeholder="Pilih Manager"
-                      value={managerKol}
-                      onChange={(e) => {
-                        // console.log(e)
-                        setManagerKol(e)
-                      }}
-                    />
-                  </CCol>
-                </CRow>
-              )}
-              {briefCodeList && (
-                <CRow className="mb-1">
-                  <CCol xs={3}>
-                    <div className="p-2 border bg-light">Pilih Brief</div>
-                  </CCol>
-                  <CCol xs={9}>
-                    <Select
-                      options={convertDataToSelectOptions(
-                        briefCodeList,
-                        'Brief Id',
-                        'Brief Code Tema',
-                      )}
-                      placeholder="Pilih Brief"
-                      value={briefCode}
-                      onChange={(e) => {
-                        // console.log(e)
-                        setBriefCode(e)
-                      }}
-                    />
-                  </CCol>
-                </CRow>
-              )}
-              {/* <CRow className="mb-1">
-                <CCol xs={3}>
-                  <div className="p-2 border bg-light">Pilih Brief</div>
-                </CCol>
-                <CCol xs={9}>
-                  <CFormSelect
-                    aria-label="Large select example"
-                    onChange={(e) => {
-                      setBriefCode(e.target.value)
-                      // if (e.target.value === 'Manual') {
-                      //   setHideInputManual(false)
-                      // } else {
-                      //   setHideInputManual(true)
-                      // }
-                    }}
-                  >
-                    <option value="default">Pilih Brief</option>
-                    {briefCodeList != null &&
-                      briefCodeList.map((value, index) => (
-                        <option key={index} value={value['Brief Id']}>
-                          {value['Brief Code']}
-                        </option>
-                      ))}
-                  </CFormSelect>
-                </CCol>
-              </CRow> */}
-              {/* {kolDetail != null && kolDetail.PLATFORM != null && kolDetail.PLATFORM == 'Tiktok' && (
-                <CRow className="mb-1">
-                  <CCol xs={3}>
-                    <div className="p-2 border bg-light">Pilih Product Attached</div>
-                  </CCol>
-                  <CCol xs={9}>
-                    <CFormSelect
-                      aria-label="Large select example"
-                      onChange={(e) => {
-                        setProductAttached(e.target.value)
-                        // if (e.target.value === 'Manual') {
-                        //   setHideInputManual(false)
-                        // } else {
-                        //   setHideInputManual(true)
-                        // }
-                      }}
-                    >
-                      <option value="default">Pilih product attached keranjang kuning</option>
-                      {productList != null &&
-                        productList.map((value) => (
-                          <option key={value} value={value}>
-                            {value}
-                          </option>
-                        ))}
-                    </CFormSelect>
-                  </CCol>
-                </CRow>
-              )} */}
-              <CRow className="mb-1">
-                <CCol xs={3}>
-                  <div className="p-2 border bg-light">Link Post</div>
-                </CCol>
-                <CCol xs={7}>
-                  <GeneralFormInput
-                    // autoFocus="autofocus"
-                    type="text"
-                    placeholder="input link post" //"Input uername KOL"
-                    value={linkPost}
-                    onChange={(event) => {
-                      setLinkPost(event.target.value)
-                    }}
-                  />
-                </CCol>
-                <CCol xs={1}>
-                  <CButton
-                    color="secondary"
-                    active={'active' === 'active'}
-                    variant="outline"
-                    key="1"
-                    onClick={handleCheckLinkPost}
-                  >
-                    Check
-                  </CButton>
-                </CCol>
-                <CCol xs={1}>
-                  <CButton
-                    color="secondary"
-                    active={'active' === 'active'}
-                    variant="outline"
-                    key="1"
-                    onClick={handleResetLinkPost}
-                  >
-                    Reset
-                  </CButton>
-                </CCol>
-              </CRow>
-              {isLinkFound && postDetail != null && userDetail != null && (
-                <div>
-                  <CRow className="mb-1">
-                    <CCol xs={3}>
-                      <div className="p-2 border bg-light">Jumlah Views, Like, Share, Comment</div>
-                    </CCol>
-                    <CCol xs={9}>
-                      <div className="p-2 border bg-light">
-                        {postDetail.View +
-                          ', ' +
-                          postDetail.Like +
-                          ', ' +
-                          postDetail.Share +
-                          ', ' +
-                          postDetail.Comment}
-                      </div>
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-1">
-                    <CCol xs={3}>
-                      <div className="p-2 border bg-light">Jumlah Followers & Like KOL</div>
-                    </CCol>
-                    <CCol xs={9}>
-                      <div className="p-2 border bg-light">
-                        {userDetail.Followers + ', ' + userDetail.Like}
-                      </div>
-                    </CCol>
-                  </CRow>
-                </div>
-              )}
-              <CRow className="mb-1">
-                <CCol xs={3}>
-                  <div className="p-2 border bg-light">Tanggal up sesuai kontrak</div>
-                </CCol>
-                <CCol xs={9}>
-                  <div className="p-2">
-                    <DatePicker
-                      selected={tanggalUpKontrak}
-                      onChange={(date: Date) => setTanggalUpKontrak(date)}
-                    />
-                  </div>
-                </CCol>
-              </CRow>
-              <CRow className="mb-1">
-                <CCol xs={3}>
-                  <div className="p-2 border bg-light">Tanggal up real</div>
-                </CCol>
-                <CCol xs={9}>
-                  <div className="p-2">
-                    <DatePicker
-                      selected={tanggalUpReal}
-                      onChange={(date: Date) => setTanggalUpReal(date)}
-                    />
-                  </div>
-                </CCol>
-              </CRow>
-              <CRow className="mt-4">
-                <CButton
-                  color="secondary"
-                  active={'active' === 'active'}
-                  variant="outline"
-                  key="1"
-                  onClick={handleOnSubmit}
-                >
-                  Submit
-                </CButton>
-              </CRow>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
-    </Suspense>
-  )
+
+  return <>{isLoading ? renderLoadingAnimation() : renderContent()}</>
 }
 
 export default InputNewPost
