@@ -69,7 +69,7 @@ const ListManager = () => {
       }
       console.log(formatTable)
       return (
-        <MDBDataTable scrollX striped bordered data={dataInput}>
+        <MDBDataTable striped bordered data={dataInput}>
           <MDBTableHead columns={dataInput.columns} />
           <MDBTableBody rows={dataInput.rows} />
         </MDBDataTable>
