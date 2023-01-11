@@ -23,10 +23,10 @@ const InputNewPost = () => {
   const [kontrakKol, setKontrakKol] = useState(null)
   const [managerKol, setManagerKol] = useState(null)
   const [briefCode, setBriefCode] = useState(null)
-  const [linkPost, setLinkPost] = useState('')
   const [totalAmountOfSlot, setTotalAmountOfSlot] = useState(0)
   const [numberOfSlot, setNumberOfSlot] = useState(0)
   const errorTitle = 'Submit Error'
+  const errorMessage = `Please select / fill `
 
   const [kolList, setKolList] = useState(null)
   const [managerList, setManagerList] = useState(null)
@@ -92,50 +92,52 @@ const InputNewPost = () => {
     setTotalAmountOfSlot(0)
   }
 
+  const checkAllFieldsFilled = (fields) => {
+    const result = fields.filter((field) => field.value === null || field.value === 0)
+    return result
+  }
+
   const handleOnSubmit = () => {
-    if (kontrakKol == null) {
-      setErrorMessage('Please select KOL')
+    const fields = [
+      { value: kontrakKol, fieldName: 'KOL' },
+      { value: managerKol, fieldName: 'Manager KOL' },
+      { value: briefCode, fieldName: 'Brief Code' },
+      { value: tanggalUpKontrak },
+    ]
+    const checker = checkAllFieldsFilled(fields)
+    const isReadyToSubmit = checker.length === 0
+
+    if (!isReadyToSubmit) {
+      const [{ fieldName }] = checker
+      setErrorMessage(errorMessage + fieldName)
       setModalTitle(errorTitle)
       handleShow()
-    } else if (managerKol == null) {
-      setErrorMessage('Please select manager')
-      setModalTitle(errorTitle)
-      handleShow()
-    } else if (briefCode == null) {
-      setErrorMessage('Please select brief')
-      setModalTitle(errorTitle)
-      handleShow()
-    } else {
-      let user = sessionStorage.getItem('user')
-      const payload = {
-        kontrakKol: kontrakKol.value,
-        managerKol: managerKol.value,
-        briefCode: briefCode.value,
-        tanggalUpKontrak,
-        user,
-      }
-      console.log('ini payload', payload)
-      // let resInsertNewPost = insertNewPost(
-      //   kontrakKol.value,
-      //   managerKol.value,
-      //   briefCode.value,
-      //   tanggalUpKontrak,
-      //   user,
-      // )
-      try {
-        // resInsertNewPost.then(function (result) {
-        //   console.log('resInsertNewPost:', result.status)
-        //   if (result.status === 'true') {
-        //     setModalTitle('Submit Success')
-        //     setErrorMessage('Insert new post success, Post Id : ' + result.postId)
-        //     handleShow()
-        //     console.log('success')
-        //     resetAllVariable()
-        //   }
-        // })
-      } catch (err) {
-        console.log(err)
-      }
+      return
+    }
+
+    let user = sessionStorage.getItem('user')
+    const payload = {
+      KontrakId: kontrakKol.value,
+      ManagerId: managerKol.value,
+      BriefId: briefCode.value,
+      TglPostKontrak: tanggalUpKontrak,
+      User: user,
+    }
+    console.log('ini payload', payload)
+    let resInsertNewPost = insertNewPost(payload)
+    try {
+      resInsertNewPost.then(function (result) {
+        console.log('resInsertNewPost:', result.status)
+        // if (result.status === 'true') {
+        //   setModalTitle('Submit Success')
+        //   setErrorMessage('Insert new post success, Post Id : ' + result.postId)
+        //   handleShow()
+        //   console.log('success')
+        //   handleResetForm()
+        // }
+      })
+    } catch (err) {
+      console.log(err)
     }
   }
 
@@ -163,7 +165,9 @@ const InputNewPost = () => {
             if (result.status === 'true') {
               const { message } = result
               const totalSlot = message['Booking Slot']
+              const postNumber = message['postNumber']
               setTotalAmountOfSlot(totalSlot)
+              setNumberOfSlot(postNumber)
             }
           })
         } catch (err) {
@@ -305,17 +309,7 @@ const InputNewPost = () => {
           <div className="p-2 border bg-light">Slot Ke / Total Slot</div>
         </CCol>
         <CCol xs={1}>
-          <CFormInput
-            autoFocus="autofocus"
-            type="text"
-            value={numberOfSlot}
-            onChange={(e) => {
-              const re = /^[0-9\b]+$/
-              if (e.target.value === '' || re.test(e.target.value)) {
-                setNumberOfSlot(e.target.value)
-              }
-            }}
-          />
+          <CFormInput value={numberOfSlot} disabled />
         </CCol>
         <div className="text-center pl-0 pr-0 pt-2 pb-2" style={{ width: '30px' }}>
           /
