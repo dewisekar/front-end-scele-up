@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Suspense } from 'react'
 import { Modal } from 'react-bootstrap'
-import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow, CFormInput } from '@coreui/react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { convertDataToSelectOptions } from '../../utils/GeneralFormInput'
@@ -24,6 +24,8 @@ const InputNewPost = () => {
   const [managerKol, setManagerKol] = useState(null)
   const [briefCode, setBriefCode] = useState(null)
   const [linkPost, setLinkPost] = useState('')
+  const [totalAmountOfSlot, setTotalAmountOfSlot] = useState(0)
+  const [numberOfSlot, setNumberOfSlot] = useState(0)
   const errorTitle = 'Submit Error'
 
   const [kolList, setKolList] = useState(null)
@@ -45,7 +47,6 @@ const InputNewPost = () => {
         console.log('resGetListKontrakIteration:', result.status)
         if (result.status === 'true') {
           setKolList(result.message)
-          console.log('ini hasil fetch', result.message)
         }
       })
     } catch (err) {
@@ -81,19 +82,14 @@ const InputNewPost = () => {
     }
   }, [])
 
-  const resetAllVariable = () => {
-    setKontrakKol(null)
-    setManagerKol(null)
-    setBriefCode(null)
-    setLinkPost('')
-  }
-
   const handleResetForm = () => {
     setKontrakKol(null)
     setManagerKol(null)
     setBriefCode(null)
     setKolDetail(null)
     setTanggalUpKontrak(today)
+    setNumberOfSlot(0)
+    setTotalAmountOfSlot(0)
   }
 
   const handleOnSubmit = () => {
@@ -154,6 +150,20 @@ const InputNewPost = () => {
             console.log('resGetKolDetail:', result.status)
             if (result.status === 'true') {
               setKolDetail(result.message)
+            }
+          })
+        } catch (err) {
+          console.log(err)
+        }
+
+        const resGetKontrakDetail = getRequestByUri('/getKontrakDetail?Id=' + Id.toString())
+        try {
+          resGetKontrakDetail.then(function (result) {
+            console.log('resGetKontrakDetail:', result.status)
+            if (result.status === 'true') {
+              const { message } = result
+              const totalSlot = message['Booking Slot']
+              setTotalAmountOfSlot(totalSlot)
             }
           })
         } catch (err) {
@@ -292,10 +302,26 @@ const InputNewPost = () => {
     return (
       <CRow className="mb-1">
         <CCol xs={3}>
-          <div className="p-2 border bg-light">Username</div>
+          <div className="p-2 border bg-light">Slot Ke / Total Slot</div>
         </CCol>
-        <CCol xs={9}>
-          <div className="p-2 border bg-light">{kolDetail.USERNAME}</div>
+        <CCol xs={1}>
+          <CFormInput
+            autoFocus="autofocus"
+            type="text"
+            value={numberOfSlot}
+            onChange={(e) => {
+              const re = /^[0-9\b]+$/
+              if (e.target.value === '' || re.test(e.target.value)) {
+                setNumberOfSlot(e.target.value)
+              }
+            }}
+          />
+        </CCol>
+        <div className="text-center pl-0 pr-0 pt-2 pb-2" style={{ width: '30px' }}>
+          /
+        </div>
+        <CCol xs={1}>
+          <CFormInput value={totalAmountOfSlot} disabled />
         </CCol>
       </CRow>
     )
@@ -357,6 +383,7 @@ const InputNewPost = () => {
         {kolDetail && renderChosenKolDetail()}
         {managerList && renderManager()}
         {briefCodeList && renderBriefCode()}
+        {renderNumberOfSlot()}
         {renderPostDate()}
         {renderSubmitButton()}
       </CCardBody>
