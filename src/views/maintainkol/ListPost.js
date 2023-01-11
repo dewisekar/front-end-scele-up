@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CBadge } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 import { execSPWithoutInput, getFormatList } from '../../utils/request-marketing'
 import { NavLink, useLocation } from 'react-router-dom'
@@ -9,6 +9,7 @@ const ListPost = () => {
   const [formatTable, setFormatTable] = useState(null)
   const [dataTable, setDataTable] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const today = new Date()
 
   useEffect(() => {
     let resGetFormatListPost = getFormatList('post')
@@ -29,25 +30,67 @@ const ListPost = () => {
         console.log('resGetListPost:', result.status)
         if (result.status === 'true') {
           let listPosData = result.message
-          listPosData = listPosData.map((item) => ({
-            ...item,
-            action: (
-              <NavLink
-                to={'/MaintainKol/ViewPost?Id=' + item.Id}
-                className="btn btn-success btn-sm"
-              >
-                View
-              </NavLink>
-            ),
-          }))
+
+          listPosData = listPosData.map((item) => {
+            console.log('ini item', item)
+            const { deadlinePost, uploadDate } = item
+            const convertedDeadlineDate = new Date(deadlinePost)
+            const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
+            const deadlineDay = convertedDeadlineDate.getDate()
+            const deadlineMonth = convertedDeadlineDate.getMonth() + 1
+            const deadlineYear = convertedDeadlineDate.getFullYear()
+
+            const StatusAction = {
+              FULFILLED: <CBadge color="success">FULFILLED</CBadge>,
+              ONSCHEDULE: <CBadge color="warning">ON SCHEDULE</CBadge>,
+              MISSED: <CBadge color="danger">MISSED</CBadge>,
+            }
+            const postStatus = getPostStatus(convertedDeadlineDate, convertedUploadDate)
+            const status = StatusAction[postStatus]
+
+            const action = (
+              <>
+                <NavLink
+                  to={'/MaintainKol/ViewPost?Id=' + item.Id}
+                  className="btn btn-success btn-sm"
+                  style={{ marginRight: '8px' }}
+                >
+                  View
+                </NavLink>
+                <NavLink to={'/MaintainKol/ViewPost?Id=' + item.Id} className="btn btn-info btn-sm">
+                  Update
+                </NavLink>
+              </>
+            )
+
+            return {
+              ...item,
+              deadlinePost: `${deadlineDay}-${deadlineMonth}-${deadlineYear}`,
+              action,
+              status,
+            }
+          })
           setDataTable(listPosData)
-          setIsLoading(false)
         }
+        setIsLoading(false)
       })
     } catch (err) {
       console.log(err)
     }
   }, [])
+
+  const getPostStatus = (deadlinePost, uploadDate) => {
+    const convertedDeadline = deadlinePost.setHours(0, 0, 0, 0)
+    const convertedToday = today.setHours(0, 0, 0, 0)
+
+    if (uploadDate === null && convertedToday <= convertedDeadline) {
+      return 'ONSCHEDULE'
+    }
+    if (uploadDate === null && convertedToday > convertedDeadline) {
+      return 'MISSED'
+    }
+    return 'FULFILLED'
+  }
 
   const renderLoadingAnimation = () => {
     return (
@@ -65,7 +108,7 @@ const ListPost = () => {
             <CCardHeader>
               <strong>List Post</strong> {/*<small>File input</small>*/}
             </CCardHeader>
-            <CCardBody>{formatTable && dataTable && <DatatablePage data={dataTable} />}</CCardBody>
+            <CCardBody>{formatTable && <DatatablePage data={dataTable} />}</CCardBody>
           </CCard>
         </CCol>
       </CRow>
@@ -78,9 +121,8 @@ const ListPost = () => {
         columns: formatTable,
         rows: props.data,
       }
-      console.log(formatTable)
       return (
-        <MDBDataTable scrollX striped bordered data={dataInput}>
+        <MDBDataTable striped bordered data={dataInput}>
           <MDBTableHead columns={dataInput.columns} />
           <MDBTableBody rows={dataInput.rows} />
         </MDBDataTable>
