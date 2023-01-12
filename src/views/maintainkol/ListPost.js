@@ -6,17 +6,12 @@ import { execSPWithoutInput, getFormatList } from '../../utils/request-marketing
 import { NavLink } from 'react-router-dom'
 import { LoadingAnimation, NoDataAvailable } from '../../components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
-import { StoredProcedure } from 'src/constants'
+import { StoredProcedure, PostStatus } from 'src/constants'
 
 const ListPost = () => {
   const [formatTable, setFormatTable] = useState(null)
   const [dataTable, setDataTable] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
-  const StatusAction = {
-    FULFILLED: <CBadge color="success">FULFILLED</CBadge>,
-    ONSCHEDULE: <CBadge color="warning">ON SCHEDULE</CBadge>,
-    MISSED: <CBadge color="danger">MISSED</CBadge>,
-  }
 
   useEffect(() => {
     let resGetFormatListPost = getFormatList('post')
@@ -43,18 +38,21 @@ const ListPost = () => {
             const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
 
             const postStatus = getPostStatus(convertedDeadlineDate, convertedUploadDate)
-            const status = StatusAction[postStatus]
+            const status = PostStatus[postStatus]
 
             const action = (
               <>
                 <NavLink
                   to={'/MaintainKol/ViewPost?Id=' + item.Id}
-                  className="btn btn-success btn-sm"
+                  className="btn btn-dark btn-sm"
                   style={{ marginRight: '8px' }}
                 >
                   View
                 </NavLink>
-                <NavLink to={'/MaintainKol/ViewPost?Id=' + item.Id} className="btn btn-info btn-sm">
+                <NavLink
+                  to={'/MaintainKol/ViewPost?Id=' + item.Id}
+                  className="btn btn-secondary btn-sm"
+                >
                   Update
                 </NavLink>
               </>
