@@ -4,27 +4,28 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
 import { getRequestByUri, execSPWithoutInput } from '../../utils/request-marketing'
-import { PostBanner } from 'src/components'
+import { PostBanner, LoadingAnimation } from 'src/components'
+import StoredProcedure from 'src/database/StoredProcedure'
+import { convertDate } from 'src/utils/pageUtil'
 
 const PostCalendar = () => {
   const today = new Date()
   const [missedPost, setMissedPost] = useState([])
   const [todayPost, setTodayPost] = useState([])
+  const [posts, setPosts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { message: missedPost } = await getRequestByUri('/getMissedPost')
-        const { message: todayPost } = await execSPWithoutInput(
-          '[MARKETING].[dbo].[SP_GetTodayPost]',
-        )
-        const { message: allPost } = await execSPWithoutInput(
-          '[MARKETING].[dbo].[SP_GetListPostForView]',
-        )
-        console.log('halo', allPost)
+        const { message: missedPost } = await execSPWithoutInput(StoredProcedure.GET_MISSED_POST)
+        const { message: todayPost } = await execSPWithoutInput(StoredProcedure.GET_TODAY_POST)
+        const { message: allPost } = await execSPWithoutInput(StoredProcedure.GET_ALL_POST)
+        convertCalendarEvent(allPost)
 
         setMissedPost(missedPost)
         setTodayPost(todayPost)
+        setIsLoading(false)
       } catch (error) {
         throw error
       }
@@ -38,12 +39,25 @@ const PostCalendar = () => {
     console.log('event clicked')
   }
 
+  const convertCalendarEvent = (data) => {
+    console.log('halo data', data)
+  }
+
   const renderTodayPost = () => {
     return (
       <CCol xs={12} md={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>{`Today's Posts`}</strong>
+            <CRow>
+              <CCol md={6}>
+                <strong>{`Today's Posts`}</strong>
+              </CCol>
+              <CCol md={6}>
+                <strong style={{ display: 'block', textAlign: 'right' }}>
+                  {convertDate(today)}
+                </strong>
+              </CCol>
+            </CRow>
           </CCardHeader>
           <CCardBody>
             <CRow>{renderPostBanner(todayPost)}</CRow>
@@ -105,15 +119,23 @@ const PostCalendar = () => {
     )
   }
 
-  return (
-    <Suspense>
-      <CRow>
-        {renderTodayPost()}
-        {renderMissedPost()}
-      </CRow>
-      <CRow>{renderCalendarContainer()}</CRow>
-    </Suspense>
-  )
+  const renderLoadingAnimation = () => {
+    return <LoadingAnimation />
+  }
+
+  const renderPage = () => {
+    return (
+      <Suspense>
+        <CRow>
+          {renderTodayPost()}
+          {renderMissedPost()}
+        </CRow>
+        <CRow>{renderCalendarContainer()}</CRow>
+      </Suspense>
+    )
+  }
+
+  return <>{isLoading ? renderLoadingAnimation() : renderPage()}</>
 }
 
 export default PostCalendar
