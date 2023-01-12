@@ -4,4 +4,10 @@ const StoredProcedure = {
   GET_MISSED_POST: '[MARKETING].[dbo].[SP_GetMissedPost]',
 }
 
-export default StoredProcedure
+const EventColor = {
+  FULFILLED: '#2a9d8f',
+  ONSCHEDULE: '#e9c46a',
+  MISSED: '#d64242',
+}
+
+export { StoredProcedure, EventColor }

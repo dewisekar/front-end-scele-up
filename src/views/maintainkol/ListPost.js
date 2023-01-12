@@ -6,7 +6,7 @@ import { execSPWithoutInput, getFormatList } from '../../utils/request-marketing
 import { NavLink } from 'react-router-dom'
 import { LoadingAnimation, NoDataAvailable } from '../../components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
-import StoredProcedure from 'src/database/StoredProcedure'
+import { StoredProcedure } from 'src/constants'
 
 const ListPost = () => {
   const [formatTable, setFormatTable] = useState(null)

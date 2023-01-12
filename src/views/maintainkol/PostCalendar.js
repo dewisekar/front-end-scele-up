@@ -5,8 +5,8 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 
 import { getRequestByUri, execSPWithoutInput } from '../../utils/request-marketing'
 import { PostBanner, LoadingAnimation } from 'src/components'
-import StoredProcedure from 'src/database/StoredProcedure'
-import { convertDate } from 'src/utils/pageUtil'
+import { StoredProcedure, EventColor } from 'src/constants'
+import { convertDate, getPostStatus } from 'src/utils/pageUtil'
 
 const PostCalendar = () => {
   const today = new Date()
@@ -21,10 +21,11 @@ const PostCalendar = () => {
         const { message: missedPost } = await execSPWithoutInput(StoredProcedure.GET_MISSED_POST)
         const { message: todayPost } = await execSPWithoutInput(StoredProcedure.GET_TODAY_POST)
         const { message: allPost } = await execSPWithoutInput(StoredProcedure.GET_ALL_POST)
-        convertCalendarEvent(allPost)
+        const convertedEvent = convertCalendarEvent(allPost)
 
         setMissedPost(missedPost)
         setTodayPost(todayPost)
+        setPosts(convertedEvent)
         setIsLoading(false)
       } catch (error) {
         throw error
@@ -39,8 +40,31 @@ const PostCalendar = () => {
     console.log('event clicked')
   }
 
+  const convertDateForCalendar = (date) => {
+    const convertedDate = new Date(date)
+
+    const deadlineDay = ('0' + convertedDate.getDate()).slice(-2)
+    const deadlineMonth = ('0' + (convertedDate.getMonth() + 1)).slice(-2)
+    const deadlineYear = convertedDate.getFullYear()
+
+    return `${deadlineYear}-${deadlineMonth}-${deadlineDay}`
+  }
+
   const convertCalendarEvent = (data) => {
-    console.log('halo data', data)
+    const convertedEvent = data.map((item, index) => {
+      const deadlinePost = new Date(item['deadlinePost'])
+      const uploadDate = item['uploadDate'] ? new Date(item['uploadDate']) : null
+      const postStatus = getPostStatus(deadlinePost, uploadDate)
+
+      return {
+        title: item['Kontrak Name'],
+        date: convertDateForCalendar(item['deadlinePost']),
+        postId: item['Id'],
+        color: EventColor[postStatus],
+      }
+    })
+
+    return convertedEvent
   }
 
   const renderTodayPost = () => {
@@ -97,11 +121,17 @@ const PostCalendar = () => {
         dayMaxEventRows={3}
         eventClick={function (arg) {
           const {
-            event: { start, title, id },
+            event: {
+              start,
+              title,
+              extendedProps: { postId },
+            },
           } = arg
-          const payload = { start, title, id }
+          const payload = { start, title, postId }
           handleEventClick(payload)
         }}
+        events={posts}
+        editable
       />
     )
   }
