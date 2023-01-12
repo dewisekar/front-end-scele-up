@@ -3,7 +3,7 @@ import { CCol } from '@coreui/react'
 import { NavLink } from 'react-router-dom'
 
 const PostBanner = ({ props }) => {
-  const { contractName, deadlinePost, postId } = props
+  const { contractName, deadlinePost, postId, briefName } = props
   const styles = {
     container: {
       backgroundColor: '#7B84A1',
@@ -30,9 +30,12 @@ const PostBanner = ({ props }) => {
         >
           {contractName}
         </NavLink>
-        <p className="m-0 text-light">
-          Deadline: {deadlineDay}-{deadlineMonth}-{deadlineYear}
-        </p>
+        {!briefName && (
+          <p className="m-0 text-light">
+            Deadline: {deadlineDay}-{deadlineMonth}-{deadlineYear}
+          </p>
+        )}
+        {briefName && <p className="m-0 text-light">Brief: {briefName}</p>}
       </div>
     </CCol>
   )

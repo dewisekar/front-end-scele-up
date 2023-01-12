@@ -1,28 +1,26 @@
 import React, { useState, useEffect, Suspense } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-import { getRequestByUri } from '../../utils/request-marketing'
+import { getRequestByUri, execSPWithoutInput } from '../../utils/request-marketing'
 import { PostBanner } from 'src/components'
-
-const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
-  </div>
-)
 
 const PostCalendar = () => {
   const today = new Date()
   const [missedPost, setMissedPost] = useState([])
+  const [todayPost, setTodayPost] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const missedPostPromise = await getRequestByUri('/getMissedPost')
-        const { message: fetchedMissedPost } = missedPostPromise
-        setMissedPost(fetchedMissedPost)
+        const { message: missedPost } = await getRequestByUri('/getMissedPost')
+        const { message: todayPost } = await execSPWithoutInput(
+          '[MARKETING].[dbo].[SP_GetTodayPost]',
+        )
+
+        setMissedPost(missedPost)
+        setTodayPost(todayPost)
       } catch (error) {
         throw error
       }
@@ -38,11 +36,14 @@ const PostCalendar = () => {
 
   const renderTodayPost = () => {
     return (
-      <CCol xs={6}>
+      <CCol xs={12} md={6}>
         <CCard className="mb-4">
           <CCardHeader>
             <strong>{`Today's Posts`}</strong>
           </CCardHeader>
+          <CCardBody>
+            <CRow>{renderPostBanner(todayPost)}</CRow>
+          </CCardBody>
         </CCard>
       </CCol>
     )
@@ -57,7 +58,7 @@ const PostCalendar = () => {
 
   const renderMissedPost = () => {
     return (
-      <CCol xs={6}>
+      <CCol xs={12} md={6}>
         <CCard className="mb-4">
           <CCardHeader>
             <strong>{`Missed Posts`}</strong>
@@ -101,7 +102,7 @@ const PostCalendar = () => {
   }
 
   return (
-    <Suspense fallback={loading}>
+    <Suspense>
       <CRow>
         {renderTodayPost()}
         {renderMissedPost()}
