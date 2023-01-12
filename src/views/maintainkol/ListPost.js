@@ -6,6 +6,7 @@ import { execSPWithoutInput, getFormatList } from '../../utils/request-marketing
 import { NavLink } from 'react-router-dom'
 import { LoadingAnimation, NoDataAvailable } from '../../components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
+import StoredProcedure from 'src/database/StoredProcedure'
 
 const ListPost = () => {
   const [formatTable, setFormatTable] = useState(null)
@@ -30,7 +31,7 @@ const ListPost = () => {
       console.log(err)
     }
 
-    let resGetListPost = execSPWithoutInput('[MARKETING].[dbo].[SP_GetListPostForView]')
+    let resGetListPost = execSPWithoutInput(StoredProcedure.GET_ALL_POST)
     try {
       resGetListPost.then(function (result) {
         if (result.status === 'true') {
