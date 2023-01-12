@@ -3,9 +3,9 @@ import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-import { getRequestByUri, execSPWithoutInput } from '../../utils/request-marketing'
+import { execSPWithoutInput } from '../../utils/request-marketing'
 import { PostBanner, LoadingAnimation } from 'src/components'
-import { StoredProcedure, EventColor } from 'src/constants'
+import { StoredProcedure, EventColor, DateMode } from 'src/constants'
 import { convertDate, getPostStatus } from 'src/utils/pageUtil'
 
 const PostCalendar = () => {
@@ -40,16 +40,6 @@ const PostCalendar = () => {
     console.log('event clicked')
   }
 
-  const convertDateForCalendar = (date) => {
-    const convertedDate = new Date(date)
-
-    const deadlineDay = ('0' + convertedDate.getDate()).slice(-2)
-    const deadlineMonth = ('0' + (convertedDate.getMonth() + 1)).slice(-2)
-    const deadlineYear = convertedDate.getFullYear()
-
-    return `${deadlineYear}-${deadlineMonth}-${deadlineDay}`
-  }
-
   const convertCalendarEvent = (data) => {
     const convertedEvent = data.map((item, index) => {
       const deadlinePost = new Date(item['deadlinePost'])
@@ -58,7 +48,7 @@ const PostCalendar = () => {
 
       return {
         title: item['Kontrak Name'],
-        date: convertDateForCalendar(item['deadlinePost']),
+        date: convertDate(item['deadlinePost'], DateMode.YYYYMMDD),
         postId: item['Id'],
         color: EventColor[postStatus],
       }

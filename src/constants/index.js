@@ -10,4 +10,9 @@ const EventColor = {
   MISSED: '#d64242',
 }
 
-export { StoredProcedure, EventColor }
+const DateMode = {
+  DDMMYYYY: 'DDMMYYYY',
+  YYYYMMDD: 'YYYYMMDD',
+}
+
+export { StoredProcedure, EventColor, DateMode }

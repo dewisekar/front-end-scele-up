@@ -1,3 +1,5 @@
+import { DateMode } from 'src/constants'
+
 const getPostStatus = (deadlinePost, uploadDate) => {
   const today = new Date()
   const convertedDeadline = deadlinePost.setHours(0, 0, 0, 0)
@@ -12,7 +14,7 @@ const getPostStatus = (deadlinePost, uploadDate) => {
   return 'FULFILLED'
 }
 
-const convertDate = (date, mode = 'DDMMYYYY') => {
+const convertDate = (date, mode = DateMode.DDMMYYYY) => {
   const convertedDate = new Date(date)
 
   const deadlineDay = ('0' + convertedDate.getDate()).slice(-2)
