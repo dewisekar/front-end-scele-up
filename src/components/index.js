@@ -9,6 +9,7 @@ import DocsLink from './DocsLink'
 import DocsExample from './DocsExample'
 import LoadingAnimation from './LoadingAnimation'
 import NoDataAvailable from './NoDataAvailable'
+import PostBanner from './PostBanner'
 
 export {
   AppBreadcrumb,
@@ -22,4 +23,5 @@ export {
   DocsExample,
   LoadingAnimation,
   NoDataAvailable,
+  PostBanner,
 }
