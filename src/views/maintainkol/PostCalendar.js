@@ -36,8 +36,8 @@ const PostCalendar = () => {
   }, [])
 
   const handleEventClick = (payload) => {
-    console.log(payload)
-    console.log('event clicked')
+    const { postId } = payload
+    window.location.href = `./#/MaintainKol/ViewPost?Id=` + postId
   }
 
   const convertCalendarEvent = (data) => {
