@@ -68,7 +68,7 @@ const PostCalendar = () => {
               </CCol>
               <CCol md={6}>
                 <strong style={{ display: 'block', textAlign: 'right' }}>
-                  {convertDate(today)}
+                  {convertDate(today)} | Jumlah: {todayPost.length}
                 </strong>
               </CCol>
             </CRow>
@@ -93,7 +93,16 @@ const PostCalendar = () => {
       <CCol xs={12} md={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>{`Missed Posts`}</strong>
+            <CRow>
+              <CCol md={6}>
+                <strong>{`Missed Posts`}</strong>
+              </CCol>
+              <CCol md={6}>
+                <strong style={{ display: 'block', textAlign: 'right' }}>
+                  Jumlah: {missedPost.length}
+                </strong>
+              </CCol>
+            </CRow>
           </CCardHeader>
           <CCardBody>
             <CRow>{renderPostBanner(missedPost)}</CRow>
