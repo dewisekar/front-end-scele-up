@@ -18,6 +18,10 @@ const PostCalendar = () => {
         const { message: todayPost } = await execSPWithoutInput(
           '[MARKETING].[dbo].[SP_GetTodayPost]',
         )
+        const { message: allPost } = await execSPWithoutInput(
+          '[MARKETING].[dbo].[SP_GetListPostForView]',
+        )
+        console.log('halo', allPost)
 
         setMissedPost(missedPost)
         setTodayPost(todayPost)

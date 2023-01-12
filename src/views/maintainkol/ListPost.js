@@ -1,18 +1,21 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CBadge } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
-import FullCalendar from '@fullcalendar/react' // must go before plugins
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 
 import { execSPWithoutInput, getFormatList } from '../../utils/request-marketing'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { LoadingAnimation, NoDataAvailable } from '../../components'
+import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 
 const ListPost = () => {
   const [formatTable, setFormatTable] = useState(null)
   const [dataTable, setDataTable] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
-  const today = new Date()
+  const StatusAction = {
+    FULFILLED: <CBadge color="success">FULFILLED</CBadge>,
+    ONSCHEDULE: <CBadge color="warning">ON SCHEDULE</CBadge>,
+    MISSED: <CBadge color="danger">MISSED</CBadge>,
+  }
 
   useEffect(() => {
     let resGetFormatListPost = getFormatList('post')
@@ -30,24 +33,14 @@ const ListPost = () => {
     let resGetListPost = execSPWithoutInput('[MARKETING].[dbo].[SP_GetListPostForView]')
     try {
       resGetListPost.then(function (result) {
-        console.log('resGetListPost:', result.status)
         if (result.status === 'true') {
           let listPosData = result.message
 
           listPosData = listPosData.map((item) => {
-            console.log('ini item', item)
             const { deadlinePost, uploadDate } = item
             const convertedDeadlineDate = new Date(deadlinePost)
             const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
-            const deadlineDay = convertedDeadlineDate.getDate()
-            const deadlineMonth = convertedDeadlineDate.getMonth() + 1
-            const deadlineYear = convertedDeadlineDate.getFullYear()
 
-            const StatusAction = {
-              FULFILLED: <CBadge color="success">FULFILLED</CBadge>,
-              ONSCHEDULE: <CBadge color="warning">ON SCHEDULE</CBadge>,
-              MISSED: <CBadge color="danger">MISSED</CBadge>,
-            }
             const postStatus = getPostStatus(convertedDeadlineDate, convertedUploadDate)
             const status = StatusAction[postStatus]
 
@@ -68,7 +61,7 @@ const ListPost = () => {
 
             return {
               ...item,
-              deadlinePost: `${deadlineDay}-${deadlineMonth}-${deadlineYear}`,
+              deadlinePost: convertDate(deadlinePost),
               action,
               status,
             }
@@ -81,19 +74,6 @@ const ListPost = () => {
       console.log(err)
     }
   }, [])
-
-  const getPostStatus = (deadlinePost, uploadDate) => {
-    const convertedDeadline = deadlinePost.setHours(0, 0, 0, 0)
-    const convertedToday = today.setHours(0, 0, 0, 0)
-
-    if (uploadDate === null && convertedToday <= convertedDeadline) {
-      return 'ONSCHEDULE'
-    }
-    if (uploadDate === null && convertedToday > convertedDeadline) {
-      return 'MISSED'
-    }
-    return 'FULFILLED'
-  }
 
   const renderLoadingAnimation = () => {
     return (
