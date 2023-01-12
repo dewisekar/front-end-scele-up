@@ -1,6 +1,9 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CBadge } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
+import FullCalendar from '@fullcalendar/react' // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+
 import { execSPWithoutInput, getFormatList } from '../../utils/request-marketing'
 import { NavLink, useLocation } from 'react-router-dom'
 import { LoadingAnimation, NoDataAvailable } from '../../components'

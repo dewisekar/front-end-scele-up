@@ -1,8 +1,8 @@
 import axios from 'axios'
 import configData from '../appconfig.json'
 
-//const baseUrl = 'http://localhost:5000'
-const baseUrl = configData.MW_SERVER_URL
+const baseUrl = 'http://localhost:5002'
+// const baseUrl = configData.MW_SERVER_URL
 const pythonUrl = configData.PYTHON_SERVER_URL
 const getRequestByUri = async (endpoint) => {
   // let data = JSON.stringify({
@@ -215,32 +215,8 @@ const insertNewManager = async (managerName, noWhatsApp, email, alias, Roles, No
   }
 }
 
-const insertNewPost = async (
-  kontrakId,
-  managerId,
-  briefId,
-  tglPostKontrak,
-  tglPostReal,
-  linkPost,
-  jumlahLike,
-  jumlahView,
-  jumlahShare,
-  jumlahComment,
-  user,
-) => {
-  let data = JSON.stringify({
-    KontrakId: kontrakId,
-    ManagerId: managerId,
-    BriefId: briefId,
-    TglPostKontrak: tglPostKontrak,
-    TglPostReal: tglPostReal,
-    LinkPost: linkPost,
-    JumlahLike: jumlahLike,
-    JumlahView: jumlahView,
-    JumlahShare: jumlahShare,
-    JumlahComment: jumlahComment,
-    User: user,
-  })
+const insertNewPost = async (payload) => {
+  let data = JSON.stringify(payload)
   try {
     const res = await axios.post(baseUrl + '/insertNewPost', data, {
       headers: {
