@@ -1,27 +1,11 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import {
-  CButton,
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CBadge,
-  CFormInput,
-  CFormLabel,
-  CFormTextarea,
-  CRow,
-  CFormSelect,
-} from '@coreui/react'
-import {
-  execSPWithoutInput,
-  execSPWithInput,
-  updatePostStatsById,
-} from '../../utils/request-marketing'
-import { StoredProcedure } from 'src/constants'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CNav, CNavLink, CNavItem } from '@coreui/react'
 import { tableField, styles } from './ViewPost.config'
 import { getRequestByUri } from '../../utils/request-marketing'
 import { URL } from 'src/constants'
+import { VerticalTableRow } from 'src/components'
+import { ColumnSizePercentage } from 'src/constants'
 
 const ViewPost = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -36,6 +20,7 @@ const ViewPost = () => {
       const fetchData = async () => {
         const { message: fetchedDetail } = await getRequestByUri(URL.GET_POST_DETAIL + postId)
         setPostDetail(fetchedDetail)
+        console.log('ini fetched', fetchedDetail)
       }
 
       fetchData()
@@ -44,24 +29,18 @@ const ViewPost = () => {
     }
   }, [])
 
-  const rowData = (item, index) => {
-    return (
-      <CRow className="mb-1" key={index}>
-        <CCol xs={3}>
-          <div className="p-2 border bg-light">{item.label}</div>
-        </CCol>
-        {/* {postData[item.field] && (
-          <CCol xs={9}>
-            <div className="p-2 border bg-light">{postData[item.field]}</div>
-          </CCol>
-        )} */}
-      </CRow>
-    )
+  const renderDetailInfo = (fields, data, size = ColumnSizePercentage.FULL) => {
+    const info = fields.map((item, index) => {
+      return <VerticalTableRow key={index} props={{ item, data, size }} />
+    })
+
+    return info
   }
+
   const renderPageContent = () => {
     return (
       <Suspense>
-        <CRow>
+        <CRow id="post-detail">
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
@@ -69,7 +48,10 @@ const ViewPost = () => {
                 {/* {postId && <strong>{' Post Id: ' + postId}</strong>} */}
               </CCardHeader>
               <CCardBody>
-                {tableField && tableField.map((item, index) => rowData(item, index))}
+                <CRow>
+                  {tableField &&
+                    renderDetailInfo(tableField, postDetail, ColumnSizePercentage.HALF)}
+                </CRow>
               </CCardBody>
             </CCard>
           </CCol>

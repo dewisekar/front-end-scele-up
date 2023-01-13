@@ -35,4 +35,17 @@ const ResponseStatus = {
   FALSE: 'false',
 }
 
-export { StoredProcedure, EventColor, DateMode, PostStatus, URL, ResponseStatus }
+const ColumnSizePercentage = {
+  FULL: 100,
+  HALF: 50,
+}
+
+export {
+  StoredProcedure,
+  EventColor,
+  DateMode,
+  PostStatus,
+  URL,
+  ResponseStatus,
+  ColumnSizePercentage,
+}

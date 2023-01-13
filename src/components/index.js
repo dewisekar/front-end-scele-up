@@ -10,6 +10,7 @@ import DocsExample from './DocsExample'
 import LoadingAnimation from './LoadingAnimation'
 import NoDataAvailable from './NoDataAvailable'
 import PostBanner from './PostBanner'
+import VerticalTableRow from './VerticalTableRow'
 
 export {
   AppBreadcrumb,
@@ -24,4 +25,5 @@ export {
   LoadingAnimation,
   NoDataAvailable,
   PostBanner,
+  VerticalTableRow,
 }
