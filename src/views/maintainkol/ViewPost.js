@@ -1,11 +1,12 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CNav, CNavLink, CNavItem } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+
 import { tableField, styles } from './ViewPost.config'
 import { getRequestByUri } from '../../utils/request-marketing'
-import { URL } from 'src/constants'
+import { URL, ColumnSizePercentage, PostStatus } from 'src/constants'
 import { VerticalTableRow } from 'src/components'
-import { ColumnSizePercentage } from 'src/constants'
+import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 
 const ViewPost = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -19,8 +20,19 @@ const ViewPost = () => {
 
       const fetchData = async () => {
         const { message: fetchedDetail } = await getRequestByUri(URL.GET_POST_DETAIL + postId)
-        setPostDetail(fetchedDetail)
-        console.log('ini fetched', fetchedDetail)
+        const { uploadDate, deadlineDate } = fetchedDetail
+        const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
+
+        const postStatus = PostStatus[getPostStatus(new Date(deadlineDate), convertedUploadDate)]
+        const convertedDeadline = convertDate(deadlineDate)
+        const convertedUpload = uploadDate ? convertDate(deadlineDate) : null
+
+        setPostDetail({
+          ...fetchedDetail,
+          postStatus,
+          deadlineDate: convertedDeadline,
+          uploadDate: convertedUpload,
+        })
       }
 
       fetchData()
@@ -50,6 +62,7 @@ const ViewPost = () => {
               <CCardBody>
                 <CRow>
                   {tableField &&
+                    postDetail &&
                     renderDetailInfo(tableField, postDetail, ColumnSizePercentage.HALF)}
                 </CRow>
               </CCardBody>

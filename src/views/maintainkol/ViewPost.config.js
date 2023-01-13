@@ -1,6 +1,5 @@
 const tableField = [
   { label: 'Status', field: 'postStatus' },
-  { label: 'KOL ID', field: 'kolId' },
   { label: 'Nama Kol', field: 'kolName' },
   { label: 'Platform', field: 'platform' },
   { label: 'Username', field: 'username' },
