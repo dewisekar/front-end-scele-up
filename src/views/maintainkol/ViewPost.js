@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/react'
 
 import { tableField, styles } from './ViewPost.config'
 import { getRequestByUri } from '../../utils/request-marketing'
@@ -56,8 +56,21 @@ const ViewPost = () => {
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
-                <strong>{'View Post'} </strong>
-                {/* {postId && <strong>{' Post Id: ' + postId}</strong>} */}
+                <CRow>
+                  <CCol md={6}>
+                    <strong>{`View Post`}</strong>
+                  </CCol>
+                  <CCol md={6} className="d-flex align-items-start justify-content-end">
+                    <CButton
+                      color="light"
+                      onClick={() =>
+                        (window.location.href = `./#/MaintainKol/UpdatePost?Id=` + postId)
+                      }
+                    >
+                      Update
+                    </CButton>
+                  </CCol>
+                </CRow>
               </CCardHeader>
               <CCardBody>
                 <CRow>
