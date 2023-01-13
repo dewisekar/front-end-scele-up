@@ -7,9 +7,9 @@ const tableField = [
   { label: 'Slot Ke', field: 'slotNumber' },
   { label: 'Tanggal Deadline', field: 'deadlineDate' },
   { label: 'Tanggal Upload', field: 'uploadDate' },
-  { label: 'PIC KOL', field: 'kolManager' },
   { label: 'Kode Brief', field: 'briefCode' },
   { label: 'Nama Brief', field: 'briefName' },
+  { label: 'PIC KOL', field: 'kolManager' },
   { label: 'Link Post', field: 'postLink' },
 ]
 

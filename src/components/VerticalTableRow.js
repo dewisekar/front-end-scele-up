@@ -1,7 +1,7 @@
 import React from 'react'
 import { CCol, CRow } from '@coreui/react'
 import { ColumnSizePercentage } from 'src/constants'
-import { grid2Classes } from '@mui/material'
+
 const VerticalTableRow = ({ props }) => {
   const {
     data,
@@ -26,7 +26,7 @@ const VerticalTableRow = ({ props }) => {
 
   const renderFullRow = () => {
     return (
-      <CRow className="mb-1">
+      <CRow className="mb-1" style={styles.contentColumn}>
         <CCol xs={3}>
           <div className="p-2 border bg-light">{label}</div>
         </CCol>
@@ -42,7 +42,7 @@ const VerticalTableRow = ({ props }) => {
   const renderHalfRow = () => {
     return (
       <>
-        <CCol xs={2} className="mb-1">
+        <CCol xs={2} className="mb-1" style={styles.contentColumn}>
           <div className="p-2 border bg-light">{label}</div>
         </CCol>
         <CCol xs={4} className="mb-1" style={styles.contentColumn}>
