@@ -15,4 +15,24 @@ const DateMode = {
   YYYYMMDD: 'YYYYMMDD',
 }
 
-export { StoredProcedure, EventColor, DateMode }
+const PostStatus = {
+  FULFILLED: 'FULFILLED',
+  ONSCHEDULE: 'ON SCHEDULE',
+  MISSED: 'MISSED',
+}
+
+const URL = {
+  GET_POST_DETAIL: '/getPostDetail?id=',
+  GET_KOL_DETAIL: '/getKolDetail?Id=',
+  GET_CONTRACT_DETAIL: '/getKontrakDetail?Id=',
+  GET_CONTRACT_ITERATION: '/getListKontrakIteration',
+  GET_MANAGER_LIST: '/getListManager',
+  GET_BRIEF_LIST: '/getListBrief',
+}
+
+const ResponseStatus = {
+  TRUE: 'true',
+  FALSE: 'false',
+}
+
+export { StoredProcedure, EventColor, DateMode, PostStatus, URL, ResponseStatus }

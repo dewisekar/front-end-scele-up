@@ -3,10 +3,12 @@ import { Modal } from 'react-bootstrap'
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow, CFormInput } from '@coreui/react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { convertDataToSelectOptions } from '../../utils/GeneralFormInput'
 import Select from 'react-select'
+
+import { convertDataToSelectOptions } from '../../utils/GeneralFormInput'
 import { getRequestByUri, insertNewPost } from '../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
+import { URL, ResponseStatus } from 'src/constants'
 
 const findKolIdByKontrakId = (kontrakList, KontrakId) => {
   let foundArr = kontrakList.filter((item) => item['Kontrak Id'] == KontrakId)
@@ -17,7 +19,6 @@ const findKolIdByKontrakId = (kontrakList, KontrakId) => {
   }
 }
 const InputNewPost = () => {
-  const [state, setState] = useState({})
   const today = new Date()
   const [tanggalUpKontrak, setTanggalUpKontrak] = useState(today)
   const [kontrakKol, setKontrakKol] = useState(null)
@@ -41,45 +42,21 @@ const InputNewPost = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    let resGetListKontrakIteration = getRequestByUri('/getListKontrakIteration')
-    try {
-      resGetListKontrakIteration.then(function (result) {
-        console.log('resGetListKontrakIteration:', result.status)
-        if (result.status === 'true') {
-          setKolList(result.message)
-        }
-      })
-    } catch (err) {
-      console.log(err)
-    }
-
-    let resGetListManager = getRequestByUri('/getListManager')
-    try {
-      resGetListManager.then(function (result) {
-        console.log('resGetListManager:', result.status)
-        if (result.status === 'true') {
-          setManagerList(result.message)
-        }
-      })
-    } catch (err) {
-      console.log(err)
-    }
-
-    let resGetListBrief = getRequestByUri('/getListBrief')
-    try {
-      resGetListBrief.then(function (result) {
-        console.log('resGetListBrief:', result.status)
-        if (result.status === 'true') {
-          setBriefCodeList(result.message)
-        }
+    const fetchData = async () => {
+      try {
+        const { message: contractListIteration } = await getRequestByUri(URL.GET_CONTRACT_ITERATION)
+        const { message: manager } = await getRequestByUri(URL.GET_MANAGER_LIST)
+        const { message: briefList } = await getRequestByUri(URL.GET_BRIEF_LIST)
+        setKolList(contractListIteration)
+        setManagerList(manager)
+        setBriefCodeList(briefList)
         setIsLoading(false)
-      })
-    } catch (err) {
-      console.log(err)
+      } catch (error) {
+        throw error
+      }
     }
-    return () => {
-      setState({}) // This worked for me
-    }
+
+    fetchData()
   }, [])
 
   const handleResetForm = () => {
@@ -97,7 +74,7 @@ const InputNewPost = () => {
     return result
   }
 
-  const handleOnSubmit = () => {
+  const handleOnSubmit = async () => {
     const fields = [
       { value: kontrakKol, fieldName: 'KOL' },
       { value: managerKol, fieldName: 'Manager KOL' },
@@ -123,62 +100,36 @@ const InputNewPost = () => {
       TglPostKontrak: tanggalUpKontrak,
       User: user,
     }
-    console.log('ini payload', payload)
-    let resInsertNewPost = insertNewPost(payload)
     try {
-      resInsertNewPost.then(function (result) {
-        console.log('resInsertNewPost:', result.status)
-        if (result.status === 'true') {
-          setModalTitle('Submit Success')
-          setErrorMessage('Insert new post success, Post Id : ' + result.postId)
-          handleShow()
-          console.log('success')
-          handleResetForm()
-        }
-      })
+      const { status, postId } = await insertNewPost(payload)
+      if (status === ResponseStatus.TRUE) {
+        setModalTitle('Submit Success')
+        setErrorMessage('Insert new post success, Post ID : ' + postId)
+        handleShow()
+        handleResetForm()
+      }
     } catch (err) {
       console.log(err)
     }
   }
 
-  const handleSelectedKol = (Id) => {
-    if (Id != null) {
-      setIsLoading(true)
-      let kolId = findKolIdByKontrakId(kolList, Id)
-      if (kolId != null) {
-        let resGetKolDetail = getRequestByUri('/getKolDetail?Id=' + kolId.toString())
-        try {
-          resGetKolDetail.then(function (result) {
-            console.log('resGetKolDetail:', result.status)
-            if (result.status === 'true') {
-              setKolDetail(result.message)
-            }
-          })
-        } catch (err) {
-          console.log(err)
-        }
+  const handleSelectedKol = async (id) => {
+    setIsLoading(true)
+    const kolId = findKolIdByKontrakId(kolList, id)
+    try {
+      const { message: kolDetail } = await getRequestByUri(URL.GET_KOL_DETAIL + kolId.toString())
+      const { message: contractDetail } = await getRequestByUri(
+        URL.GET_CONTRACT_DETAIL + id.toString(),
+      )
 
-        const resGetKontrakDetail = getRequestByUri('/getKontrakDetail?Id=' + Id.toString())
-        try {
-          resGetKontrakDetail.then(function (result) {
-            console.log('resGetKontrakDetail:', result.status)
-            if (result.status === 'true') {
-              const { message } = result
-              const totalSlot = message['Booking Slot']
-              const postNumber = message['postNumber']
-              setTotalAmountOfSlot(totalSlot)
-              setNumberOfSlot(postNumber)
-            }
-          })
-        } catch (err) {
-          console.log(err)
-        }
-      } else {
-        console.log('Warning kolId is null')
-      }
+      setKolDetail(kolDetail)
+      const totalSlot = contractDetail['Booking Slot']
+      const postNumber = contractDetail['postNumber']
+      setTotalAmountOfSlot(totalSlot)
+      setNumberOfSlot(postNumber)
       setIsLoading(false)
-    } else {
-      console.log('Warning id is null')
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -272,7 +223,6 @@ const InputNewPost = () => {
             placeholder="Pilih Manager"
             value={managerKol}
             onChange={(e) => {
-              // console.log(e)
               setManagerKol(e)
             }}
           />
@@ -293,7 +243,6 @@ const InputNewPost = () => {
             placeholder="Pilih Brief"
             value={briefCode}
             onChange={(e) => {
-              // console.log(e)
               setBriefCode(e)
             }}
           />
