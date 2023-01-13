@@ -50,7 +50,7 @@ const ListPost = () => {
                   View
                 </NavLink>
                 <NavLink
-                  to={'/MaintainKol/ViewPost?Id=' + item.Id}
+                  to={'/MaintainKol/UpdatePost?Id=' + item.Id}
                   className="btn btn-secondary btn-sm"
                 >
                   Update

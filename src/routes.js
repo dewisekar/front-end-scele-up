@@ -71,6 +71,7 @@ const ListManager = React.lazy(() => import('./views/maintainkol/ListManager'))
 const InputNewPost = React.lazy(() => import('./views/maintainkol/InputNewPost'))
 const ListPost = React.lazy(() => import('./views/maintainkol/ListPost'))
 const ViewPost = React.lazy(() => import('./views/maintainkol/ViewPost'))
+const UpdatePost = React.lazy(() => import('./views/maintainkol/UpdatePost'))
 const PostCalendar = React.lazy(() => import('./views/maintainkol/PostCalendar'))
 // const TestPost = React.lazy(() => import('./views/maintainkol/TestPost'))
 
@@ -172,6 +173,11 @@ const routes = [
     path: '/MaintainKol/ViewPost',
     name: 'View Post',
     element: ViewPost,
+  },
+  {
+    path: '/MaintainKol/UpdatePost',
+    name: 'Update Post',
+    element: UpdatePost,
   },
   {
     path: '/MaintainKol/PostCalendar',

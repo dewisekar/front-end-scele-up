@@ -281,7 +281,7 @@ const InputNewKol = () => {
                 <CFormInput
                   autoFocus="autofocus"
                   type="text"
-                  placeholder="Input uername KOL"
+                  placeholder="Input username KOL"
                   aria-label="default input example"
                   value={usernameKOL}
                   onChange={(e) => {
