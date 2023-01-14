@@ -49,12 +49,14 @@ const ListPost = () => {
                 >
                   View
                 </NavLink>
-                <NavLink
-                  to={'/MaintainKol/UpdatePost?Id=' + item.Id}
-                  className="btn btn-secondary btn-sm"
-                >
-                  Update
-                </NavLink>
+                {!uploadDate && (
+                  <NavLink
+                    to={'/MaintainKol/UpdatePost?Id=' + item.Id}
+                    className="btn btn-secondary btn-sm"
+                  >
+                    Update
+                  </NavLink>
+                )}
               </>
             )
 

@@ -11,7 +11,7 @@ import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 const ViewPost = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [postId, setPostId] = useState(null)
-  const [postDetail, setPostDetail] = useState(null)
+  const [postDetail, setPostDetail] = useState({})
 
   useEffect(() => {
     try {
@@ -61,14 +61,16 @@ const ViewPost = () => {
                     <strong>{`View Post`}</strong>
                   </CCol>
                   <CCol md={6} className="d-flex align-items-start justify-content-end">
-                    <CButton
-                      color="light"
-                      onClick={() =>
-                        (window.location.href = `./#/MaintainKol/UpdatePost?Id=` + postId)
-                      }
-                    >
-                      Update
-                    </CButton>
+                    {!postDetail.uploadDate && (
+                      <CButton
+                        color="light"
+                        onClick={() =>
+                          (window.location.href = `./#/MaintainKol/UpdatePost?Id=` + postId)
+                        }
+                      >
+                        Update
+                      </CButton>
+                    )}
                   </CCol>
                 </CRow>
               </CCardHeader>
