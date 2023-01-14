@@ -21,6 +21,8 @@ const VerticalTableRow = ({ props }) => {
     contentColumn: {
       display: 'grid',
       alignItems: 'stretch',
+      overflowWrap: 'break-word',
+      wordBreak: 'break-all',
     },
   }
 

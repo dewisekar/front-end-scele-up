@@ -311,6 +311,45 @@ const updatePostStatsById = async (Id) => {
   }
 }
 
+const putRequestByUri = async (endpoint, payload) => {
+  try {
+    const res = await axios.put(baseUrl + endpoint, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const postRequestByUri = async (endpoint, payload) => {
+  try {
+    const res = await axios.post(baseUrl + endpoint, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const patchRequestByUri = async (endpoint, payload) => {
+  try {
+    const res = await axios.patch(baseUrl + endpoint, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 export {
   insertNewKOL,
   getFormatListKol,
@@ -328,4 +367,7 @@ export {
   execSPWithoutInput,
   execSPWithInput,
   updatePostStatsById,
+  putRequestByUri,
+  postRequestByUri,
+  patchRequestByUri,
 }

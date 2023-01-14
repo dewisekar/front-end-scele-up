@@ -14,15 +14,22 @@ import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 
 import { tableField } from './UpdatePost.config'
-import { getRequestByUri, getVideoAndUserStats } from '../../utils/request-marketing'
-import { URL, PostStatus, DateMode, PythonErrorCode } from 'src/constants'
+import {
+  getRequestByUri,
+  getVideoAndUserStats,
+  patchRequestByUri,
+  putRequestByUri,
+} from '../../utils/request-marketing'
+import { URL, PostStatus, DateMode, PythonErrorCode, ResponseStatus } from 'src/constants'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 import { ErrorModal, ConfirmationModal } from 'src/components'
 
 const UpdatePost = () => {
   const [searchParams] = useSearchParams()
   const [state, setState] = useState({})
+  const [postDetail, setPostDetail] = useState({})
   const [isCheckingPostLink, setIsCheckingPostLink] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false)
   const [isErrorModalVisible, setIsErrorModalVisible] = useState(false)
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
   const [errorModalMessage, setErrorModalMessage] = useState({ title: null, message: null })
@@ -34,13 +41,12 @@ const UpdatePost = () => {
   const confirmModalMessage = {
     title: 'Anda yakin ingin update post?',
     message: `Demi kelancaran proses pengambilan statistik post, data yang sudah 
-      diupdate tidak bisa diupdate lagi. Pastikan info yang diinput adalah benar!`,
+      diupdate post linknya tidak bisa diupdate lagi. Pastikan info yang diinput adalah benar!`,
   }
+  let postId = searchParams.get('Id')
 
   useEffect(() => {
     try {
-      let postId = searchParams.get('Id')
-
       const fetchData = async () => {
         const { message: fetchedDetail } = await getRequestByUri(URL.GET_POST_DETAIL + postId)
 
@@ -59,6 +65,7 @@ const UpdatePost = () => {
           uploadDate: convertedUpload,
           isLinkChecked,
         })
+        setPostDetail(fetchedDetail)
       }
 
       fetchData()
@@ -69,10 +76,11 @@ const UpdatePost = () => {
 
   const handleCheckPostLink = async () => {
     const postLink = state.linkPost
+
     setIsCheckingPostLink(true)
     let { status } = await getVideoAndUserStats(postLink)
 
-    if (status === PythonErrorCode.NOT_AVAILABLE) {
+    if (status === PythonErrorCode.NOT_AVAILABLE || postLink === null) {
       setErrorModalMessage({
         message: 'Pastikan anda memasukkan link yang benar',
         title: 'Link Post Tidak Ditemukan',
@@ -117,7 +125,37 @@ const UpdatePost = () => {
     handleConfirmationModalShow()
   }
 
-  const handleSubmitForm = async () => {}
+  const handleSubmitForm = async () => {
+    handleConfirmationModalClose()
+    const payload = {
+      deadlineDate: state.deadlineDate,
+      uploadDate: state.uploadDate,
+      linkPost: state.linkPost,
+    }
+    setIsUpdating(true)
+
+    try {
+      const { status } = await patchRequestByUri(URL.UPDATE_POST + postId, payload)
+      if (status === ResponseStatus.FALSE) {
+        setErrorModalMessage({
+          message: 'Update post gagal',
+          title: 'Update post gagal. Silahkan coba lagi. Post id: ' + postId,
+        })
+        handleErrorModalShow()
+        setIsUpdating(false)
+        return
+      }
+
+      setErrorModalMessage({
+        message: 'Update post berhasil',
+        title: 'Update post berhasil. Post id: ' + postId,
+      })
+      setIsUpdating(false)
+      handleErrorModalShow()
+    } catch (error) {
+      alert(error)
+    }
+  }
 
   const onFormChange = (e) => {
     const { name, value, checked, type } = e.target
@@ -188,7 +226,7 @@ const UpdatePost = () => {
           <CCol xs={3}>
             <div className="p-2 border bg-light">Link Belum / Telah Dicek</div>
           </CCol>
-          {state.isLinkChecked ? (
+          {state.isLinkChecked || (!state.isLinkChecked && postDetail.uploadDate) ? (
             <CCol xs={3}>
               <div className="p-2 border bg-light text-success text-center">
                 <b>Link Valid</b> <CIcon icon={cilCheckCircle} size="sm" />
@@ -203,16 +241,20 @@ const UpdatePost = () => {
           )}
         </CRow>
         <CRow className="mt-3">
-          <CCol xs={12}>
-            <CButton
-              color="info"
-              className="w-100"
-              onClick={onFormSubmit}
-              active
-              disabled={state.postStatus === PostStatus.FULFILLED}
-            >
-              Update
-            </CButton>
+          <CCol xs={12} className="text-center">
+            {!isUpdating ? (
+              <CButton
+                color="info"
+                className="w-100"
+                onClick={onFormSubmit}
+                active
+                disabled={state.postStatus === PostStatus.FULFILLED}
+              >
+                Update
+              </CButton>
+            ) : (
+              <CSpinner color="primary" />
+            )}
           </CCol>
         </CRow>
       </>

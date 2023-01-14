@@ -28,6 +28,7 @@ const URL = {
   GET_CONTRACT_ITERATION: '/getListKontrakIteration',
   GET_MANAGER_LIST: '/getListManager',
   GET_BRIEF_LIST: '/getListBrief',
+  UPDATE_POST: '/updatePost?id=',
 }
 
 const ResponseStatus = {
