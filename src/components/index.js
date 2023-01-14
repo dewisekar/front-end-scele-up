@@ -12,6 +12,7 @@ import NoDataAvailable from './NoDataAvailable'
 import PostBanner from './PostBanner'
 import VerticalTableRow from './VerticalTableRow'
 import ErrorModal from './ErrorModal'
+import ConfirmationModal from './ConfirmationModal'
 
 export {
   AppBreadcrumb,
@@ -28,4 +29,5 @@ export {
   PostBanner,
   VerticalTableRow,
   ErrorModal,
+  ConfirmationModal,
 }

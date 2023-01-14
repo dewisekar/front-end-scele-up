@@ -8,16 +8,24 @@ import { tableField } from './UpdatePost.config'
 import { getRequestByUri, getVideoAndUserStats } from '../../utils/request-marketing'
 import { URL, PostStatus, DateMode } from 'src/constants'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
-import { ErrorModal } from 'src/components'
+import { ErrorModal, ConfirmationModal } from 'src/components'
 
 const UpdatePost = () => {
   const [searchParams] = useSearchParams()
   const [state, setState] = useState({})
   const [isErrorModalVisible, setIsErrorModalVisible] = useState(false)
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
   const [errorModalMessage, setErrorModalMessage] = useState({ title: null, message: null })
   const handleErrorModalClose = () => setIsErrorModalVisible(false)
   const handleErrorModalShow = () => setIsErrorModalVisible(true)
+  const handleConfirmationModalClose = () => setIsConfirmationModalVisible(false)
+  const handleConfirmationModalShow = () => setIsConfirmationModalVisible(true)
   const errorModalTitle = 'Update Post Error'
+  const confirmModalMessage = {
+    title: 'Anda yakin ingin update post?',
+    message: `Demi kelancaran proses pengambilan statistik post, data yang sudah 
+      diupdate tidak bisa diupdate lagi. Pastikan info yang diinput adalah benar!`,
+  }
 
   useEffect(() => {
     try {
@@ -63,7 +71,7 @@ const UpdatePost = () => {
     return result
   }
 
-  const handleSubmitForm = async () => {
+  const onFormSubmit = () => {
     const checker = checkAllFieldsFilled(tableField)
     const isEveryFieldFilled = checker.length === 0
 
@@ -82,7 +90,11 @@ const UpdatePost = () => {
       handleErrorModalShow()
       return
     }
+
+    handleConfirmationModalShow()
   }
+
+  const handleSubmitForm = async () => {}
 
   const onFormChange = (e) => {
     const { name, value, checked, type } = e.target
@@ -168,7 +180,7 @@ const UpdatePost = () => {
             <CButton
               color="info"
               className="w-100"
-              onClick={handleSubmitForm}
+              onClick={onFormSubmit}
               active
               disabled={state.postStatus === PostStatus.FULFILLED}
             >
@@ -196,6 +208,13 @@ const UpdatePost = () => {
                   isVisible={isErrorModalVisible}
                   onClose={handleErrorModalClose}
                   modalMessage={errorModalMessage}
+                />
+                <ConfirmationModal
+                  isVisible={isConfirmationModalVisible}
+                  onClose={handleConfirmationModalClose}
+                  modalMessage={confirmModalMessage}
+                  onConfirm={handleSubmitForm}
+                  confirmButtonLabel="Ya, Update"
                 />
               </CCardBody>
             </CCard>
