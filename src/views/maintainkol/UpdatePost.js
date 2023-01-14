@@ -5,13 +5,19 @@ import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 
 import { tableField } from './UpdatePost.config'
-import { getRequestByUri } from '../../utils/request-marketing'
+import { getRequestByUri, getVideoAndUserStats } from '../../utils/request-marketing'
 import { URL, PostStatus, DateMode } from 'src/constants'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
+import { ErrorModal } from 'src/components'
 
 const UpdatePost = () => {
   const [searchParams] = useSearchParams()
   const [state, setState] = useState({})
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false)
+  const [errorModalMessage, setErrorModalMessage] = useState({ title: null, message: null })
+  const handleErrorModalClose = () => setIsErrorModalVisible(false)
+  const handleErrorModalShow = () => setIsErrorModalVisible(true)
+  const errorModalTitle = 'Update Post Error'
 
   useEffect(() => {
     try {
@@ -42,6 +48,41 @@ const UpdatePost = () => {
       console.log(err)
     }
   }, [])
+
+  const handleCheckPostLink = async () => {
+    const postLink = state.postLink
+    let resGetVideoAndUserStats = await getVideoAndUserStats(postLink)
+    console.log('ini link post', resGetVideoAndUserStats)
+  }
+
+  const checkAllFieldsFilled = (fields) => {
+    const result = fields.filter((field) => {
+      const { field: fieldCode } = field
+      return state[fieldCode] === null
+    })
+    return result
+  }
+
+  const handleSubmitForm = async () => {
+    const checker = checkAllFieldsFilled(tableField)
+    const isEveryFieldFilled = checker.length === 0
+
+    if (!isEveryFieldFilled) {
+      const [{ label }] = checker
+      setErrorModalMessage({ message: 'Mohon isi ' + label, title: errorModalTitle })
+      handleErrorModalShow()
+      return
+    }
+
+    if (!state.isLinkChecked) {
+      setErrorModalMessage({
+        message: 'Please check post link validity!',
+        title: errorModalTitle,
+      })
+      handleErrorModalShow()
+      return
+    }
+  }
 
   const onFormChange = (e) => {
     const { name, value, checked, type } = e.target
@@ -81,11 +122,7 @@ const UpdatePost = () => {
               />
             </CCol>
             <CCol xs={3} className="d-flex align-items-start justify-content-end">
-              <CButton
-                color="light"
-                className="w-100"
-                // onClick={}
-              >
+              <CButton color="light" className="w-100" onClick={handleCheckPostLink}>
                 Check Link Validity
               </CButton>
             </CCol>
@@ -128,11 +165,7 @@ const UpdatePost = () => {
         </CRow>
         <CRow className="mt-3">
           <CCol xs={12}>
-            <CButton
-              color="info"
-              className="w-100"
-              // onClick={}
-            >
+            <CButton color="info" className="w-100" onClick={handleSubmitForm} active>
               Update
             </CButton>
           </CCol>
@@ -153,6 +186,11 @@ const UpdatePost = () => {
               <CCardBody>
                 {state && renderForm(tableField, state)}
                 {renderFormButtons()}
+                <ErrorModal
+                  isVisible={isErrorModalVisible}
+                  onClose={handleErrorModalClose}
+                  modalMessage={errorModalMessage}
+                />
               </CCardBody>
             </CCard>
           </CCol>

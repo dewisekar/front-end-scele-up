@@ -11,6 +11,7 @@ import LoadingAnimation from './LoadingAnimation'
 import NoDataAvailable from './NoDataAvailable'
 import PostBanner from './PostBanner'
 import VerticalTableRow from './VerticalTableRow'
+import ErrorModal from './ErrorModal'
 
 export {
   AppBreadcrumb,
@@ -26,4 +27,5 @@ export {
   NoDataAvailable,
   PostBanner,
   VerticalTableRow,
+  ErrorModal,
 }
