@@ -40,6 +40,10 @@ const ColumnSizePercentage = {
   HALF: 50,
 }
 
+const PythonErrorCode = {
+  NOT_AVAILABLE: '203',
+}
+
 export {
   StoredProcedure,
   EventColor,
@@ -48,4 +52,5 @@ export {
   URL,
   ResponseStatus,
   ColumnSizePercentage,
+  PythonErrorCode,
 }

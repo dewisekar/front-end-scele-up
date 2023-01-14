@@ -1,18 +1,28 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CFormInput, CButton } from '@coreui/react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CFormInput,
+  CButton,
+  CSpinner,
+} from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 
 import { tableField } from './UpdatePost.config'
 import { getRequestByUri, getVideoAndUserStats } from '../../utils/request-marketing'
-import { URL, PostStatus, DateMode } from 'src/constants'
+import { URL, PostStatus, DateMode, PythonErrorCode } from 'src/constants'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 import { ErrorModal, ConfirmationModal } from 'src/components'
 
 const UpdatePost = () => {
   const [searchParams] = useSearchParams()
   const [state, setState] = useState({})
+  const [isCheckingPostLink, setIsCheckingPostLink] = useState(false)
   const [isErrorModalVisible, setIsErrorModalVisible] = useState(false)
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
   const [errorModalMessage, setErrorModalMessage] = useState({ title: null, message: null })
@@ -58,9 +68,22 @@ const UpdatePost = () => {
   }, [])
 
   const handleCheckPostLink = async () => {
-    const postLink = state.postLink
-    let resGetVideoAndUserStats = await getVideoAndUserStats(postLink)
-    console.log('ini link post', resGetVideoAndUserStats)
+    const postLink = state.linkPost
+    setIsCheckingPostLink(true)
+    let { status } = await getVideoAndUserStats(postLink)
+
+    if (status === PythonErrorCode.NOT_AVAILABLE) {
+      setErrorModalMessage({
+        message: 'Pastikan anda memasukkan link yang benar',
+        title: 'Link Post Tidak Ditemukan',
+      })
+      handleErrorModalShow()
+      setIsCheckingPostLink(false)
+      return
+    }
+
+    setState({ ...state, isLinkChecked: true })
+    setIsCheckingPostLink(false)
   }
 
   const checkAllFieldsFilled = (fields) => {
@@ -134,9 +157,13 @@ const UpdatePost = () => {
               />
             </CCol>
             <CCol xs={3} className="d-flex align-items-start justify-content-end">
-              <CButton color="light" className="w-100" onClick={handleCheckPostLink}>
-                Check Link Validity
-              </CButton>
+              {!isCheckingPostLink ? (
+                <CButton color="light" className="w-100" onClick={handleCheckPostLink}>
+                  Check Link Validity
+                </CButton>
+              ) : (
+                <CSpinner color="primary" />
+              )}
             </CCol>
           </>
         ) : (
