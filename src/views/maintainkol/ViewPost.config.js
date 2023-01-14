@@ -10,7 +10,7 @@ const tableField = [
   { label: 'Kode Brief', field: 'briefCode' },
   { label: 'Nama Brief', field: 'briefName' },
   { label: 'PIC KOL', field: 'kolManager' },
-  { label: 'Link Post', field: 'postLink' },
+  { label: 'Link Post', field: 'linkPost' },
 ]
 
 const styles = {

@@ -110,7 +110,7 @@ const UpdatePost = () => {
         <CCol xs={3}>
           <div className="p-2 border bg-light">{label}</div>
         </CCol>
-        {field === 'postLink' ? (
+        {field === 'linkPost' ? (
           <>
             <CCol xs={6}>
               <CFormInput
@@ -165,7 +165,13 @@ const UpdatePost = () => {
         </CRow>
         <CRow className="mt-3">
           <CCol xs={12}>
-            <CButton color="info" className="w-100" onClick={handleSubmitForm} active>
+            <CButton
+              color="info"
+              className="w-100"
+              onClick={handleSubmitForm}
+              active
+              disabled={state.postStatus === PostStatus.FULFILLED}
+            >
               Update
             </CButton>
           </CCol>
