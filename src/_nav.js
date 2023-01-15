@@ -218,13 +218,6 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Input Post Review Manual',
-    to: '/MaintainKol/InputPostReviewManual',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    level: ['MK', 'MKSU'],
-  },
-  {
-    component: CNavItem,
     name: 'List Post',
     to: '/MaintainKol/ListPost',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,

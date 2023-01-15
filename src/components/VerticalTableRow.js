@@ -5,7 +5,7 @@ import { ColumnSizePercentage } from 'src/constants'
 const VerticalTableRow = ({ props }) => {
   const {
     data,
-    item: { label, field },
+    item: { label, field, type = 'text' },
     size = ColumnSizePercentage.FULL,
   } = props
   const value = data[field]
@@ -34,7 +34,13 @@ const VerticalTableRow = ({ props }) => {
         </CCol>
         <CCol xs={9} style={styles.contentColumn}>
           <div className="p-2 border" style={styles.contentContainer}>
-            {value}
+            {type === 'link' ? (
+              <a href={value} target="_blank" rel="noreferrer">
+                {value}
+              </a>
+            ) : (
+              value
+            )}
           </div>
         </CCol>
       </CRow>
@@ -49,7 +55,13 @@ const VerticalTableRow = ({ props }) => {
         </CCol>
         <CCol xs={4} className="mb-1" style={styles.contentColumn}>
           <div className="p-2 border" style={styles.contentContainer}>
-            {value}
+            {type === 'link' ? (
+              <a href={value} target="_blank" rel="noreferrer">
+                {value}
+              </a>
+            ) : (
+              value
+            )}
           </div>
         </CCol>
       </>

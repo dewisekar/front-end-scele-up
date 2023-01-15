@@ -1,16 +1,16 @@
 const tableField = [
-  { label: 'Status', field: 'postStatus' },
-  { label: 'Nama Kol', field: 'kolName' },
-  { label: 'Platform', field: 'platform' },
-  { label: 'Username', field: 'username' },
-  { label: 'Kontrak Ke', field: 'contractNumber' },
-  { label: 'Slot Ke', field: 'slotNumber' },
-  { label: 'Tanggal Deadline', field: 'deadlineDate' },
-  { label: 'Tanggal Upload', field: 'uploadDate' },
-  { label: 'Kode Brief', field: 'briefCode' },
-  { label: 'Nama Brief', field: 'briefName' },
-  { label: 'PIC KOL', field: 'kolManager' },
-  { label: 'Link Post', field: 'linkPost' },
+  { label: 'Status', field: 'postStatus', type: 'text' },
+  { label: 'Nama Kol', field: 'kolName', type: 'text' },
+  { label: 'Platform', field: 'platform', type: 'text' },
+  { label: 'Username', field: 'username', type: 'text' },
+  { label: 'Kontrak Ke', field: 'contractNumber', type: 'text' },
+  { label: 'Slot Ke', field: 'slotNumber', type: 'text' },
+  { label: 'Tanggal Deadline', field: 'deadlineDate', type: 'text' },
+  { label: 'Tanggal Upload', field: 'uploadDate', type: 'text' },
+  { label: 'Kode Brief', field: 'briefCode', type: 'text' },
+  { label: 'Nama Brief', field: 'briefName', type: 'text' },
+  { label: 'PIC KOL', field: 'kolManager', type: 'text' },
+  { label: 'Link Post', field: 'linkPost', type: 'link' },
 ]
 
 const styles = {

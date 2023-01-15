@@ -150,6 +150,7 @@ const UpdatePost = () => {
         message: 'Update post berhasil',
         title: 'Update post berhasil. Post id: ' + postId,
       })
+      setState({ ...state, postStatus: PostStatus.FULFILLED })
       setIsUpdating(false)
       handleErrorModalShow()
     } catch (error) {
