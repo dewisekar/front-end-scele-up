@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert } from '@coreui/react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
@@ -156,6 +156,13 @@ const PostCalendar = () => {
     return (
       <Suspense>
         <CRow>
+          <CCol xs={12}>
+            <CAlert color="info">
+              Demi kelancaran pengumpulan data statistik, jangan lupa untuk update data post setelah
+              KOL melakukan <i>upload</i> di sosial media,{' '}
+              <b>maksimal H+1 waktu KOL upload post.</b>
+            </CAlert>
+          </CCol>
           {renderTodayPost()}
           {renderMissedPost()}
         </CRow>

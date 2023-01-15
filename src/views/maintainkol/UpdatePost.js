@@ -78,7 +78,8 @@ const UpdatePost = () => {
     const postLink = state.linkPost
 
     setIsCheckingPostLink(true)
-    let { status } = await getVideoAndUserStats(postLink)
+    let result = await getVideoAndUserStats(postLink)
+    const { status } = result
 
     if (status === PythonErrorCode.NOT_AVAILABLE || postLink === null) {
       setErrorModalMessage({

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CBadge } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 
 import { execSPWithoutInput, getFormatList } from '../../utils/request-marketing'
@@ -92,7 +92,14 @@ const ListPost = () => {
             <CCardHeader>
               <strong>List Post</strong> {/*<small>File input</small>*/}
             </CCardHeader>
-            <CCardBody>{formatTable && <DatatablePage data={dataTable} />}</CCardBody>
+            <CCardBody>
+              <CAlert color="info">
+                Demi kelancaran pengumpulan data statistik, jangan lupa untuk update data post
+                setelah KOL melakukan <i>upload</i> di sosial media,{' '}
+                <b>maksimal H+1 waktu KOL upload post.</b>
+              </CAlert>
+              {formatTable && <DatatablePage data={dataTable} />}
+            </CCardBody>
           </CCard>
         </CCol>
       </CRow>
