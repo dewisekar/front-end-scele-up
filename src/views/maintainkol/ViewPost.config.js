@@ -13,10 +13,37 @@ const tableField = [
   { label: 'Link Post', field: 'linkPost', type: 'link' },
 ]
 
+const statisticField = [
+  {
+    key: 'dayNumber',
+    label: 'H+N',
+  },
+  {
+    key: 'followers',
+    label: 'Followers',
+  },
+  {
+    key: 'views',
+    label: 'Views',
+  },
+  {
+    key: 'likes',
+    label: 'Likes',
+  },
+  {
+    key: 'shares',
+    label: 'Shares',
+  },
+  {
+    key: 'comments',
+    label: 'Comments',
+  },
+]
+
 const styles = {
   container: {
     borderRadius: '5px',
   },
 }
 
-export { tableField, styles }
+export { tableField, styles, statisticField }
