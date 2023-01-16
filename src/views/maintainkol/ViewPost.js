@@ -9,6 +9,10 @@ import {
   CButton,
   CTable,
   CTableRow,
+  CTableHead,
+  CTableHeaderCell,
+  CTableBody,
+  CTableDataCell,
 } from '@coreui/react'
 
 import { tableField, styles, statisticField } from './ViewPost.config'
@@ -34,6 +38,7 @@ const ViewPost = () => {
         const { message: fetchedStatistic } = await getRequestByUri(
           URL.GET_POST_STATISTIC_BY_POST_ID + postId,
         )
+        console.log('ini fetched', fetchedStatistic)
 
         const { uploadDate, deadlineDate } = fetchedDetail
         const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
@@ -64,12 +69,26 @@ const ViewPost = () => {
     }
   }, [])
 
+  const countStatisticPoint = (data) => {}
+
   const renderDetailInfo = (fields, data, size = ColumnSizePercentage.FULL) => {
     const info = fields.map((item, index) => {
       return <VerticalTableRow key={index} props={{ item, data, size }} />
     })
 
     return info
+  }
+
+  const renderStatsRow = (data) => {
+    const day = [<CTableDataCell key="dayNumber">{data.dayNumber}</CTableDataCell>]
+    const info = statisticField.map((item, index) => {
+      return (
+        <CTableDataCell key={item.key} className="text-center">
+          {data[item.key]}
+        </CTableDataCell>
+      )
+    })
+    return [...day, ...info]
   }
 
   const renderPostDetail = () => {
@@ -121,16 +140,66 @@ const ViewPost = () => {
                 </CCol>
               </CRow>
             </CCardHeader>
-            <CCardBody>
+            <CCardBody style={{ overflowX: 'scroll' }}>
               <CRow>
                 <CCol lg={12}>
-                  <CTable
-                    bordered
-                    columns={statisticField}
-                    tableHeadProps={{ className: 'text-center' }}
-                    items={postStatistic}
-                    style={{ textAlign: 'center' }}
-                  ></CTable>
+                  <CTable bordered style={{ overflowX: 'scroll', borderColor: 'black' }}>
+                    <CTableHead>
+                      <CTableRow className="text-center">
+                        <CTableHeaderCell
+                          scope="col"
+                          rowSpan="5"
+                          key="dayNumber"
+                          color="light"
+                          style={{ borderColor: 'black' }}
+                        >
+                          H+N
+                        </CTableHeaderCell>
+                        <CTableHeaderCell
+                          scope="col"
+                          colSpan="5"
+                          color="secondary"
+                          style={{ borderColor: 'black' }}
+                        >
+                          Statistik Post
+                        </CTableHeaderCell>
+                        <CTableHeaderCell
+                          scope="col"
+                          colSpan="3"
+                          color="info"
+                          style={{ borderColor: 'black' }}
+                        >
+                          Score Efektivitas (Ratio Per Metriks)
+                        </CTableHeaderCell>
+                        <CTableHeaderCell
+                          scope="col"
+                          colSpan="2"
+                          color="dark"
+                          style={{ borderColor: 'black' }}
+                        >
+                          Cost Worthiness
+                        </CTableHeaderCell>
+                      </CTableRow>
+                      <CTableRow>
+                        {statisticField.map((field) => (
+                          <CTableHeaderCell
+                            scope="col"
+                            className="text-center"
+                            key={field.key}
+                            color={field.color}
+                            style={{ borderColor: 'black' }}
+                          >
+                            {field.label}
+                          </CTableHeaderCell>
+                        ))}
+                      </CTableRow>
+                    </CTableHead>
+                    <CTableBody>
+                      {postStatistic.map((data, index) => (
+                        <CTableRow key={index}> {renderStatsRow(data)}</CTableRow>
+                      ))}
+                    </CTableBody>
+                  </CTable>
                 </CCol>
               </CRow>
             </CCardBody>

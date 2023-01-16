@@ -15,28 +15,54 @@ const tableField = [
 
 const statisticField = [
   {
-    key: 'dayNumber',
-    label: 'H+N',
-  },
-  {
     key: 'followers',
     label: 'Followers',
+    color: 'secondary',
   },
   {
     key: 'views',
     label: 'Views',
+    color: 'secondary',
   },
   {
     key: 'likes',
     label: 'Likes',
+    color: 'secondary',
   },
   {
     key: 'shares',
     label: 'Shares',
+    color: 'secondary',
   },
   {
     key: 'comments',
     label: 'Comments',
+    color: 'secondary',
+  },
+  {
+    key: 'viewsPerFollowers',
+    label: 'Views/Followers (*100)',
+    color: 'info',
+  },
+  {
+    key: 'commentsPerFollowers',
+    label: 'Comments/Followers (*30K)',
+    color: 'info',
+  },
+  {
+    key: 'sharePerFollowers',
+    label: 'Shares/Followers (*50K)',
+    color: 'info',
+  },
+  {
+    key: 'cwViews',
+    label: 'Per Views',
+    color: 'dark',
+  },
+  {
+    key: 'cwCPM',
+    label: 'CPM (Cost/1000 Reach)',
+    color: 'dark',
   },
 ]
 
