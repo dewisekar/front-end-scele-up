@@ -1,16 +1,16 @@
 const countPostStatistic = (data, fields) => {
   const { views, followers, shares, comments, costPerSlot } = data
   const Scores = {
-    viewsPerFollowers: Math.round((views / followers) * 1000 * 100) / 100,
-    commentsPerFollowers: Math.round((comments / followers) * 30000 * 100) / 100,
-    sharesPerFollowers: Math.round((shares / followers) * 50000 * 100) / 100,
-    costPerViews: Math.round((costPerSlot / views) * 100) / 100,
-    cpm: Math.round((costPerSlot / views) * 1000 * 100) / 100,
+    viewsPerFollowers: (views / followers) * 100,
+    commentsPerFollowers: (comments / followers) * 30000,
+    sharesPerFollowers: (shares / followers) * 50000,
+    costPerViews: costPerSlot / views,
+    cpm: (costPerSlot / views) * 1000,
   }
 
   let result = {}
   fields.forEach((field) => {
-    result[field] = Scores[field]
+    result[field] = Math.round(Scores[field] * 100) / 100
   })
 
   return result

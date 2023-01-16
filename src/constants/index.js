@@ -30,6 +30,7 @@ const URL = {
   GET_BRIEF_LIST: '/getListBrief',
   UPDATE_POST: '/updatePost?id=',
   GET_POST_STATISTIC_BY_POST_ID: '/getPostStatisticByPostId?id=',
+  GET_CONTRACT_RENEWAL_LIST: '/getContractRenewalList',
 }
 
 const ResponseStatus = {
