@@ -46,6 +46,12 @@ const PythonErrorCode = {
   NOT_AVAILABLE: '203',
 }
 
+const PostStatisticKey = {
+  VIEWS_PER_FOLLOWERS: 'viewsPerFollowers',
+  COMMENTS_PER_FOLLOWERS: 'commentsPerFollowers',
+  SHARES_PER_FOLLOWERS: 'sharesPerFollowers',
+}
+
 export {
   StoredProcedure,
   EventColor,
@@ -55,4 +61,5 @@ export {
   ResponseStatus,
   ColumnSizePercentage,
   PythonErrorCode,
+  PostStatisticKey,
 }

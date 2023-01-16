@@ -17,16 +17,22 @@ import {
 
 import { tableField, styles, statisticField } from './ViewPost.config'
 import { getRequestByUri } from '../../utils/request-marketing'
-import { URL, ColumnSizePercentage, PostStatus } from 'src/constants'
-import { VerticalTableRow } from 'src/components'
+import { URL, ColumnSizePercentage, PostStatus, PostStatisticKey } from 'src/constants'
+import { VerticalTableRow, LoadingAnimation } from 'src/components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
-import { textAlign } from '@mui/system'
+import { countPostStatistic } from 'src/utils/postUtil'
 
 const ViewPost = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [postId, setPostId] = useState(null)
   const [postDetail, setPostDetail] = useState({})
   const [postStatistic, setPostStatistic] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const postStatisticKey = [
+    PostStatisticKey.VIEWS_PER_FOLLOWERS,
+    PostStatisticKey.COMMENTS_PER_FOLLOWERS,
+    PostStatisticKey.SHARES_PER_FOLLOWERS,
+  ]
 
   useEffect(() => {
     try {
@@ -38,7 +44,6 @@ const ViewPost = () => {
         const { message: fetchedStatistic } = await getRequestByUri(
           URL.GET_POST_STATISTIC_BY_POST_ID + postId,
         )
-        console.log('ini fetched', fetchedStatistic)
 
         const { uploadDate, deadlineDate } = fetchedDetail
         const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
@@ -48,11 +53,16 @@ const ViewPost = () => {
         const convertedUpload = uploadDate ? convertDate(deadlineDate) : null
 
         const mappedStatistic = fetchedStatistic.map((data) => {
+          const countedStat = countPostStatistic(data, postStatisticKey)
+
           return {
             ...data,
             dayNumber: 'H+' + data.dayNumber,
+            ...countedStat,
           }
         })
+
+        console.log('hai', mappedStatistic)
 
         setPostDetail({
           ...fetchedDetail,
@@ -61,6 +71,7 @@ const ViewPost = () => {
           uploadDate: convertedUpload,
         })
         setPostStatistic(mappedStatistic)
+        setIsLoading(false)
       }
 
       fetchData()
@@ -99,7 +110,7 @@ const ViewPost = () => {
             <CCardHeader>
               <CRow>
                 <CCol md={6}>
-                  <strong>{`View Post`}</strong>
+                  <strong>{`Detail Post`}</strong>
                 </CCol>
                 <CCol md={6} className="d-flex align-items-start justify-content-end">
                   {!postDetail.uploadDate && (
@@ -136,7 +147,7 @@ const ViewPost = () => {
             <CCardHeader>
               <CRow>
                 <CCol md={6}>
-                  <strong>Statistic</strong>
+                  <strong>Statistik Post</strong>
                 </CCol>
               </CRow>
             </CCardHeader>
@@ -195,9 +206,17 @@ const ViewPost = () => {
                       </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                      {postStatistic.map((data, index) => (
-                        <CTableRow key={index}> {renderStatsRow(data)}</CTableRow>
-                      ))}
+                      {postStatistic.length > 0 ? (
+                        postStatistic.map((data, index) => (
+                          <CTableRow key={index}> {renderStatsRow(data)}</CTableRow>
+                        ))
+                      ) : (
+                        <CTableRow>
+                          <CTableDataCell colSpan="11" className="text-center">
+                            NO DATA AVAILABLE
+                          </CTableDataCell>
+                        </CTableRow>
+                      )}
                     </CTableBody>
                   </CTable>
                 </CCol>
@@ -209,6 +228,9 @@ const ViewPost = () => {
     )
   }
 
+  const renderLoadingAnimation = () => {
+    return <LoadingAnimation />
+  }
   const renderPageContent = () => {
     return (
       <Suspense>
@@ -218,7 +240,7 @@ const ViewPost = () => {
     )
   }
 
-  return <>{renderPageContent()}</>
+  return <>{isLoading ? renderLoadingAnimation() : renderPageContent()}</>
 }
 
 export default ViewPost

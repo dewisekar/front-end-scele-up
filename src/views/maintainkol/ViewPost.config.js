@@ -50,7 +50,7 @@ const statisticField = [
     color: 'info',
   },
   {
-    key: 'sharePerFollowers',
+    key: 'sharesPerFollowers',
     label: 'Shares/Followers (*50K)',
     color: 'info',
   },
