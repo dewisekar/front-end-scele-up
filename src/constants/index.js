@@ -44,6 +44,8 @@ const ColumnSizePercentage = {
 
 const PythonErrorCode = {
   NOT_AVAILABLE: '203',
+  FAILED_TO_FETCH: '201',
+  EMPTY_DATA: '202',
 }
 
 const PostStatisticKey = {

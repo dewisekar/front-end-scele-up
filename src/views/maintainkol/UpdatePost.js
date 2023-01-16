@@ -81,7 +81,12 @@ const UpdatePost = () => {
     let result = await getVideoAndUserStats(postLink)
     const { status } = result
 
-    if (status === PythonErrorCode.NOT_AVAILABLE || postLink === null) {
+    if (
+      status === PythonErrorCode.NOT_AVAILABLE ||
+      status === PythonErrorCode.FAILED_TO_FETCH ||
+      status === PythonErrorCode.EMPTY_DATA ||
+      postLink === null
+    ) {
       setErrorModalMessage({
         message: 'Pastikan anda memasukkan link yang benar',
         title: 'Link Post Tidak Ditemukan',
@@ -104,7 +109,13 @@ const UpdatePost = () => {
   }
 
   const onFormSubmit = () => {
-    const checker = checkAllFieldsFilled(tableField)
+    if (state['uploadDate'] === null && state['linkPost'] === null) {
+      handleConfirmationModalShow()
+      return
+    }
+
+    const field = [{ label: 'Link Post', field: 'linkPost', type: 'text', disabled: false }]
+    const checker = checkAllFieldsFilled(field)
     const isEveryFieldFilled = checker.length === 0
 
     if (!isEveryFieldFilled) {
