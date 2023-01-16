@@ -55,12 +55,12 @@ const statisticField = [
     color: 'info',
   },
   {
-    key: 'cwViews',
+    key: 'costPerViews',
     label: 'Per Views',
     color: 'dark',
   },
   {
-    key: 'cwCPM',
+    key: 'cpm',
     label: 'CPM (Cost/1000 Reach)',
     color: 'dark',
   },

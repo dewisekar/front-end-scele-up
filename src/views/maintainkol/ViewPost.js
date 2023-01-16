@@ -32,6 +32,8 @@ const ViewPost = () => {
     PostStatisticKey.VIEWS_PER_FOLLOWERS,
     PostStatisticKey.COMMENTS_PER_FOLLOWERS,
     PostStatisticKey.SHARES_PER_FOLLOWERS,
+    PostStatisticKey.COST_PER_VIEWS,
+    PostStatisticKey.CPM,
   ]
 
   useEffect(() => {
@@ -45,7 +47,7 @@ const ViewPost = () => {
           URL.GET_POST_STATISTIC_BY_POST_ID + postId,
         )
 
-        const { uploadDate, deadlineDate } = fetchedDetail
+        const { uploadDate, deadlineDate, costPerSlot } = fetchedDetail
         const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
 
         const postStatus = PostStatus[getPostStatus(new Date(deadlineDate), convertedUploadDate)]
@@ -53,7 +55,7 @@ const ViewPost = () => {
         const convertedUpload = uploadDate ? convertDate(deadlineDate) : null
 
         const mappedStatistic = fetchedStatistic.map((data) => {
-          const countedStat = countPostStatistic(data, postStatisticKey)
+          const countedStat = countPostStatistic({ ...data, costPerSlot }, postStatisticKey)
 
           return {
             ...data,
@@ -61,8 +63,6 @@ const ViewPost = () => {
             ...countedStat,
           }
         })
-
-        console.log('hai', mappedStatistic)
 
         setPostDetail({
           ...fetchedDetail,
@@ -79,8 +79,6 @@ const ViewPost = () => {
       console.log(err)
     }
   }, [])
-
-  const countStatisticPoint = (data) => {}
 
   const renderDetailInfo = (fields, data, size = ColumnSizePercentage.FULL) => {
     const info = fields.map((item, index) => {

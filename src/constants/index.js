@@ -50,6 +50,8 @@ const PostStatisticKey = {
   VIEWS_PER_FOLLOWERS: 'viewsPerFollowers',
   COMMENTS_PER_FOLLOWERS: 'commentsPerFollowers',
   SHARES_PER_FOLLOWERS: 'sharesPerFollowers',
+  COST_PER_VIEWS: 'costPerViews',
+  CPM: 'cpm',
 }
 
 export {
