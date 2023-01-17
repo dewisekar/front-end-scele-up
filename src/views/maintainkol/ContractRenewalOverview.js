@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CTable } from '@coreui/react'
-import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
+import { NavLink } from 'react-router-dom'
 
 import { getRequestByUri } from '../../utils/request-marketing'
 import { LoadingAnimation } from '../../components'
-import { getPostStatus, convertDate } from 'src/utils/pageUtil'
+import { convertDate } from 'src/utils/pageUtil'
 import { URL } from 'src/constants'
 
 const ContractRenewalOverview = () => {
@@ -14,7 +14,9 @@ const ContractRenewalOverview = () => {
     { key: 'totalSlot', label: 'Jumlah Slot' },
     { key: 'uploadedPost', label: 'Slot Terpenuhi' },
     { key: 'missedPost', label: 'Slot Tidak Terpenuhi' },
+    { key: 'contractEndDate', label: 'Tanggal Kontrak Berakhir' },
     { key: 'dateDifference', label: 'Jumlah Hari Sebelum Kadaluarsa' },
+    { key: 'action', label: 'Action' },
   ]
   const [contractData, setContractData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -24,15 +26,27 @@ const ContractRenewalOverview = () => {
       const fetchData = async () => {
         const { message: fetchedContract } = await getRequestByUri(URL.GET_CONTRACT_RENEWAL_LIST)
         const mappedData = fetchedContract.map((data) => {
-          const { missedPost, uploadedPost } = data
+          const { missedPost, uploadedPost, contractId } = data
+          const action = (
+            <>
+              <NavLink
+                to={'/MaintainKol/ViewContract?id=' + contractId}
+                className="btn btn-dark btn-sm"
+                style={{ marginRight: '8px' }}
+              >
+                View
+              </NavLink>
+            </>
+          )
           return {
             ...data,
             missedPost: missedPost.toString(),
             uploadedPost: uploadedPost.toString(),
+            action,
+            contractEndDate: convertDate(new Date(data.contractEndDate)),
           }
         })
         setContractData(mappedData)
-        console.log(fetchedContract)
         setIsLoading(false)
       }
 

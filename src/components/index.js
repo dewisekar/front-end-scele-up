@@ -13,6 +13,7 @@ import PostBanner from './PostBanner'
 import VerticalTableRow from './VerticalTableRow'
 import ErrorModal from './ErrorModal'
 import ConfirmationModal from './ConfirmationModal'
+import RupiahCurrency from './RupiahCurrency'
 
 export {
   AppBreadcrumb,
@@ -30,4 +31,5 @@ export {
   VerticalTableRow,
   ErrorModal,
   ConfirmationModal,
+  RupiahCurrency,
 }

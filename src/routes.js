@@ -73,6 +73,7 @@ const ListPost = React.lazy(() => import('./views/maintainkol/ListPost'))
 const ViewPost = React.lazy(() => import('./views/maintainkol/ViewPost'))
 const UpdatePost = React.lazy(() => import('./views/maintainkol/UpdatePost'))
 const PostCalendar = React.lazy(() => import('./views/maintainkol/PostCalendar'))
+const ViewContract = React.lazy(() => import('./views/maintainkol/ViewContract'))
 const ContractRenewalOverview = React.lazy(() =>
   import('./views/maintainkol/ContractRenewalOverview'),
 )
@@ -191,6 +192,11 @@ const routes = [
     path: '/MaintainKol/ContractRenewalOverview',
     name: 'Contract Renewal Overview',
     element: ContractRenewalOverview,
+  },
+  {
+    path: '/MaintainKol/ViewContract',
+    name: 'View Contract',
+    element: ViewContract,
   },
   // },
   // {
