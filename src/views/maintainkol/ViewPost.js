@@ -206,7 +206,7 @@ const ViewPost = () => {
                     <CTableBody>
                       {postStatistic.length > 0 ? (
                         postStatistic.map((data, index) => (
-                          <CTableRow key={index}> {renderStatsRow(data)}</CTableRow>
+                          <CTableRow key={index}>{renderStatsRow(data)}</CTableRow>
                         ))
                       ) : (
                         <CTableRow>
