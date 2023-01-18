@@ -23,38 +23,34 @@ const ContractRenewalOverview = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    try {
-      const fetchData = async () => {
-        const { message: fetchedContract } = await getRequestByUri(URL.GET_CONTRACT_RENEWAL_LIST)
-        const mappedData = fetchedContract.map((data) => {
-          const { missedPost, uploadedPost, contractId } = data
-          const action = (
-            <>
-              <NavLink
-                to={'/MaintainKol/ViewContract?id=' + contractId}
-                className="btn btn-dark btn-sm"
-                style={{ marginRight: '8px' }}
-              >
-                View
-              </NavLink>
-            </>
-          )
-          return {
-            ...data,
-            missedPost: missedPost.toString(),
-            uploadedPost: uploadedPost.toString(),
-            action,
-            contractEndDate: convertDate(new Date(data.contractEndDate)),
-          }
-        })
-        setContractData(mappedData)
-        setIsLoading(false)
-      }
-
-      fetchData()
-    } catch (err) {
-      console.log(err)
+    const fetchData = async () => {
+      const { message: fetchedContract } = await getRequestByUri(URL.GET_CONTRACT_RENEWAL_LIST)
+      const mappedData = fetchedContract.map((data) => {
+        const { missedPost, uploadedPost, contractId } = data
+        const action = (
+          <>
+            <NavLink
+              to={'/MaintainKol/ViewContract?id=' + contractId}
+              className="btn btn-dark btn-sm"
+              style={{ marginRight: '8px' }}
+            >
+              View
+            </NavLink>
+          </>
+        )
+        return {
+          ...data,
+          missedPost: missedPost.toString(),
+          uploadedPost: uploadedPost.toString(),
+          action,
+          contractEndDate: convertDate(new Date(data.contractEndDate)),
+        }
+      })
+      setContractData(mappedData)
+      setIsLoading(false)
     }
+
+    fetchData()
   }, [])
 
   const renderLoadingAnimation = () => {

@@ -60,8 +60,6 @@ const ViewContract = () => {
           URL.GET_CONTRACT_DETAIL + contractId,
         )
 
-        console.log(fetchedDetail)
-
         const contractStartDate = convertDate(new Date(fetchedDetail['Masa Kontrak Mulai']))
         const contractEndDate = convertDate(new Date(fetchedDetail['Masa Kontrak Akhir']))
         const contractSignDate = convertDate(new Date(fetchedDetail['Tgl Kontrak']))

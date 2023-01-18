@@ -77,6 +77,9 @@ const ViewContract = React.lazy(() => import('./views/maintainkol/Contract/ViewC
 const ContractRenewalOverview = React.lazy(() =>
   import('./views/maintainkol/Overview/ContractRenewalOverview'),
 )
+const KolOverview = React.lazy(() => import('./views/maintainkol/Overview/KolOverview'))
+const ManagerOverview = React.lazy(() => import('./views/maintainkol/Overview/ManagerOverview'))
+const BriefOverview = React.lazy(() => import('./views/maintainkol/Overview/BriefOverview'))
 // const TestPost = React.lazy(() => import('./views/maintainkol/TestPost'))
 
 const routes = [
@@ -192,6 +195,21 @@ const routes = [
     path: '/MaintainKol/ContractRenewalOverview',
     name: 'Contract Renewal Overview',
     element: ContractRenewalOverview,
+  },
+  {
+    path: '/MaintainKol/KolOverview',
+    name: 'Kol Overview',
+    element: KolOverview,
+  },
+  {
+    path: '/MaintainKol/ManagerOverview',
+    name: 'Manager Overview',
+    element: ManagerOverview,
+  },
+  {
+    path: '/MaintainKol/BriefOverview',
+    name: 'Brief Overview',
+    element: BriefOverview,
   },
   {
     path: '/MaintainKol/ViewContract',

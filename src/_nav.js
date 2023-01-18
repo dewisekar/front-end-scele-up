@@ -235,6 +235,27 @@ const _nav = [
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
     level: ['MK', 'MKSU'],
   },
+  {
+    component: CNavItem,
+    name: 'KOL Overview',
+    to: '/MaintainKol/KolOverview',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+  },
+  {
+    component: CNavItem,
+    name: 'Manager Overview',
+    to: '/MaintainKol/ManagerOverview',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+  },
+  {
+    component: CNavItem,
+    name: 'Brief Overview',
+    to: '/MaintainKol/BriefOverview',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+  },
   // {
   //   component: CNavTitle,
   //   name: 'Maintain Post',
