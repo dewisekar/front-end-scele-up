@@ -3,7 +3,7 @@ import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert } from '@coreui/react
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-import { execSPWithoutInput } from '../../utils/request-marketing'
+import { execSPWithoutInput } from '../../../utils/request-marketing'
 import { PostBanner, LoadingAnimation } from 'src/components'
 import { StoredProcedure, EventColor, DateMode } from 'src/constants'
 import { convertDate, getPostStatus } from 'src/utils/pageUtil'

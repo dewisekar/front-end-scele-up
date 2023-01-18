@@ -16,7 +16,7 @@ import {
 } from '@coreui/react'
 
 import { tableField, styles, statisticField } from './ViewPost.config'
-import { getRequestByUri } from '../../utils/request-marketing'
+import { getRequestByUri } from '../../../utils/request-marketing'
 import { URL, ColumnSizePercentage, PostStatus, PostStatisticKey } from 'src/constants'
 import { VerticalTableRow, LoadingAnimation } from 'src/components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'

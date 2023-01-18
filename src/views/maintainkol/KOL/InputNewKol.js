@@ -16,7 +16,7 @@ import {
 // import DatePicker from 'react-datepicker'
 // import 'react-datepicker/dist/react-datepicker.css'
 // import { DocsCallout, DocsExample } from 'src/components'
-import { insertNewKOL } from '../../utils/request-marketing'
+import { insertNewKOL } from '../../../utils/request-marketing'
 // import { format } from 'date-fns'
 // import fileDownload from 'js-file-download'
 

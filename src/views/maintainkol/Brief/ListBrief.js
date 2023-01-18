@@ -1,19 +1,19 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
-import { getRequestByUri, getFormatList } from '../../utils/request-marketing'
+import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation, NoDataAvailable } from 'src/components'
 
-const ListManager = () => {
+const ListBrief = () => {
   const [formatTable, setFormatTable] = useState(null)
   const [dataTable, setDataTable] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    let resGetFormatListManager = getFormatList('manager')
+    let resGetFormatListBrief = getRequestByUri('/getFormatListBrief')
     try {
-      resGetFormatListManager.then(function (result) {
-        console.log('getFormatListManager:', result.status)
+      resGetFormatListBrief.then(function (result) {
+        console.log('getFormatListBrief:', result.status)
         if (result.status === 'true') {
           setFormatTable(result.message)
         }
@@ -22,10 +22,10 @@ const ListManager = () => {
       console.log(err)
     }
 
-    let resGetListManager = getRequestByUri('/getListManager')
+    let resGetListBrief = getRequestByUri('/getListBrief')
     try {
-      resGetListManager.then(function (result) {
-        console.log('resGetListManager:', result.status)
+      resGetListBrief.then(function (result) {
+        console.log('resGetListBrief:', result.status)
         if (result.status === 'true') {
           setDataTable(result.message)
         }
@@ -44,13 +44,13 @@ const ListManager = () => {
     )
   }
 
-  const renderTable = () => {
+  const renderContent = () => {
     return (
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>List Manager</strong> {/*<small>File input</small>*/}
+              <strong>List Brief</strong> {/*<small>File input</small>*/}
             </CCardHeader>
             <CCardBody>
               <DatatablePage data={dataTable} />
@@ -69,17 +69,16 @@ const ListManager = () => {
       }
       console.log(formatTable)
       return (
-        <MDBDataTable striped bordered data={dataInput}>
+        <MDBDataTable scrollX striped bordered data={dataInput}>
           <MDBTableHead columns={dataInput.columns} />
           <MDBTableBody rows={dataInput.rows} />
         </MDBDataTable>
       )
     }
-
     return <NoDataAvailable />
   }
 
-  return <>{isLoading ? renderLoadingAnimation() : renderTable()}</>
+  return <> {isLoading ? renderLoadingAnimation() : renderContent()}</>
 }
 
-export default ListManager
+export default ListBrief

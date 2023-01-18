@@ -5,8 +5,8 @@ import {
   GeneralFormInput,
   GeneralTextArea,
   convertDataToSelectOptions,
-} from '../../utils/GeneralFormInput'
-import { insertNewBrief, getRequestByUri } from '../../utils/request-marketing'
+} from '../../../utils/GeneralFormInput'
+import { insertNewBrief, getRequestByUri } from '../../../utils/request-marketing'
 import Select from 'react-select'
 
 const InputNewBrief = () => {

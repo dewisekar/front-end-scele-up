@@ -15,7 +15,7 @@ import {
   CTableDataCell,
 } from '@coreui/react'
 
-import { getRequestByUri } from '../../utils/request-marketing'
+import { getRequestByUri } from '../../../utils/request-marketing'
 import { URL, ColumnSizePercentage, PostStatus, PostStatisticKey } from 'src/constants'
 import { RupiahCurrency, LoadingAnimation } from 'src/components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'

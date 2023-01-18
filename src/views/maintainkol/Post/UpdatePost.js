@@ -18,8 +18,7 @@ import {
   getRequestByUri,
   getVideoAndUserStats,
   patchRequestByUri,
-  putRequestByUri,
-} from '../../utils/request-marketing'
+} from '../../../utils/request-marketing'
 import { URL, PostStatus, DateMode, PythonErrorCode, ResponseStatus } from 'src/constants'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 import { ErrorModal, ConfirmationModal } from 'src/components'

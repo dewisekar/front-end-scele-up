@@ -16,9 +16,9 @@ import {
   getSubMediaById,
   insertNewKontrak,
   getRequestByUri,
-} from '../../utils/request-marketing'
-import { generalDownload } from '../../utils/axios-request'
-import { GeneralFormInput } from '../../utils/GeneralFormInput'
+} from '../../../utils/request-marketing'
+import { generalDownload } from '../../../utils/axios-request'
+import { GeneralFormInput } from '../../../utils/GeneralFormInput'
 // import ControlledInput from '../../utils/GeneralFormInput'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'

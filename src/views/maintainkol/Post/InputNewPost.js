@@ -5,8 +5,8 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
 
-import { convertDataToSelectOptions } from '../../utils/GeneralFormInput'
-import { getRequestByUri, insertNewPost } from '../../utils/request-marketing'
+import { convertDataToSelectOptions } from '../../../utils/GeneralFormInput'
+import { getRequestByUri, insertNewPost } from '../../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
 import { URL, ResponseStatus } from 'src/constants'
 

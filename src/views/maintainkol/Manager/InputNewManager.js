@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow, CFormSelect } from '@coreui/react'
-import { GeneralFormInput, GeneralTextArea } from '../../utils/GeneralFormInput'
-import { insertNewBrief, insertNewManager } from '../../utils/request-marketing'
+import { GeneralFormInput, GeneralTextArea } from '../../../utils/GeneralFormInput'
+import { insertNewBrief, insertNewManager } from '../../../utils/request-marketing'
 
 const InputNewManager = () => {
   const [managerName, setManagerName] = useState('')

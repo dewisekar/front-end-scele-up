@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 
-import { execSPWithoutInput, getFormatList } from '../../utils/request-marketing'
+import { execSPWithoutInput, getFormatList } from '../../../utils/request-marketing'
 import { NavLink } from 'react-router-dom'
-import { LoadingAnimation, NoDataAvailable } from '../../components'
+import { LoadingAnimation, NoDataAvailable } from '../../../components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 import { StoredProcedure, PostStatus } from 'src/constants'
 

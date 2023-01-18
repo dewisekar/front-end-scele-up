@@ -3,8 +3,8 @@ import { CCard, CCardBody, CCardHeader, CCol, CRow, CTable } from '@coreui/react
 import { NavLink } from 'react-router-dom'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 
-import { getRequestByUri } from '../../utils/request-marketing'
-import { LoadingAnimation } from '../../components'
+import { getRequestByUri } from '../../../utils/request-marketing'
+import { LoadingAnimation } from '../../../components'
 import { convertDate } from 'src/utils/pageUtil'
 import { URL } from 'src/constants'
 

@@ -3,8 +3,8 @@ import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 import { NavLink } from 'react-router-dom'
 
-import { getRequestByUri } from '../../utils/request-marketing'
-import { LoadingAnimation, NoDataAvailable } from '../../components'
+import { getRequestByUri } from '../../../utils/request-marketing'
+import { LoadingAnimation, NoDataAvailable } from '../../../components'
 import { URL } from 'src/constants'
 const tableField = [
   { field: 'Name', label: 'Nama Kol' },

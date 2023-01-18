@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import { MDBDataTable } from 'mdbreact'
-import { getFormatListKol, getListKol } from '../../utils/request-marketing'
+import { getFormatListKol, getListKol } from '../../../utils/request-marketing'
 import { LoadingAnimation, NoDataAvailable } from 'src/components'
 
 const ListKol = () => {
