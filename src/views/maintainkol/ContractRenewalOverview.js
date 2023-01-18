@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CTable } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CTable } from '@coreui/react'
 import { NavLink } from 'react-router-dom'
+import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 
 import { getRequestByUri } from '../../utils/request-marketing'
 import { LoadingAnimation } from '../../components'
@@ -9,14 +10,14 @@ import { URL } from 'src/constants'
 
 const ContractRenewalOverview = () => {
   const tableField = [
-    { key: 'kolName', label: 'Nama KOL' },
-    { key: 'contractNumber', label: 'Kontrak Ke' },
-    { key: 'totalSlot', label: 'Jumlah Slot' },
-    { key: 'uploadedPost', label: 'Slot Terpenuhi' },
-    { key: 'missedPost', label: 'Slot Tidak Terpenuhi' },
-    { key: 'contractEndDate', label: 'Tanggal Kontrak Berakhir' },
-    { key: 'dateDifference', label: 'Jumlah Hari Sebelum Kadaluarsa' },
-    { key: 'action', label: 'Action' },
+    { field: 'kolName', label: 'Nama KOL' },
+    { field: 'contractNumber', label: 'Kontrak Ke' },
+    { field: 'totalSlot', label: 'Jumlah Slot' },
+    { field: 'uploadedPost', label: 'Slot Terpenuhi' },
+    { field: 'missedPost', label: 'Slot Tidak Terpenuhi' },
+    { field: 'contractEndDate', label: 'Tanggal Kontrak Berakhir' },
+    { field: 'dateDifference', label: 'Jumlah Hari Sebelum Kadaluarsa' },
+    { field: 'action', label: 'Action' },
   ]
   const [contractData, setContractData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -64,6 +65,14 @@ const ContractRenewalOverview = () => {
     )
   }
 
+  const renderTable = (field, data) => {
+    let input = {
+      columns: field,
+      rows: data,
+    }
+    return <MDBDataTable striped bordered data={input}></MDBDataTable>
+  }
+
   const renderContent = () => {
     return (
       <CRow>
@@ -72,7 +81,7 @@ const ContractRenewalOverview = () => {
             <CCardHeader>
               <strong>Kontrak KOL Untuk Diperbarui</strong> {/*<small>File input</small>*/}
             </CCardHeader>
-            <CCardBody>{<CTable items={contractData} columns={tableField} bordered />}</CCardBody>
+            <CCardBody>{renderTable(tableField, contractData)}</CCardBody>
           </CCard>
         </CCol>
       </CRow>

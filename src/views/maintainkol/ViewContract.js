@@ -47,6 +47,7 @@ const ViewContract = () => {
     { key: 'remainingPayment', label: 'Sisa Pembayaran' },
     { key: 'uploadedPost', label: 'Jumlah Post Terupload' },
     { key: 'missedPost', label: 'Jumlah Post Belum Terupload' },
+    { key: 'Slot Terupload', label: 'Slot Terpakai' },
   ]
 
   useEffect(() => {
@@ -59,13 +60,13 @@ const ViewContract = () => {
           URL.GET_CONTRACT_DETAIL + contractId,
         )
 
+        console.log(fetchedDetail)
+
         const contractStartDate = convertDate(new Date(fetchedDetail['Masa Kontrak Mulai']))
         const contractEndDate = convertDate(new Date(fetchedDetail['Masa Kontrak Akhir']))
         const contractSignDate = convertDate(new Date(fetchedDetail['Tgl Kontrak']))
-        const DP = fetchedDetail['DP'] + '%'
-        const remainingPayment =
-          fetchedDetail['Total Kerjasama'] -
-          (fetchedDetail['Total Kerjasama'] * fetchedDetail['DP']) / 100
+        const downPayment = (fetchedDetail['Total Kerjasama'] * fetchedDetail['DP']) / 100
+        const remainingPayment = fetchedDetail['Total Kerjasama'] - downPayment
 
         setContractDetail({
           ...fetchedDetail,
@@ -73,7 +74,7 @@ const ViewContract = () => {
           contractStartDate,
           contractSignDate,
           remainingPayment: <RupiahCurrency balance={remainingPayment} />,
-          DP,
+          DP: <RupiahCurrency balance={downPayment} />,
           'Total Kerjasama': <RupiahCurrency balance={fetchedDetail['Total Kerjasama']} />,
           costPerSlot: <RupiahCurrency balance={fetchedDetail['costPerSlot']} />,
         })
