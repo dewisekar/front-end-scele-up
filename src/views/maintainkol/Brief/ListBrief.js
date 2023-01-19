@@ -25,7 +25,7 @@ const ListBrief = () => {
         const action = (
           <>
             <NavLink
-              to={'/MaintainKol/ViewBrief?Id=' + data['Brief Id']}
+              to={'/Brief/ViewBrief?id=' + data['Brief Id']}
               className="btn btn-dark btn-sm"
               style={{ marginRight: '8px' }}
             >

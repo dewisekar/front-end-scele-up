@@ -32,6 +32,7 @@ const URL = {
   GET_POST_STATISTIC_BY_POST_ID: '/getPostStatisticByPostId?id=',
   GET_CONTRACT_RENEWAL_LIST: '/getContractRenewalList',
   GET_CONTRACT_LIST: '/getListKontrak',
+  GET_BRIEF_DETAIL: '/getBriefDetail?id=',
 }
 
 const ResponseStatus = {
