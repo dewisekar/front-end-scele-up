@@ -1,21 +1,10 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CRow,
-  CTable,
-  CTableRow,
-  CTableHeaderCell,
-  CTableBody,
-  CTableDataCell,
-} from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { URL } from 'src/constants'
-import { LoadingAnimation } from 'src/components'
+import { LoadingAnimation, VerticalTable } from 'src/components'
 
 const ViewBrief = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -46,19 +35,6 @@ const ViewBrief = () => {
     }
   }, [])
 
-  const renderBriefInfo = (fields, data) => {
-    const info = fields.map((item, index) => {
-      return (
-        <CTableRow key={item.key}>
-          <CTableHeaderCell>{item.label}</CTableHeaderCell>
-          <CTableDataCell>{data[item.key]}</CTableDataCell>
-        </CTableRow>
-      )
-    })
-
-    return info
-  }
-
   const renderBriefDetail = () => {
     return (
       <CRow id="post-detail">
@@ -75,9 +51,7 @@ const ViewBrief = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <CTable bordered>
-                    <CTableBody>{renderBriefInfo(briefDetailField, briefDetail)}</CTableBody>
-                  </CTable>
+                  <VerticalTable fields={briefDetailField} data={briefDetail} />
                 </CCol>
               </CRow>
             </CCardBody>

@@ -14,6 +14,7 @@ import VerticalTableRow from './VerticalTableRow'
 import ErrorModal from './ErrorModal'
 import ConfirmationModal from './ConfirmationModal'
 import RupiahCurrency from './RupiahCurrency'
+import VerticalTable from './VerticalTable'
 
 export {
   AppBreadcrumb,
@@ -32,4 +33,5 @@ export {
   ErrorModal,
   ConfirmationModal,
   RupiahCurrency,
+  VerticalTable,
 }

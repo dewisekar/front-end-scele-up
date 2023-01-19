@@ -1,30 +1,17 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CRow,
-  CButton,
-  CTable,
-  CTableRow,
-  CTableHead,
-  CTableHeaderCell,
-  CTableBody,
-  CTableDataCell,
-} from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { URL, ColumnSizePercentage, PostStatus, PostStatisticKey } from 'src/constants'
-import { RupiahCurrency, LoadingAnimation } from 'src/components'
+import { RupiahCurrency, LoadingAnimation, VerticalTable } from 'src/components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 import { countPostStatistic } from 'src/utils/postUtil'
 
 const ViewContract = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [contractId, setContractId] = useState(null)
-  const [contactDetail, setContractDetail] = useState({})
+  const [contractDetail, setContractDetail] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const contractDetailField = [
     { key: 'contractStatus', label: 'Status Kontrak' },
@@ -85,19 +72,6 @@ const ViewContract = () => {
     }
   }, [])
 
-  const renderContractInfo = (fields, data) => {
-    const info = fields.map((item, index) => {
-      return (
-        <CTableRow key={item.key}>
-          <CTableHeaderCell>{item.label}</CTableHeaderCell>
-          <CTableDataCell>{data[item.key]}</CTableDataCell>
-        </CTableRow>
-      )
-    })
-
-    return info
-  }
-
   const renderPostDetail = () => {
     return (
       <CRow id="post-detail">
@@ -114,11 +88,7 @@ const ViewContract = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <CTable bordered>
-                    <CTableBody>
-                      {renderContractInfo(contractDetailField, contactDetail)}
-                    </CTableBody>
-                  </CTable>
+                  <VerticalTable fields={contractDetailField} data={contractDetail} />
                 </CCol>
               </CRow>
             </CCardBody>

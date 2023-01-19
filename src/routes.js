@@ -156,6 +156,11 @@ const routes = [
   },
   { path: '/Contract/ListKontrak', name: 'List Kontrak', element: ListKontrak },
   {
+    path: '/Contract/ViewContract',
+    name: 'View Contract',
+    element: ViewContract,
+  },
+  {
     path: '/Brief/InputNewBrief',
     name: 'Input New Brief',
     element: InputNewBrief,
@@ -212,11 +217,6 @@ const routes = [
     path: '/Overview/BriefOverview',
     name: 'Brief Overview',
     element: BriefOverview,
-  },
-  {
-    path: '/Overview/ViewContract',
-    name: 'View Contract',
-    element: ViewContract,
   },
   // },
   // {
