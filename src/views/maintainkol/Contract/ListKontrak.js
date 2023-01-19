@@ -30,7 +30,7 @@ const ListKontrak = () => {
         const action = (
           <>
             <NavLink
-              to={'/MaintainKol/ViewContract?id=' + data['Kontrak Id']}
+              to={'/Contract/ViewContract?id=' + data['Kontrak Id']}
               className="btn btn-dark btn-sm"
               style={{ marginRight: '8px' }}
             >

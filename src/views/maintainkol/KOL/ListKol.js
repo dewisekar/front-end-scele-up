@@ -27,7 +27,7 @@ const ListKol = () => {
           const action = (
             <>
               <NavLink
-                to={'/MaintainKol/ViewKol?Id=' + data['Kol Id']}
+                to={'/Kol/ViewKol?Id=' + data['Kol Id']}
                 className="btn btn-dark btn-sm"
                 style={{ marginRight: '8px' }}
               >

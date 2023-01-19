@@ -30,7 +30,7 @@ const ContractRenewalOverview = () => {
         const action = (
           <>
             <NavLink
-              to={'/MaintainKol/ViewContract?id=' + contractId}
+              to={'/Contract/ViewContract?id=' + contractId}
               className="btn btn-dark btn-sm"
               style={{ marginRight: '8px' }}
             >

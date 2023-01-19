@@ -20,11 +20,7 @@ const PostBanner = ({ props }) => {
   return (
     <CCol md={6} xs={12} s={12} className="pr-2 pl-2 pt-1 pb-1">
       <div style={styles.container} className="p-3 pt-1 pb-1">
-        <NavLink
-          to={`/MaintainKol/ViewPost?Id=` + postId}
-          className="text-light"
-          style={styles.link}
-        >
+        <NavLink to={`/Post/ViewPost?Id=` + postId} className="text-light" style={styles.link}>
           {contractName}
         </NavLink>
         {!briefName && <p className="m-0 text-light">Deadline: {convertDate(deadlinePost)}</p>}

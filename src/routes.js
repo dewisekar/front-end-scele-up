@@ -66,6 +66,7 @@ const InputNewContract = React.lazy(() => import('./views/maintainkol/Contract/I
 const ListKontrak = React.lazy(() => import('./views/maintainkol/Contract/ListKontrak'))
 const InputNewBrief = React.lazy(() => import('./views/maintainkol/Brief/InputNewBrief'))
 const ListBrief = React.lazy(() => import('./views/maintainkol/Brief/ListBrief'))
+const ViewBrief = React.lazy(() => import('./views/maintainkol/Brief/ViewBrief'))
 const InputNewManager = React.lazy(() => import('./views/maintainkol/Manager/InputNewManager'))
 const ListManager = React.lazy(() => import('./views/maintainkol/Manager/ListManager'))
 const InputNewPost = React.lazy(() => import('./views/maintainkol/Post/InputNewPost'))
@@ -146,58 +147,59 @@ const routes = [
   { path: '/Monitoring/SelisihData', name: 'Kontrol Pengiriman', element: MonSelisih },
   { path: '/Logout', name: 'Logout', element: Logout },
   { path: '/rekapPengiriman', name: 'Rekap Pengiriman', element: RekapPengiriman },
-  { path: '/MaintainKol/InputNewKol', name: 'Input New Kol', element: InputNewKol },
-  { path: '/MaintainKol/ListKol', name: 'List Kol', element: ListKol },
+  { path: '/Kol/InputNewKol', name: 'Input New Kol', element: InputNewKol },
+  { path: '/Kol/ListKol', name: 'List Kol', element: ListKol },
   {
-    path: '/MaintainKontrakKol/InputNewContract',
+    path: '/Contract/InputNewContract',
     name: 'Input New Contract',
     element: InputNewContract,
   },
-  { path: '/MaintainKontrakKol/ListKontrak', name: 'List Kontrak', element: ListKontrak },
+  { path: '/Contract/ListKontrak', name: 'List Kontrak', element: ListKontrak },
   {
-    path: '/MaintainKontrakKol/InputNewBrief',
+    path: '/Brief/InputNewBrief',
     name: 'Input New Brief',
     element: InputNewBrief,
   },
-  { path: '/MaintainKontrakKol/ListBrief', name: 'List Brief', element: ListBrief },
+  { path: '/Brief/ListBrief', name: 'List Brief', element: ListBrief },
+  { path: '/Brief/ViewBrief', name: 'View Brief', element: ViewBrief },
   {
-    path: '/MaintainKol/InputNewManager',
+    path: '/Manager/InputNewManager',
     name: 'Input New Manager',
     element: InputNewManager,
   },
-  { path: '/MaintainKol/ListManager', name: 'List Manager', element: ListManager },
+  { path: '/Manager/ListManager', name: 'List Manager', element: ListManager },
   {
-    path: '/MaintainKol/InputNewPost',
+    path: '/Post/InputNewPost',
     name: 'Input New Post',
     element: InputNewPost,
   },
   {
-    path: '/MaintainKol/ListPost',
+    path: '/Post/ListPost',
     name: 'List Post',
     element: ListPost,
   },
   {
-    path: '/MaintainKol/ViewPost',
+    path: '/Post/ViewPost',
     name: 'View Post',
     element: ViewPost,
   },
   {
-    path: '/MaintainKol/UpdatePost',
+    path: '/Post/UpdatePost',
     name: 'Update Post',
     element: UpdatePost,
   },
   {
-    path: '/MaintainKol/PostCalendar',
+    path: '/Post/PostCalendar',
     name: 'Post Calendar',
     element: PostCalendar,
   },
   {
-    path: '/MaintainKol/ContractRenewalOverview',
+    path: '/Overview/ContractRenewalOverview',
     name: 'Contract Renewal Overview',
     element: ContractRenewalOverview,
   },
   {
-    path: '/MaintainKol/KolOverview',
+    path: '/Overview/KolOverview',
     name: 'Kol Overview',
     element: KolOverview,
   },
@@ -207,12 +209,12 @@ const routes = [
     element: ManagerOverview,
   },
   {
-    path: '/MaintainKol/BriefOverview',
+    path: '/Overview/BriefOverview',
     name: 'Brief Overview',
     element: BriefOverview,
   },
   {
-    path: '/MaintainKol/ViewContract',
+    path: '/Overview/ViewContract',
     name: 'View Contract',
     element: ViewContract,
   },

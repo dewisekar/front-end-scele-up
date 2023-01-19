@@ -30,17 +30,14 @@ const ListPost = () => {
           const action = (
             <>
               <NavLink
-                to={'/MaintainKol/ViewPost?Id=' + item.Id}
+                to={'/Post/ViewPost?Id=' + item.Id}
                 className="btn btn-dark btn-sm"
                 style={{ marginRight: '8px' }}
               >
                 View
               </NavLink>
               {!uploadDate && (
-                <NavLink
-                  to={'/MaintainKol/UpdatePost?Id=' + item.Id}
-                  className="btn btn-secondary btn-sm"
-                >
+                <NavLink to={'/Post/UpdatePost?Id=' + item.Id} className="btn btn-secondary btn-sm">
                   Update
                 </NavLink>
               )}

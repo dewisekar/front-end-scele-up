@@ -114,9 +114,7 @@ const ViewPost = () => {
                   {!postDetail.uploadDate && (
                     <CButton
                       color="light"
-                      onClick={() =>
-                        (window.location.href = `./#/MaintainKol/UpdatePost?Id=` + postId)
-                      }
+                      onClick={() => (window.location.href = `./#/Post/UpdatePost?Id=` + postId)}
                     >
                       Update
                     </CButton>
