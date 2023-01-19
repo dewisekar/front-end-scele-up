@@ -1,39 +1,51 @@
 import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import { MDBDataTable } from 'mdbreact'
-import { getFormatListKol, getListKol } from '../../../utils/request-marketing'
+import { NavLink } from 'react-router-dom'
+
+import { getListKol } from '../../../utils/request-marketing'
 import { LoadingAnimation, NoDataAvailable } from 'src/components'
+const tableField = [
+  { label: 'Name', field: 'Name' },
+  { label: 'Username', field: 'Username' },
+  { label: 'Platform', field: 'Platform' },
+  { label: 'Kategori', field: 'Kategori KOL' },
+  { label: 'Jenis', field: 'Jenis' },
+  { label: 'Action', field: 'action' },
+]
 
 const ListKol = () => {
-  const [formatTable, setFormatTable] = useState(null)
-  const [dataTable, setDataTable] = useState(null)
+  const [dataTable, setDataTable] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    let resGetFormatListKol = getFormatListKol()
-    try {
-      resGetFormatListKol.then(function (result) {
-        console.log('resGetFormatListKol:', result.status)
-        if (result.status === 'true') {
-          setFormatTable(result.message)
-        }
-      })
-    } catch (err) {
-      console.log(err)
+    const fetchData = async () => {
+      try {
+        const { message: fetchedKol } = await getListKol()
+
+        const mappedData = fetchedKol.map((data) => {
+          const action = (
+            <>
+              <NavLink
+                to={'/MaintainKol/ViewKol?Id=' + data['Kol Id']}
+                className="btn btn-dark btn-sm"
+                style={{ marginRight: '8px' }}
+              >
+                View
+              </NavLink>
+            </>
+          )
+          return { ...data, action }
+        })
+
+        setDataTable(mappedData)
+        setIsLoading(false)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
-    let resGetListKol = getListKol()
-    try {
-      resGetListKol.then(function (result) {
-        console.log('resGetListKol:', result.status)
-        if (result.status === 'true') {
-          setDataTable(result.message)
-        }
-        setIsLoading(false)
-      })
-    } catch (err) {
-      console.log(err)
-    }
+    fetchData()
   }, [])
 
   const renderLoadingAnimation = () => {
@@ -62,18 +74,12 @@ const ListKol = () => {
   }
 
   const DatatablePage = (props) => {
-    if (formatTable != null) {
+    if (dataTable !== []) {
       let dataInput = {
-        columns: formatTable,
+        columns: tableField,
         rows: props.data,
       }
-      console.log(formatTable)
-      return (
-        <MDBDataTable scrollX striped bordered data={dataInput}>
-          {/* <MDBTableHead columns={dataInput.columns} />
-          <MDBTableBody rows={dataInput.rows} /> */}
-        </MDBDataTable>
-      )
+      return <MDBDataTable striped bordered data={dataInput}></MDBDataTable>
     }
 
     return <NoDataAvailable />

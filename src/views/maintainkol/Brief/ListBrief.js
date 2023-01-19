@@ -1,39 +1,45 @@
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
-import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
+import { MDBDataTable } from 'mdbreact'
+import { NavLink } from 'react-router-dom'
+
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation, NoDataAvailable } from 'src/components'
+import { URL } from 'src/constants'
+const tableField = [
+  { label: 'Brief Code', field: 'Brief Code' },
+  { label: 'Tema', field: 'Tema' },
+  { label: 'Konsep', field: 'Konsep' },
+  { label: 'Manager Name', field: 'Manager Name' },
+  { label: 'Action', field: 'action' },
+]
 
 const ListBrief = () => {
-  const [formatTable, setFormatTable] = useState(null)
-  const [dataTable, setDataTable] = useState(null)
+  const [dataTable, setDataTable] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    let resGetFormatListBrief = getRequestByUri('/getFormatListBrief')
-    try {
-      resGetFormatListBrief.then(function (result) {
-        console.log('getFormatListBrief:', result.status)
-        if (result.status === 'true') {
-          setFormatTable(result.message)
-        }
+    const fetchData = async () => {
+      const { message: fetchedBrief } = await getRequestByUri(URL.GET_BRIEF_LIST)
+      const mappedData = fetchedBrief.map((data) => {
+        const action = (
+          <>
+            <NavLink
+              to={'/MaintainKol/ViewBrief?Id=' + data['Brief Id']}
+              className="btn btn-dark btn-sm"
+              style={{ marginRight: '8px' }}
+            >
+              View
+            </NavLink>
+          </>
+        )
+        return { ...data, action }
       })
-    } catch (err) {
-      console.log(err)
+      setDataTable(mappedData)
+      setIsLoading(false)
     }
 
-    let resGetListBrief = getRequestByUri('/getListBrief')
-    try {
-      resGetListBrief.then(function (result) {
-        console.log('resGetListBrief:', result.status)
-        if (result.status === 'true') {
-          setDataTable(result.message)
-        }
-        setIsLoading(false)
-      })
-    } catch (err) {
-      console.log(err)
-    }
+    fetchData()
   }, [])
 
   const renderLoadingAnimation = () => {
@@ -50,30 +56,22 @@ const ListBrief = () => {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>List Brief</strong> {/*<small>File input</small>*/}
+              <strong>List Brief</strong>
             </CCardHeader>
-            <CCardBody>
-              <DatatablePage data={dataTable} />
-            </CCardBody>
+            <CCardBody>{renderDatatable(dataTable)}</CCardBody>
           </CCard>
         </CCol>
       </CRow>
     )
   }
 
-  const DatatablePage = (props) => {
-    if (formatTable != null) {
+  const renderDatatable = (data) => {
+    if (dataTable !== []) {
       let dataInput = {
-        columns: formatTable,
-        rows: props.data,
+        columns: tableField,
+        rows: data,
       }
-      console.log(formatTable)
-      return (
-        <MDBDataTable scrollX striped bordered data={dataInput}>
-          <MDBTableHead columns={dataInput.columns} />
-          <MDBTableBody rows={dataInput.rows} />
-        </MDBDataTable>
-      )
+      return <MDBDataTable striped bordered data={dataInput}></MDBDataTable>
     }
     return <NoDataAvailable />
   }

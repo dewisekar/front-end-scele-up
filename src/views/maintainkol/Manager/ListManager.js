@@ -1,8 +1,10 @@
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
+
 import { getRequestByUri, getFormatList } from '../../../utils/request-marketing'
 import { LoadingAnimation, NoDataAvailable } from 'src/components'
+import { URL } from 'src/constants'
 
 const ListManager = () => {
   const [formatTable, setFormatTable] = useState(null)
@@ -10,30 +12,20 @@ const ListManager = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    let resGetFormatListManager = getFormatList('manager')
-    try {
-      resGetFormatListManager.then(function (result) {
-        console.log('getFormatListManager:', result.status)
-        if (result.status === 'true') {
-          setFormatTable(result.message)
-        }
-      })
-    } catch (err) {
-      console.log(err)
+    const fetchData = async () => {
+      try {
+        const { message: fetchedFormat } = await getFormatList('manager')
+        const { message: fetchedManager } = await getRequestByUri(URL.GET_MANAGER_LIST)
+
+        setFormatTable(fetchedFormat)
+        setDataTable(fetchedManager)
+        setIsLoading(false)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
-    let resGetListManager = getRequestByUri('/getListManager')
-    try {
-      resGetListManager.then(function (result) {
-        console.log('resGetListManager:', result.status)
-        if (result.status === 'true') {
-          setDataTable(result.message)
-        }
-        setIsLoading(false)
-      })
-    } catch (err) {
-      console.log(err)
-    }
+    fetchData()
   }, [])
 
   const renderLoadingAnimation = () => {

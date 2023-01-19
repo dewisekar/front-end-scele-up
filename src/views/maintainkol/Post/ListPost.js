@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
+import { NavLink } from 'react-router-dom'
 
 import { execSPWithoutInput, getFormatList } from '../../../utils/request-marketing'
-import { NavLink } from 'react-router-dom'
 import { LoadingAnimation, NoDataAvailable } from '../../../components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 import { StoredProcedure, PostStatus } from 'src/constants'
@@ -14,66 +14,56 @@ const ListPost = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    let resGetFormatListPost = getFormatList('post')
-    try {
-      resGetFormatListPost.then(function (result) {
-        console.log('getFormatListPost:', result.status)
-        if (result.status === 'true') {
-          setFormatTable(result.message)
-        }
-      })
-    } catch (err) {
-      console.log(err)
-    }
+    const fetchData = async () => {
+      try {
+        const { message: fetchedFormat } = await getFormatList('post')
+        const { message: fetchedPost } = await execSPWithoutInput(StoredProcedure.GET_ALL_POST)
 
-    let resGetListPost = execSPWithoutInput(StoredProcedure.GET_ALL_POST)
-    try {
-      resGetListPost.then(function (result) {
-        if (result.status === 'true') {
-          let listPosData = result.message
+        const listPosData = fetchedPost.map((item) => {
+          const { deadlinePost, uploadDate } = item
+          const convertedDeadlineDate = new Date(deadlinePost)
+          const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
 
-          listPosData = listPosData.map((item) => {
-            const { deadlinePost, uploadDate } = item
-            const convertedDeadlineDate = new Date(deadlinePost)
-            const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
+          const postStatus = getPostStatus(convertedDeadlineDate, convertedUploadDate)
+          const status = PostStatus[postStatus]
 
-            const postStatus = getPostStatus(convertedDeadlineDate, convertedUploadDate)
-            const status = PostStatus[postStatus]
-
-            const action = (
-              <>
+          const action = (
+            <>
+              <NavLink
+                to={'/MaintainKol/ViewPost?Id=' + item.Id}
+                className="btn btn-dark btn-sm"
+                style={{ marginRight: '8px' }}
+              >
+                View
+              </NavLink>
+              {!uploadDate && (
                 <NavLink
-                  to={'/MaintainKol/ViewPost?Id=' + item.Id}
-                  className="btn btn-dark btn-sm"
-                  style={{ marginRight: '8px' }}
+                  to={'/MaintainKol/UpdatePost?Id=' + item.Id}
+                  className="btn btn-secondary btn-sm"
                 >
-                  View
+                  Update
                 </NavLink>
-                {!uploadDate && (
-                  <NavLink
-                    to={'/MaintainKol/UpdatePost?Id=' + item.Id}
-                    className="btn btn-secondary btn-sm"
-                  >
-                    Update
-                  </NavLink>
-                )}
-              </>
-            )
+              )}
+            </>
+          )
 
-            return {
-              ...item,
-              deadlinePost: convertDate(deadlinePost),
-              action,
-              status,
-            }
-          })
-          setDataTable(listPosData)
-        }
+          return {
+            ...item,
+            deadlinePost: convertDate(deadlinePost),
+            action,
+            status,
+          }
+        })
+
+        setDataTable(listPosData)
+        setFormatTable(fetchedFormat)
         setIsLoading(false)
-      })
-    } catch (err) {
-      console.log(err)
+      } catch (error) {
+        console.log(error)
+      }
     }
+
+    fetchData()
   }, [])
 
   const renderLoadingAnimation = () => {
