@@ -59,7 +59,6 @@ const ListManager = () => {
         columns: formatTable,
         rows: props.data,
       }
-      console.log(formatTable)
       return (
         <MDBDataTable striped bordered data={dataInput}>
           <MDBTableHead columns={dataInput.columns} />
