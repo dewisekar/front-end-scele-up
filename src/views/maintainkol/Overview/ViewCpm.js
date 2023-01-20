@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CFormSelect, CAlert } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CSpinner, CAlert } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 import 'react-datepicker/dist/react-datepicker.css'
 import TextField from '@mui/material/TextField'
@@ -59,17 +59,19 @@ const ViewCpm = () => {
   }, [])
 
   const [isLoading, setIsLoading] = useState(true)
+  const [isContentLoading, setIsContentLoading] = useState(false)
   const [managerList, setManagerList] = useState([])
   const [dataTable, setDataTable] = useState([])
 
   const fetchViewDataHandler = async (value) => {
-    setIsLoading(true)
+    setIsContentLoading(true)
     try {
       const { message: fetchedViews } = await getRequestByUri(
         URL.GET_POST_VIEW_BY_MANAGER + value.Id,
       )
       const mappedData = fetchedViews.map((data) => {
-        const statistic = countPostStatistic(data, statisticScore)
+        const { views } = data
+        const statistic = views === 0 ? { cpm: 0 } : countPostStatistic(data, statisticScore)
         const linkPost = (
           <a href={data.linkPost} target="_blank" rel="noreferrer">
             Link Post
@@ -85,7 +87,7 @@ const ViewCpm = () => {
       })
 
       setDataTable(mappedData)
-      setIsLoading(false)
+      setIsContentLoading(false)
     } catch (error) {
       console.log(error)
     }
@@ -134,7 +136,14 @@ const ViewCpm = () => {
                 <CAlert color="info">
                   Data yang ditampilkan adalah statistik post pada H+7 tanggal upload
                 </CAlert>
-                {dataTable !== [] && renderDatatable(dataTable)}
+                {isContentLoading && (
+                  <CRow className="text-center">
+                    <CCol>
+                      <CSpinner color="primary" />
+                    </CCol>
+                  </CRow>
+                )}
+                {!isContentLoading && dataTable !== [] && renderDatatable(dataTable)}
               </CCardBody>
             </CCard>
           </CCol>
