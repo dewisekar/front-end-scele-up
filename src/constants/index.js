@@ -34,6 +34,7 @@ const URL = {
   GET_CONTRACT_RENEWAL_LIST: '/getContractRenewalList',
   GET_CONTRACT_LIST: '/getListKontrak',
   GET_BRIEF_DETAIL: '/getBriefDetail?id=',
+  GET_POST_VIEW_BY_MANAGER: '/getPostViewByManager?id=',
 }
 
 const ResponseStatus = {
