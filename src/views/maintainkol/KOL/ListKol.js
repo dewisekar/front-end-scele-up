@@ -9,7 +9,7 @@ const tableField = [
   { label: 'Name', field: 'Name' },
   { label: 'Username', field: 'Username' },
   { label: 'Platform', field: 'Platform' },
-  { label: 'Kategori', field: 'Kategori KOL' },
+  { label: 'Kategori', field: 'Kategori Kol' },
   { label: 'Jenis', field: 'Jenis' },
   { label: 'Action', field: 'action' },
 ]

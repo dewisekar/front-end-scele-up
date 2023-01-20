@@ -256,6 +256,13 @@ const _nav = [
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
     level: ['MK', 'MKSU'],
   },
+  {
+    component: CNavItem,
+    name: 'Data View & CPM',
+    to: '/Overview/ViewCPM',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+  },
   // {
   //   component: CNavTitle,
   //   name: 'Maintain Post',

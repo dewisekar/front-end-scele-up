@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import {
   CButton,
@@ -6,19 +6,14 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
-  CBadge,
   CFormInput,
-  CFormLabel,
-  CFormTextarea,
   CRow,
   CFormSelect,
 } from '@coreui/react'
-// import DatePicker from 'react-datepicker'
-// import 'react-datepicker/dist/react-datepicker.css'
-// import { DocsCallout, DocsExample } from 'src/components'
+
 import { insertNewKOL } from '../../../utils/request-marketing'
-// import { format } from 'date-fns'
-// import fileDownload from 'js-file-download'
+import { execSPWithoutInput } from '../../../utils/request-marketing'
+import { StoredProcedure } from 'src/constants'
 
 const InputNewKol = () => {
   const [jenisEndorse, setJenisEndorse] = useState('default')
@@ -53,21 +48,7 @@ const InputNewKol = () => {
     'Youtube',
     'All Platform',
   ])
-  const [listKategoriKol, setListKategoriKol] = useState([
-    'Skinfluencer',
-    'Skinfluencer Edukatif/Stortelling',
-    'Makeup',
-    'Cogan',
-    'Cantik',
-    'Couple',
-    'Heboh/Fun',
-    'Viral',
-    'Farmasi',
-    'Hair Influencer',
-    'Skinfluencer Cowo',
-    'Viral no irisan influencer',
-    'Racun',
-  ])
+  const [listKategoriKol, setListKategoriKol] = useState([])
   const [listBank, setListBank] = useState([
     'BCA',
     'BANK MANDIRI',
@@ -82,6 +63,22 @@ const InputNewKol = () => {
   const [modalTitle, setModalTitle] = useState('')
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { message: fetchedCategory } = await execSPWithoutInput(
+          StoredProcedure.GET_KOL_CATEGORY,
+        )
+        setListKategoriKol(fetchedCategory)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   const resetAllVariable = () => {
     setJenisEndorse('default')
     setJenisPlatform('default')
@@ -94,6 +91,7 @@ const InputNewKol = () => {
     setAlamatKOL('')
     setNorekKOL('')
   }
+
   const handleOnSubmit = () => {
     if (jenisEndorse == 'default') {
       setErrorMessage('Please input jenis KOL')
@@ -244,11 +242,13 @@ const InputNewKol = () => {
                   }}
                 >
                   <option value="default">Pilih Kategori</option>
-                  {listKategoriKol.map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
+                  {listKategoriKol.map((data) => {
+                    return (
+                      <option key={data.id} value={data.id}>
+                        {data.category}
+                      </option>
+                    )
+                  })}
                 </CFormSelect>
               </CCol>
             </CRow>
