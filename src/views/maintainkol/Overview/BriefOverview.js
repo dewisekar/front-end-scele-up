@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CSpinner } from '@coreui/react'
+import { CChartLine } from '@coreui/react-chartjs'
 import 'react-datepicker/dist/react-datepicker.css'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
@@ -50,19 +51,30 @@ const BriefOverview = () => {
   const [isContentLoading, setIsContentLoading] = useState(false)
   const [BriefList, setBriefList] = useState([])
   const [statisticData, setStatisticData] = useState([])
+  const [chartLineLabel, setChartLineLabel] = useState([])
+  const [avgViews, setAvgViews] = useState([])
+  const [avgCpm, setAvgCpm] = useState([])
 
   const fetchViewDataHandler = async (value) => {
-    console.log(value)
     setIsContentLoading(true)
     try {
       const url = URL.GET_OVERVIEW + 'params=' + OverviewParams.BRIEF + '&id=' + value.Id
       const { message: fetchedOverview } = await getRequestByUri(url)
+      const views = []
+      const cpm = []
+      const label = []
       const mappedData = fetchedOverview.map((data) => {
+        views.push(data.avgViews)
+        cpm.push(data.avgCpm)
+        label.push(data.yearMonth)
         return { ...data, avgViews: roundScore(data.avgViews), avgCpm: roundScore(data.avgCpm) }
       })
 
       setStatisticData(mappedData)
       setIsContentLoading(false)
+      setAvgViews(views)
+      setAvgCpm(cpm)
+      setChartLineLabel(label)
     } catch (error) {
       console.log(error)
     }
@@ -123,6 +135,52 @@ const BriefOverview = () => {
             </CCard>
           </CCol>
         </CRow>
+        {statisticData.length !== 0 && (
+          <CRow>
+            <CCol xs={6}>
+              <CCard className="mb-4">
+                <CCardBody>
+                  <CChartLine
+                    data={{
+                      labels: chartLineLabel,
+                      datasets: [
+                        {
+                          label: 'Average Views',
+                          backgroundColor: 'rgba(220, 220, 220, 0.2)',
+                          borderColor: 'rgba(220, 220, 220, 1)',
+                          pointBackgroundColor: 'rgba(220, 220, 220, 1)',
+                          pointBorderColor: '#fff',
+                          data: avgViews,
+                        },
+                      ],
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={6}>
+              <CCard className="mb-4">
+                <CCardBody>
+                  <CChartLine
+                    data={{
+                      labels: chartLineLabel,
+                      datasets: [
+                        {
+                          label: 'Average CPM',
+                          backgroundColor: 'rgba(220, 220, 220, 0.2)',
+                          borderColor: 'rgba(220, 220, 220, 1)',
+                          pointBackgroundColor: 'rgba(220, 220, 220, 1)',
+                          pointBorderColor: '#fff',
+                          data: avgCpm,
+                        },
+                      ],
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow>
+        )}
       </Suspense>
     )
   }
