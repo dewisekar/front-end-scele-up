@@ -36,6 +36,7 @@ const URL = {
   GET_BRIEF_DETAIL: '/getBriefDetail?id=',
   GET_POST_VIEW_BY_MANAGER: '/getPostViewByManager?id=',
   GET_OVERVIEW: '/getOverview?',
+  GET_POST_AND_COST_OVERVIEW: '/getCostAndSlotOverview',
 }
 
 const ResponseStatus = {

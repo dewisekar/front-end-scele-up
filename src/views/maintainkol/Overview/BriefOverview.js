@@ -10,16 +10,18 @@ import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
 import { URL, OverviewParams, OverviewTableField } from 'src/constants'
 import { roundScore } from 'src/utils/postUtil'
-import { NumberFormat } from 'src/components'
+import { NumberFormat, RupiahCurrency } from 'src/components'
 
 const BriefOverview = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { message: fetchedBrief } = await getRequestByUri(URL.GET_BRIEF_LIST)
+      const { message: fetchedOverview } = await getRequestByUri(URL.GET_POST_AND_COST_OVERVIEW)
       const mappedData = fetchedBrief.map((data) => {
         return { Id: data['Brief Id'], label: data['Brief Code Tema'] }
       })
       setBriefList(mappedData)
+      setPostCostOverview(fetchedOverview)
       setIsLoading(false)
     }
 
@@ -33,6 +35,7 @@ const BriefOverview = () => {
   const [chartLineLabel, setChartLineLabel] = useState([])
   const [avgViews, setAvgViews] = useState([])
   const [avgCpm, setAvgCpm] = useState([])
+  const [postCostOverview, setPostCostOverview] = useState({})
 
   const fetchViewDataHandler = async (value) => {
     setIsContentLoading(true)
@@ -87,16 +90,31 @@ const BriefOverview = () => {
                 <strong>Brief Overview</strong>
               </CCardHeader>
               <CCardBody>
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  options={BriefList}
-                  sx={{ width: 300 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Choose Brief" size="small" />
-                  )}
-                  onChange={(event, value) => fetchViewDataHandler(value)}
-                />
+                <CRow>
+                  <CCol lg={6}>
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={BriefList}
+                      sx={{ width: 300 }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Choose Brief" size="small" />
+                      )}
+                      onChange={(event, value) => fetchViewDataHandler(value)}
+                    />
+                  </CCol>
+                  <CCol lg={6}>
+                    Total Budget - Cost:{' '}
+                    <RupiahCurrency balance={postCostOverview.totalCostData.cost} /> | Slot:{' '}
+                    {postCostOverview.totalCostData.slot} <br></br>
+                    Uploaded Budget - Cost:{' '}
+                    <RupiahCurrency balance={postCostOverview.spentCostData.cost} /> | Slot:{' '}
+                    {postCostOverview.spentCostData.slot} <br></br>
+                    Remaining Budget - Cost:{' '}
+                    <RupiahCurrency balance={postCostOverview.remainingCostData.cost} /> | Slot:{' '}
+                    {postCostOverview.remainingCostData.slot}
+                  </CCol>
+                </CRow>
               </CCardBody>
             </CCard>
           </CCol>

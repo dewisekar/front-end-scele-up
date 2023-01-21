@@ -10,16 +10,18 @@ import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
 import { URL, OverviewParams, OverviewTableField } from 'src/constants'
 import { roundScore } from 'src/utils/postUtil'
-import { NumberFormat } from 'src/components'
+import { NumberFormat, RupiahCurrency } from 'src/components'
 
 const ManagerOverview = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { message: fetchedManager } = await getRequestByUri(URL.GET_MANAGER_LIST)
+      const { message: fetchedOverview } = await getRequestByUri(URL.GET_POST_AND_COST_OVERVIEW)
       const mappedData = fetchedManager.map((data) => {
         return { Id: data['Manager Id'], label: data['Manager Name'] }
       })
       setManagerList(mappedData)
+      setPostCostOverview(fetchedOverview)
       setIsLoading(false)
     }
 
@@ -33,6 +35,7 @@ const ManagerOverview = () => {
   const [chartLineLabel, setChartLineLabel] = useState([])
   const [avgViews, setAvgViews] = useState([])
   const [avgCpm, setAvgCpm] = useState([])
+  const [postCostOverview, setPostCostOverview] = useState({})
 
   const fetchViewDataHandler = async (value) => {
     setIsContentLoading(true)
@@ -87,16 +90,31 @@ const ManagerOverview = () => {
                 <strong>Manager Overview</strong>
               </CCardHeader>
               <CCardBody>
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  options={managerList}
-                  sx={{ width: 300 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Choose Manager" size="small" />
-                  )}
-                  onChange={(event, value) => fetchViewDataHandler(value)}
-                />
+                <CRow>
+                  <CCol lg={6}>
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={managerList}
+                      sx={{ width: 300 }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Choose Manager" size="small" />
+                      )}
+                      onChange={(event, value) => fetchViewDataHandler(value)}
+                    />
+                  </CCol>
+                  <CCol lg={6}>
+                    Total Budget - Cost:{' '}
+                    <RupiahCurrency balance={postCostOverview.totalCostData.cost} /> | Slot:{' '}
+                    {postCostOverview.totalCostData.slot} <br></br>
+                    Uploaded Budget - Cost:{' '}
+                    <RupiahCurrency balance={postCostOverview.spentCostData.cost} /> | Slot:{' '}
+                    {postCostOverview.spentCostData.slot} <br></br>
+                    Remaining Budget - Cost:{' '}
+                    <RupiahCurrency balance={postCostOverview.remainingCostData.cost} /> | Slot:{' '}
+                    {postCostOverview.remainingCostData.slot}
+                  </CCol>
+                </CRow>
               </CCardBody>
             </CCard>
           </CCol>
