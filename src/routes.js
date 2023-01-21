@@ -212,7 +212,7 @@ const routes = [
     element: KolOverview,
   },
   {
-    path: '/MaintainKol/ManagerOverview',
+    path: '/Overview/ManagerOverview',
     name: 'Manager Overview',
     element: ManagerOverview,
   },

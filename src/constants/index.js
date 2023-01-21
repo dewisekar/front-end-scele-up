@@ -64,7 +64,31 @@ const PostStatisticKey = {
 
 const OverviewParams = {
   BRIEF: 'BRIEF',
+  MANAGER: 'MANAGER',
 }
+
+const OverviewTableField = [
+  {
+    field: 'yearMonth',
+    label: 'Bulan - Tahun',
+  },
+  {
+    field: 'numberOfPost',
+    label: 'Jumlah Post',
+  },
+  {
+    field: 'totalViews',
+    label: 'Total Views',
+  },
+  {
+    field: 'avgViews',
+    label: 'Rata-Rata Views',
+  },
+  {
+    field: 'avgCpm',
+    label: 'Rata-Rata CPM',
+  },
+]
 
 export {
   StoredProcedure,
@@ -77,4 +101,5 @@ export {
   PythonErrorCode,
   PostStatisticKey,
   OverviewParams,
+  OverviewTableField,
 }

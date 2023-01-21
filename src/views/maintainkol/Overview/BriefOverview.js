@@ -8,30 +8,8 @@ import { MDBDataTable } from 'mdbreact'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
-import { URL, OverviewParams } from 'src/constants'
+import { URL, OverviewParams, OverviewTableField } from 'src/constants'
 import { roundScore } from 'src/utils/postUtil'
-const tableField = [
-  {
-    field: 'yearMonth',
-    label: 'Bulan - Tahun',
-  },
-  {
-    field: 'numberOfPost',
-    label: 'Jumlah Post',
-  },
-  {
-    field: 'totalViews',
-    label: 'Total Views',
-  },
-  {
-    field: 'avgViews',
-    label: 'Rata-Rata Views',
-  },
-  {
-    field: 'avgCpm',
-    label: 'Rata-Rata CPM',
-  },
-]
 
 const BriefOverview = () => {
   useEffect(() => {
@@ -82,7 +60,7 @@ const BriefOverview = () => {
 
   const renderDatatable = (data) => {
     let dataInput = {
-      columns: tableField,
+      columns: OverviewTableField,
       rows: data,
     }
     return <MDBDataTable striped bordered data={dataInput}></MDBDataTable>
