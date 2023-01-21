@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom'
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation, NoDataAvailable } from '../../../components'
 import { URL } from 'src/constants'
+import { convertDate } from 'src/utils/pageUtil'
 const tableField = [
   { field: 'Name', label: 'Nama Kol' },
   { field: 'Platform', label: 'Platform' },
@@ -38,7 +39,13 @@ const ListKontrak = () => {
             </NavLink>
           </>
         )
-        return { ...data, action }
+        const convertedDate = convertDate(new Date(data['Masa Kontrak Akhir']))
+
+        return {
+          ...data,
+          action,
+          'Masa Kontrak Akhir': convertedDate,
+        }
       })
       setDataTable(mappedData)
       setIsLoading(false)

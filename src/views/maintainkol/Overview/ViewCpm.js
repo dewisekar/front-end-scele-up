@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CSpinner, CAlert } from '@coreui/react'
-import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
+import { MDBDataTable } from 'mdbreact'
 import 'react-datepicker/dist/react-datepicker.css'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'

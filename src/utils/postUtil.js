@@ -16,4 +16,8 @@ const countPostStatistic = (data, fields) => {
   return result
 }
 
-export { countPostStatistic }
+const roundScore = (score) => {
+  return Math.round(score * 100) / 100
+}
+
+export { countPostStatistic, roundScore }

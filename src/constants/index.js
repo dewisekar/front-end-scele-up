@@ -35,6 +35,7 @@ const URL = {
   GET_CONTRACT_LIST: '/getListKontrak',
   GET_BRIEF_DETAIL: '/getBriefDetail?id=',
   GET_POST_VIEW_BY_MANAGER: '/getPostViewByManager?id=',
+  GET_OVERVIEW: '/getOverview?',
 }
 
 const ResponseStatus = {
@@ -61,6 +62,10 @@ const PostStatisticKey = {
   CPM: 'cpm',
 }
 
+const OverviewParams = {
+  BRIEF: 'BRIEF',
+}
+
 export {
   StoredProcedure,
   EventColor,
@@ -71,4 +76,5 @@ export {
   ColumnSizePercentage,
   PythonErrorCode,
   PostStatisticKey,
+  OverviewParams,
 }
