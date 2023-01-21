@@ -66,6 +66,7 @@ const OverviewParams = {
   BRIEF: 'BRIEF',
   MANAGER: 'MANAGER',
   KOL_CATEGORY: 'KOL_CATEGORY',
+  KOL: 'KOL',
 }
 
 const OverviewTableField = [
