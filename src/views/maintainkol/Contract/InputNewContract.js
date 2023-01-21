@@ -697,7 +697,7 @@ const InputNewContract = () => {
               <div className="p-2 border bg-light">Kategori</div>
             </CCol>
             <CCol xs={9}>
-              <div className="p-2 border bg-light">{detailData.KATEGORI}</div>
+              <div className="p-2 border bg-light">{detailData.kolCategory}</div>
             </CCol>
           </CRow>
           <CRow className="mb-1">

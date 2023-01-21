@@ -244,6 +244,13 @@ const _nav = [
   },
   {
     component: CNavItem,
+    name: 'KOL Category Overview',
+    to: '/Overview/KolCategoryOverview',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+  },
+  {
+    component: CNavItem,
     name: 'Manager Overview',
     to: '/Overview/ManagerOverview',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,

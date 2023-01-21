@@ -65,6 +65,7 @@ const PostStatisticKey = {
 const OverviewParams = {
   BRIEF: 'BRIEF',
   MANAGER: 'MANAGER',
+  KOL_CATEGORY: 'KOL_CATEGORY',
 }
 
 const OverviewTableField = [
