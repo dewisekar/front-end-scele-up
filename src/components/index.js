@@ -15,6 +15,7 @@ import ErrorModal from './ErrorModal'
 import ConfirmationModal from './ConfirmationModal'
 import RupiahCurrency from './RupiahCurrency'
 import VerticalTable from './VerticalTable'
+import NumberFormat from './NumberFormat'
 
 export {
   AppBreadcrumb,
@@ -34,4 +35,5 @@ export {
   ConfirmationModal,
   RupiahCurrency,
   VerticalTable,
+  NumberFormat,
 }

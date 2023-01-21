@@ -14,6 +14,7 @@ import {
 import { LoadingAnimation } from 'src/components'
 import { URL, OverviewParams, OverviewTableField, StoredProcedure } from 'src/constants'
 import { roundScore } from 'src/utils/postUtil'
+import { NumberFormat } from 'src/components'
 
 const KolOverview = () => {
   useEffect(() => {
@@ -43,10 +44,16 @@ const KolOverview = () => {
       const cpm = []
       const label = []
       const mappedData = fetchedOverview.map((data) => {
-        views.push(data.avgViews)
+        const { totalViews, avgViews: noAvgViews } = data
+        views.push(noAvgViews)
         cpm.push(data.avgCpm)
         label.push(data.yearMonth)
-        return { ...data, avgViews: roundScore(data.avgViews), avgCpm: roundScore(data.avgCpm) }
+        return {
+          ...data,
+          avgCpm: roundScore(data.avgCpm),
+          avgViews: <NumberFormat number={roundScore(data.avgViews)} />,
+          totalViews: <NumberFormat number={totalViews} />,
+        }
       })
       setStatisticData(mappedData)
       setIsContentLoading(false)
