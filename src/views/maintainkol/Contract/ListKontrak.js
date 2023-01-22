@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/react'
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 import { NavLink } from 'react-router-dom'
+import fileDownload from 'js-file-download'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
+import { generalDownload } from '../../../utils/axios-request'
 import { LoadingAnimation, NoDataAvailable } from '../../../components'
 import { URL } from 'src/constants'
 import { convertDate } from 'src/utils/pageUtil'
@@ -32,11 +34,12 @@ const ListKontrak = () => {
           <>
             <NavLink
               to={'/Contract/ViewContract?id=' + data['Kontrak Id']}
-              className="btn btn-dark btn-sm"
+              className="btn btn-dark btn-sm mb-1"
               style={{ marginRight: '8px' }}
             >
               View
             </NavLink>
+            <CButton onClick={() => downloadContract(data['Kontrak Id'])}>Download File</CButton>
           </>
         )
         const convertedDate = convertDate(new Date(data['Masa Kontrak Akhir']))
@@ -53,6 +56,21 @@ const ListKontrak = () => {
 
     fetchData()
   }, [])
+
+  const downloadContract = async (fileId) => {
+    try {
+      const { filename } = await getRequestByUri('/checkFileStatus?FileId=' + fileId.toString())
+      const downloadedFile = await generalDownload('/downloadFile?file=' + filename)
+      console.log('resDownloadFile: ', downloadedFile)
+      if (downloadedFile !== undefined) {
+        let fileOnly = filename.split('/')[filename.split('/').length - 1]
+        console.log('fileOnly:', fileOnly)
+        fileDownload(downloadedFile, fileOnly)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const renderLoadingAnimation = () => {
     return (
