@@ -1,3 +1,5 @@
+import { PostStatisticKey } from 'src/constants'
+
 const tableField = [
   { label: 'Status', field: 'postStatus', type: 'text' },
   { label: 'Nama Kol', field: 'kolName', type: 'text' },
@@ -40,29 +42,49 @@ const statisticField = [
     color: 'secondary',
   },
   {
-    key: 'viewsPerFollowers',
+    key: PostStatisticKey.VIEWS_PER_FOLLOWERS,
     label: 'Views/Followers (*100)',
     color: 'info',
   },
   {
-    key: 'commentsPerFollowers',
+    key: PostStatisticKey.COMMENTS_PER_FOLLOWERS,
     label: 'Comments/Followers (*30K)',
     color: 'info',
   },
   {
-    key: 'sharesPerFollowers',
+    key: PostStatisticKey.SHARES_PER_FOLLOWERS,
     label: 'Shares/Followers (*50K)',
     color: 'info',
   },
   {
-    key: 'costPerViews',
+    key: PostStatisticKey.COST_PER_VIEWS,
     label: 'Per Views',
     color: 'dark',
   },
   {
-    key: 'cpm',
+    key: PostStatisticKey.CPM,
     label: 'CPM (Cost/1000 Reach)',
     color: 'dark',
+  },
+  {
+    key: PostStatisticKey.ENGAGEMENT_POINT,
+    label: 'Engagement Point',
+    color: 'primary',
+  },
+  {
+    key: PostStatisticKey.MARKET_READINESS,
+    label: 'Market Readiness',
+    color: 'primary',
+  },
+  {
+    key: PostStatisticKey.MARKET_READINESS_PER_VIEWS,
+    label: 'Ratio Market Readiness/Views',
+    color: 'primary',
+  },
+  {
+    key: PostStatisticKey.ENGAGEMENT_POINT_PER_VIEWS,
+    label: 'Ratio EP/Views',
+    color: 'primary',
   },
 ]
 
@@ -72,4 +94,17 @@ const styles = {
   },
 }
 
-export { tableField, styles, statisticField }
+const postStatisticKey = [
+  PostStatisticKey.VIEWS_PER_FOLLOWERS,
+  PostStatisticKey.COMMENTS_PER_FOLLOWERS,
+  PostStatisticKey.SHARES_PER_FOLLOWERS,
+  PostStatisticKey.COST_PER_VIEWS,
+  PostStatisticKey.CPM,
+  PostStatisticKey.ENGAGEMENT_POINT,
+  PostStatisticKey.ENGAGEMENT_POINT,
+  PostStatisticKey.MARKET_READINESS,
+  PostStatisticKey.MARKET_READINESS_PER_VIEWS,
+  PostStatisticKey.ENGAGEMENT_POINT_PER_VIEWS,
+]
+
+export { tableField, styles, statisticField, postStatisticKey }

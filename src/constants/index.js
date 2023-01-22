@@ -61,6 +61,10 @@ const PostStatisticKey = {
   SHARES_PER_FOLLOWERS: 'sharesPerFollowers',
   COST_PER_VIEWS: 'costPerViews',
   CPM: 'cpm',
+  ENGAGEMENT_POINT: 'engagementPoint',
+  MARKET_READINESS: 'marketReadiness',
+  MARKET_READINESS_PER_VIEWS: 'marketReadinessPerViews',
+  ENGAGEMENT_POINT_PER_VIEWS: 'engagementPointPerViews',
 }
 
 const OverviewParams = {

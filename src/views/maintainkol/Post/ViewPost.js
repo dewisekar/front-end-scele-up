@@ -15,9 +15,9 @@ import {
   CTableDataCell,
 } from '@coreui/react'
 
-import { tableField, styles, statisticField } from './ViewPost.config'
+import { tableField, styles, statisticField, postStatisticKey } from './ViewPost.config'
 import { getRequestByUri } from '../../../utils/request-marketing'
-import { URL, ColumnSizePercentage, PostStatus, PostStatisticKey } from 'src/constants'
+import { URL, ColumnSizePercentage, PostStatus } from 'src/constants'
 import { VerticalTableRow, LoadingAnimation } from 'src/components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 import { countPostStatistic } from 'src/utils/postUtil'
@@ -28,13 +28,6 @@ const ViewPost = () => {
   const [postDetail, setPostDetail] = useState({})
   const [postStatistic, setPostStatistic] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const postStatisticKey = [
-    PostStatisticKey.VIEWS_PER_FOLLOWERS,
-    PostStatisticKey.COMMENTS_PER_FOLLOWERS,
-    PostStatisticKey.SHARES_PER_FOLLOWERS,
-    PostStatisticKey.COST_PER_VIEWS,
-    PostStatisticKey.CPM,
-  ]
 
   useEffect(() => {
     try {
@@ -185,6 +178,14 @@ const ViewPost = () => {
                           style={{ borderColor: 'black' }}
                         >
                           Cost Worthiness
+                        </CTableHeaderCell>
+                        <CTableHeaderCell
+                          scope="col"
+                          colSpan="4"
+                          color="primary"
+                          style={{ borderColor: 'black' }}
+                        >
+                          Engagement Meter
                         </CTableHeaderCell>
                       </CTableRow>
                       <CTableRow>
