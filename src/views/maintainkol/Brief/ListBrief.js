@@ -11,6 +11,7 @@ import {
   CModalHeader,
   CModalFooter,
   CButton,
+  CSpinner,
 } from '@coreui/react'
 import { MDBDataTable } from 'mdbreact'
 import { NavLink } from 'react-router-dom'
@@ -30,6 +31,7 @@ const tableField = [
   { label: 'Manager Name', field: 'Manager Name' },
   { label: 'Action', field: 'action' },
 ]
+const kolInBriefField = [{ label: 'Nama KOL', field: 'kolName' }]
 const broadcastOptions = [
   { value: 'kol', label: 'KOL' },
   { value: 'kolCategory', label: 'Kategori KOL' },
@@ -38,15 +40,17 @@ const broadcastOptions = [
 const ListBrief = () => {
   const [dataTable, setDataTable] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const [isModalShown, setIsModalShown] = useState(true)
+  const [choosenBrief, setChoosenBrief] = useState({})
+  const [isBroadcastModalShown, setIsBroadcastModalShown] = useState(false)
   const [choosenBroadcastOption, setChoosenBroadcastOption] = useState({
     value: 'kol',
     label: 'KOL',
   })
-  const handleModalClose = () => setIsModalShown(false)
   const [kolList, setKolList] = useState([])
   const [kolCategoryList, setKolCategoryList] = useState([])
   const [broadcastDestination, setBroadcastDestination] = useState([])
+  const [kolInBrief, setKolInBrief] = useState([])
+  const [isContentLoading, setIsContentLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,17 +59,27 @@ const ListBrief = () => {
       const { message: fetchedCategory } = await execSPWithoutInput(
         StoredProcedure.GET_KOL_CATEGORY,
       )
-      console.log(fetchedCategory)
+
       const mappedBriefData = fetchedBrief.map((data) => {
+        const briefCode = data['Brief Code'] + ' - ' + data['Tema']
+        const id = data['Brief Id']
+        const briefPayload = { id, briefCode }
+
         const action = (
           <>
             <NavLink
               to={'/Brief/ViewBrief?id=' + data['Brief Id']}
-              className="btn btn-dark btn-sm"
+              className="btn btn-dark btn-sm mb-1"
               style={{ marginRight: '8px' }}
             >
               View
             </NavLink>
+            <CButton
+              color="secondary"
+              onClick={async () => await handleBroadcastModalShow(briefPayload)}
+            >
+              Broadcast
+            </CButton>
           </>
         )
         return { ...data, action }
@@ -88,8 +102,31 @@ const ListBrief = () => {
     fetchData()
   }, [])
 
-  const handleModalShow = () => {
-    setIsModalShown(true)
+  const handleBroadcastModalShow = async (payload) => {
+    setIsContentLoading(true)
+    try {
+      const { message: fetchedKol } = await getRequestByUri(
+        URL.GET_KOL_LIST_BY_BRIEF_ID + payload.id,
+      )
+      setKolInBrief(fetchedKol)
+      setChoosenBrief(payload)
+      setIsBroadcastModalShown(true)
+      setIsContentLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleBroadcastModalClose = () => {
+    setIsBroadcastModalShown(false)
+  }
+
+  const renderKolInBriefData = (data) => {
+    let dataInput = {
+      columns: kolInBriefField,
+      rows: data,
+    }
+    return <MDBDataTable striped bordered data={dataInput}></MDBDataTable>
   }
 
   const renderModal = () => {
@@ -97,15 +134,15 @@ const ListBrief = () => {
       <CModal
         size="xl"
         alignment="center"
-        visible={isModalShown}
-        onClose={() => handleModalClose()}
+        visible={isBroadcastModalShown}
+        onClose={() => handleBroadcastModalClose()}
       >
         <CModalHeader>
           <CModalTitle>Broadcast Brief</CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CRow>
-            <CCol lg={8}>
+            <CCol lg={6}>
               <CRow className="mb-2">
                 <CRow className="mb-1">
                   <CCol>
@@ -113,65 +150,71 @@ const ListBrief = () => {
                   </CCol>
                 </CRow>
                 <CRow>
-                  <CCol>December/22/1 - Re-Create Ombre Blackpink</CCol>
+                  <CCol>{choosenBrief.briefCode}</CCol>
                 </CRow>
               </CRow>
               <CRow className="mb-2">
                 <CRow>
-                  <CCol lg={12} className="mb-1">
-                    <b>Pilih Penerima:</b>
-                  </CCol>
-                </CRow>
-                <CRow>
-                  <CCol lg={3}>
-                    <Select
-                      options={broadcastOptions}
-                      placeholder="Kategori"
-                      value={choosenBroadcastOption}
-                      onChange={(e) => {
-                        setChoosenBroadcastOption(e)
-                        setBroadcastDestination([])
-                      }}
-                    />
-                  </CCol>
-                  <CCol lg={9}>
-                    {choosenBroadcastOption.value === 'kol' ? (
+                  <CRow className="mb-2">
+                    <CCol lg={12}>
+                      <b>Pilihan:</b>
                       <Select
-                        isMulti
-                        name="colors"
-                        options={kolList}
-                        className="basic-multi-select"
-                        classNamePrefix="select"
-                        placeholder="Pilih KOL"
-                        value={broadcastDestination}
+                        options={broadcastOptions}
+                        placeholder="Kategori"
+                        value={choosenBroadcastOption}
                         onChange={(e) => {
-                          console.log(e)
-                          setBroadcastDestination(e)
+                          setChoosenBroadcastOption(e)
+                          setBroadcastDestination([])
                         }}
                       />
-                    ) : (
-                      <Select
-                        isMulti
-                        name="colors"
-                        options={kolCategoryList}
-                        className="basic-multi-select"
-                        classNamePrefix="select"
-                        placeholder="Pilih KOL Kategori"
-                        value={broadcastDestination}
-                        onChange={(e) => {
-                          console.log(e)
-                          setBroadcastDestination(e)
-                        }}
-                      />
-                    )}
-                  </CCol>
+                    </CCol>
+                  </CRow>
+                  <CRow>
+                    <CCol lg={12}>
+                      <b>Pilih Penerima:</b>
+                      {choosenBroadcastOption.value === 'kol' ? (
+                        <Select
+                          isMulti
+                          name="colors"
+                          options={kolList}
+                          className="basic-multi-select"
+                          classNamePrefix="select"
+                          placeholder="Pilih KOL"
+                          value={broadcastDestination}
+                          onChange={(e) => {
+                            setBroadcastDestination(e)
+                          }}
+                        />
+                      ) : (
+                        <Select
+                          isMulti
+                          name="colors"
+                          options={kolCategoryList}
+                          className="basic-multi-select"
+                          classNamePrefix="select"
+                          placeholder="Pilih KOL Kategori"
+                          value={broadcastDestination}
+                          onChange={(e) => {
+                            setBroadcastDestination(e)
+                          }}
+                        />
+                      )}
+                    </CCol>
+                  </CRow>
                 </CRow>
               </CRow>
+            </CCol>
+            <CCol lg={6}>
+              <b>List KOL dengan Brief Ini:</b>
+              {renderKolInBriefData(kolInBrief)}
             </CCol>
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <CButton color="secondary" onClick={() => handleModalClose()}>
+          <CButton color="primary" onClick={() => handleBroadcastModalClose()}>
+            Kirim Broadcast
+          </CButton>
+          <CButton color="secondary" onClick={() => handleBroadcastModalClose()}>
             Close
           </CButton>
         </CModalFooter>
@@ -195,7 +238,16 @@ const ListBrief = () => {
             <CCardHeader>
               <strong>List Brief</strong>
             </CCardHeader>
-            <CCardBody>{renderDatatable(dataTable)}</CCardBody>
+            <CCardBody>
+              {isContentLoading && (
+                <CRow className="text-center">
+                  <CCol>
+                    <CSpinner color="primary" />
+                  </CCol>
+                </CRow>
+              )}
+              {!isContentLoading && renderDatatable(dataTable)}
+            </CCardBody>
           </CCard>
         </CCol>
         {renderModal()}

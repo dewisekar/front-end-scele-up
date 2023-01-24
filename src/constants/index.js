@@ -37,6 +37,7 @@ const URL = {
   GET_POST_VIEW_BY_MANAGER: '/getPostViewByManager?id=',
   GET_OVERVIEW: '/getOverview?',
   GET_POST_AND_COST_OVERVIEW: '/getCostAndSlotOverview',
+  GET_KOL_LIST_BY_BRIEF_ID: `/getKolListByBrief?id=`,
 }
 
 const ResponseStatus = {
