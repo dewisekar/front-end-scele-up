@@ -66,6 +66,7 @@ const ListKontrak = () => {
         let fileOnly = filename.split('/')[filename.split('/').length - 1]
         console.log('fileOnly:', fileOnly)
         fileDownload(downloadedFile, fileOnly)
+        return
       }
     } catch (err) {
       console.log(err)
