@@ -12,6 +12,7 @@ import {
   CModalFooter,
   CButton,
   CSpinner,
+  CTable,
 } from '@coreui/react'
 import { MDBDataTable } from 'mdbreact'
 import { NavLink } from 'react-router-dom'
@@ -21,6 +22,7 @@ import {
   getRequestByUri,
   getALLKolName,
   execSPWithoutInput,
+  postRequestByUri,
 } from '../../../utils/request-marketing'
 import { LoadingAnimation, NoDataAvailable } from 'src/components'
 import { URL, StoredProcedure } from 'src/constants'
@@ -31,7 +33,7 @@ const tableField = [
   { label: 'Manager Name', field: 'Manager Name' },
   { label: 'Action', field: 'action' },
 ]
-const kolInBriefField = [{ label: 'Nama KOL', field: 'kolName' }]
+const kolInBriefField = [{ label: 'Nama KOL', key: 'kolName' }]
 const broadcastOptions = [
   { value: 'kol', label: 'KOL' },
   { value: 'kolCategory', label: 'Kategori KOL' },
@@ -51,6 +53,8 @@ const ListBrief = () => {
   const [broadcastDestination, setBroadcastDestination] = useState([])
   const [kolInBrief, setKolInBrief] = useState([])
   const [isContentLoading, setIsContentLoading] = useState(false)
+  const [isSendingBroadCast, setIsSendingBroadcast] = useState(false)
+  const [isDestinationEmpty, setIsDestinationEmpty] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,6 +112,7 @@ const ListBrief = () => {
       const { message: fetchedKol } = await getRequestByUri(
         URL.GET_KOL_LIST_BY_BRIEF_ID + payload.id,
       )
+
       setKolInBrief(fetchedKol)
       setChoosenBrief(payload)
       setIsBroadcastModalShown(true)
@@ -119,14 +124,40 @@ const ListBrief = () => {
 
   const handleBroadcastModalClose = () => {
     setIsBroadcastModalShown(false)
+    setBroadcastDestination([])
   }
 
   const renderKolInBriefData = (data) => {
-    let dataInput = {
-      columns: kolInBriefField,
-      rows: data,
+    return <CTable className="mt-3" bordered items={data} columns={kolInBriefField}></CTable>
+  }
+
+  const handleConfirmBroadcastBrief = async () => {
+    if (broadcastDestination.length === 0) {
+      setIsDestinationEmpty(true)
+      return
     }
-    return <MDBDataTable striped bordered data={dataInput}></MDBDataTable>
+
+    setIsSendingBroadcast(true)
+    const destinationIds = broadcastDestination.map((data) => {
+      return data.value
+    })
+    const payload = {
+      params: choosenBroadcastOption.value,
+      destination: destinationIds,
+      briefId: choosenBrief.id,
+    }
+
+    try {
+      const { status } = await postRequestByUri(URL.BROADCAST_BRIEF, payload)
+      setIsSendingBroadcast(false)
+      if (status === 'true') {
+        alert('Berhasil mengirim broadcast')
+        return
+      }
+      alert('gagal mengirim broadcast')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const renderModal = () => {
@@ -142,7 +173,7 @@ const ListBrief = () => {
         </CModalHeader>
         <CModalBody>
           <CRow>
-            <CCol lg={6}>
+            <CCol lg={8}>
               <CRow className="mb-2">
                 <CRow className="mb-1">
                   <CCol>
@@ -183,6 +214,7 @@ const ListBrief = () => {
                           value={broadcastDestination}
                           onChange={(e) => {
                             setBroadcastDestination(e)
+                            setIsDestinationEmpty(false)
                           }}
                         />
                       ) : (
@@ -196,27 +228,37 @@ const ListBrief = () => {
                           value={broadcastDestination}
                           onChange={(e) => {
                             setBroadcastDestination(e)
+                            setIsDestinationEmpty(false)
                           }}
                         />
+                      )}
+                      {isDestinationEmpty && (
+                        <small className="mt-1 text-danger">Harap pilih penerima broadcast!</small>
                       )}
                     </CCol>
                   </CRow>
                 </CRow>
               </CRow>
             </CCol>
-            <CCol lg={6}>
+            <CCol lg={4} style={{ maxHeight: '250px', overflowY: 'scroll' }}>
               <b>List KOL dengan Brief Ini:</b>
               {renderKolInBriefData(kolInBrief)}
             </CCol>
           </CRow>
         </CModalBody>
-        <CModalFooter>
-          <CButton color="primary" onClick={() => handleBroadcastModalClose()}>
-            Kirim Broadcast
-          </CButton>
-          <CButton color="secondary" onClick={() => handleBroadcastModalClose()}>
-            Close
-          </CButton>
+        <CModalFooter className="d-flex justify-content-center">
+          {isSendingBroadCast ? (
+            <CSpinner color="primary" />
+          ) : (
+            <>
+              <CButton color="primary" onClick={() => handleConfirmBroadcastBrief()}>
+                Kirim Broadcast
+              </CButton>
+              <CButton color="secondary" onClick={() => handleBroadcastModalClose()}>
+                Close
+              </CButton>
+            </>
+          )}
         </CModalFooter>
       </CModal>
     )
