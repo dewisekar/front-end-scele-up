@@ -73,7 +73,7 @@ const PostCalendar = () => {
               </CCol>
             </CRow>
           </CCardHeader>
-          <CCardBody>
+          <CCardBody style={{ maxHeight: '300px', overflowY: 'scroll' }}>
             <CRow>{renderPostBanner(todayPost)}</CRow>
           </CCardBody>
         </CCard>
@@ -104,7 +104,7 @@ const PostCalendar = () => {
               </CCol>
             </CRow>
           </CCardHeader>
-          <CCardBody>
+          <CCardBody style={{ maxHeight: '300px', overflowY: 'scroll' }}>
             <CRow>{renderPostBanner(missedPost)}</CRow>
           </CCardBody>
         </CCard>
