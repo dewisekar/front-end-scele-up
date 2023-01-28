@@ -154,7 +154,7 @@ const ListBrief = () => {
         alert('Berhasil mengirim broadcast')
         return
       }
-      alert('gagal mengirim broadcast')
+      alert('Gagal mengirim broadcast')
     } catch (error) {
       console.log(error)
     }

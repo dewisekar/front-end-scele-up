@@ -85,6 +85,7 @@ const KolCategoryOverview = React.lazy(() =>
 )
 const ManagerOverview = React.lazy(() => import('./views/maintainkol/Overview/ManagerOverview'))
 const BriefOverview = React.lazy(() => import('./views/maintainkol/Overview/BriefOverview'))
+const MonthlyOverview = React.lazy(() => import('./views/maintainkol/Overview/MonthlyOverview'))
 const ViewCpm = React.lazy(() => import('./views/maintainkol/Overview/ViewCpm'))
 // const TestPost = React.lazy(() => import('./views/maintainkol/TestPost'))
 
@@ -228,6 +229,11 @@ const routes = [
     path: '/Overview/BriefOverview',
     name: 'Brief Overview',
     element: BriefOverview,
+  },
+  {
+    path: '/Overview/MonthlyOverview',
+    name: 'Monthly Overview',
+    element: MonthlyOverview,
   },
   {
     path: '/Overview/ViewCPM',

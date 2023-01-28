@@ -209,7 +209,7 @@ const ViewPost = () => {
                         ))
                       ) : (
                         <CTableRow>
-                          <CTableDataCell colSpan="11" className="text-center">
+                          <CTableDataCell colSpan="15" className="text-center">
                             NO DATA AVAILABLE
                           </CTableDataCell>
                         </CTableRow>

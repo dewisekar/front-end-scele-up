@@ -39,6 +39,7 @@ const URL = {
   GET_POST_AND_COST_OVERVIEW: '/getCostAndSlotOverview',
   GET_KOL_LIST_BY_BRIEF_ID: `/getKolListByBrief?id=`,
   BROADCAST_BRIEF: '/broadcastBrief',
+  GET_MONTHLY_OVERVIEW: '/getMonthlyOverview',
 }
 
 const ResponseStatus = {
