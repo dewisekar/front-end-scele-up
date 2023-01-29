@@ -295,21 +295,22 @@ const execSPWithInput = async (SPName, Input) => {
   }
 }
 
-const updatePostStatsById = async (Id) => {
-  let data = JSON.stringify({
-    Id: Id,
-  })
-  try {
-    const res = await axios.post(baseUrl + '/updatePostStatsById/', data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    return res.data
-  } catch (err) {
-    console.error(err)
-  }
-}
+//not used
+// const updatePostStatsById = async (Id) => {
+//   let data = JSON.stringify({
+//     Id: Id,
+//   })
+//   try {
+//     const res = await axios.post(baseUrl + '/updatePostStatsById/', data, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     })
+//     return res.data
+//   } catch (err) {
+//     console.error(err)
+//   }
+// }
 
 const putRequestByUri = async (endpoint, payload) => {
   try {
