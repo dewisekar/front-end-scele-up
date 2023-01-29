@@ -17,7 +17,7 @@ const ListPost = () => {
     const fetchData = async () => {
       try {
         const { message: fetchedFormat } = await getFormatList('post')
-        const { message: fetchedPost } = await execSPWithoutInput(StoredProcedure.GET_ALL_POST)
+        const { message: fetchedPost = [] } = await execSPWithoutInput(StoredProcedure.GET_ALL_POST)
 
         const listPosData = fetchedPost.map((item) => {
           const { deadlinePost, uploadDate } = item

@@ -24,7 +24,7 @@ const ContractRenewalOverview = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { message: fetchedContract } = await getRequestByUri(URL.GET_CONTRACT_RENEWAL_LIST)
+      const { message: fetchedContract = [] } = await getRequestByUri(URL.GET_CONTRACT_RENEWAL_LIST)
       const mappedData = fetchedContract.map((data) => {
         const { missedPost, uploadedPost, contractId } = data
         const action = (

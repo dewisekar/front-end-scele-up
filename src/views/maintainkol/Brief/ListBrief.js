@@ -58,9 +58,9 @@ const ListBrief = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { message: fetchedBrief } = await getRequestByUri(URL.GET_BRIEF_LIST)
-      const { message: fetchedKol } = await getALLKolName()
-      const { message: fetchedCategory } = await execSPWithoutInput(
+      const { message: fetchedBrief = [] } = await getRequestByUri(URL.GET_BRIEF_LIST)
+      const { message: fetchedKol = [] } = await getALLKolName()
+      const { message: fetchedCategory = [] } = await execSPWithoutInput(
         StoredProcedure.GET_KOL_CATEGORY,
       )
 

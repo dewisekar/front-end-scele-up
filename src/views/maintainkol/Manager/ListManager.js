@@ -14,8 +14,8 @@ const ListManager = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { message: fetchedFormat } = await getFormatList('manager')
-        const { message: fetchedManager } = await getRequestByUri(URL.GET_MANAGER_LIST)
+        const { message: fetchedFormat = [] } = await getFormatList('manager')
+        const { message: fetchedManager = [] } = await getRequestByUri(URL.GET_MANAGER_LIST)
 
         setFormatTable(fetchedFormat)
         setDataTable(fetchedManager)

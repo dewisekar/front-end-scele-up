@@ -28,7 +28,7 @@ const ListKontrak = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { message: fetchedContract } = await getRequestByUri(URL.GET_CONTRACT_LIST)
+      const { message: fetchedContract = [] } = await getRequestByUri(URL.GET_CONTRACT_LIST)
       const mappedData = fetchedContract.map((data) => {
         const action = (
           <>

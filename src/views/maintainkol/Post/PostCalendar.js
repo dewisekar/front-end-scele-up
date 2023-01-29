@@ -18,9 +18,11 @@ const PostCalendar = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { message: missedPost } = await execSPWithoutInput(StoredProcedure.GET_MISSED_POST)
-        const { message: todayPost } = await execSPWithoutInput(StoredProcedure.GET_TODAY_POST)
-        const { message: allPost } = await execSPWithoutInput(StoredProcedure.GET_ALL_POST)
+        const { message: missedPost = [] } = await execSPWithoutInput(
+          StoredProcedure.GET_MISSED_POST,
+        )
+        const { message: todayPost = [] } = await execSPWithoutInput(StoredProcedure.GET_TODAY_POST)
+        const { message: allPost = [] } = await execSPWithoutInput(StoredProcedure.GET_ALL_POST)
         const convertedEvent = convertCalendarEvent(allPost)
 
         setMissedPost(missedPost)

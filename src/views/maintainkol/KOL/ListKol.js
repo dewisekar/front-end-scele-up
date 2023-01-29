@@ -21,7 +21,7 @@ const ListKol = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { message: fetchedKol } = await getListKol()
+        const { message: fetchedKol = [] } = await getListKol()
 
         const mappedData = fetchedKol.map((data) => {
           const action = (
