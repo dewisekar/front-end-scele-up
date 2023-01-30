@@ -1,6 +1,15 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
-import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow, CFormSelect } from '@coreui/react'
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CFormSelect,
+  CSpinner,
+} from '@coreui/react'
 import { GeneralFormInput, GeneralTextArea } from '../../../utils/GeneralFormInput'
 import { insertNewBrief, insertNewManager } from '../../../utils/request-marketing'
 
@@ -11,6 +20,7 @@ const InputNewManager = () => {
   const [email, setEmail] = useState('')
   const [alias, setAlias] = useState('')
   const [roles, setRoles] = useState('default')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [show, setShow] = useState(false)
   const [errMessage, setErrorMessage] = useState('')
   const [modalTitle, setModalTitle] = useState('')
@@ -53,6 +63,7 @@ const InputNewManager = () => {
       handleShow()
     } else {
       try {
+        setIsSubmitting(true)
         let user = sessionStorage.getItem('user')
         let resInsertNewManager = insertNewManager(
           managerName,
@@ -76,6 +87,7 @@ const InputNewManager = () => {
             handleShow()
             console.log('err')
           }
+          setIsSubmitting(false)
         })
       } catch (err) {
         console.log(err)
@@ -206,15 +218,24 @@ const InputNewManager = () => {
               </CCol>
             </CRow>
             <CRow className="mt-4">
-              <CButton
-                color="secondary"
-                active={'active' === 'active'}
-                variant="outline"
-                key="1"
-                onClick={handleOnSumbit}
-              >
-                Submit
-              </CButton>
+              {!isSubmitting ? (
+                <CCol lg={12}>
+                  <CButton
+                    color="secondary"
+                    active={'active' === 'active'}
+                    variant="outline"
+                    className="w-100"
+                    key="1"
+                    onClick={handleOnSumbit}
+                  >
+                    Submit
+                  </CButton>
+                </CCol>
+              ) : (
+                <CCol lg={12} className="text-center">
+                  <CSpinner color="primary" />
+                </CCol>
+              )}
             </CRow>
           </CCardBody>
         </CCard>

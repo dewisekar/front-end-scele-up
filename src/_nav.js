@@ -13,7 +13,7 @@ import {
   cilStar,
   cilSatelite,
 } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import { CNavGroup, CNavItem, CNavLink, CNavTitle } from '@coreui/react'
 
 const _nav = [
   {
@@ -236,46 +236,66 @@ const _nav = [
     level: ['MK', 'MKSU'],
   },
   {
-    component: CNavItem,
-    name: 'Monthly Overview',
-    to: '/Overview/MonthlyOverview',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    component: CNavGroup,
+    name: 'Overview Category',
+    to: '/Overview',
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
     level: ['MK', 'MKSU'],
-  },
-  {
-    component: CNavItem,
-    name: 'KOL Overview',
-    to: '/Overview/KolOverview',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    level: ['MK', 'MKSU'],
-  },
-  {
-    component: CNavItem,
-    name: 'KOL Category Overview',
-    to: '/Overview/KolCategoryOverview',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    level: ['MK', 'MKSU'],
-  },
-  {
-    component: CNavItem,
-    name: 'Manager Overview',
-    to: '/Overview/ManagerOverview',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    level: ['MK', 'MKSU'],
-  },
-  {
-    component: CNavItem,
-    name: 'Brief Overview',
-    to: '/Overview/BriefOverview',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    level: ['MK', 'MKSU'],
-  },
-  {
-    component: CNavItem,
-    name: 'Data View & CPM',
-    to: '/Overview/ViewCPM',
-    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    level: ['MK', 'MKSU'],
+    items: [
+      {
+        component: CNavLink,
+        name: 'Monthly Overview',
+        to: '/Overview/MonthlyOverview',
+        level: ['MK', 'MKSU'],
+      },
+      {
+        component: CNavLink,
+        name: 'KOL Overview',
+        to: '/Overview/KolOverview',
+        level: ['MK', 'MKSU'],
+      },
+      {
+        component: CNavLink,
+        name: 'KOL Category Overview',
+        to: '/Overview/KolCategoryOverview',
+        level: ['MK', 'MKSU'],
+      },
+      {
+        component: CNavLink,
+        name: 'Manager Overview',
+        to: '/Overview/ManagerOverview',
+        level: ['MK', 'MKSU'],
+      },
+      {
+        component: CNavLink,
+        name: 'Brief Overview',
+        to: '/Overview/BriefOverview',
+        level: ['MK', 'MKSU'],
+      },
+      {
+        component: CNavLink,
+        name: 'Data View & CPM',
+        to: '/Overview/ViewCPM',
+        level: ['MK', 'MKSU'],
+      },
+    ],
+    // items: [
+    //   {
+    //     component: CNavItem,
+    //     name: 'Accordion',
+    //     to: '/base/accordion',
+    //   },
+    //   {
+    //     component: CNavItem,
+    //     name: 'Breadcrumb',
+    //     to: '/base/breadcrumbs',
+    //   },
+    //   {
+    //     component: CNavItem,
+    //     name: 'Cards',
+    //     to: '/base/cards',
+    //   },
+    // ],
   },
   // {
   //   component: CNavTitle,
