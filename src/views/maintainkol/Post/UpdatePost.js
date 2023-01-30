@@ -75,6 +75,12 @@ const UpdatePost = () => {
 
   const handleCheckPostLink = async () => {
     const postLink = state.linkPost
+    const platform = state.platform
+
+    if (platform !== 'Tiktok') {
+      setState({ ...state, isLinkChecked: true })
+      return
+    }
 
     setIsCheckingPostLink(true)
     let result = await getVideoAndUserStats(postLink)
@@ -142,6 +148,7 @@ const UpdatePost = () => {
       deadlineDate: state.deadlineDate,
       uploadDate: state.uploadDate,
       linkPost: state.linkPost,
+      platform: state.platform,
     }
     setIsUpdating(true)
 
