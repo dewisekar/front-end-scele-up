@@ -40,6 +40,7 @@ const URL = {
   GET_KOL_LIST_BY_BRIEF_ID: `/getKolListByBrief?id=`,
   BROADCAST_BRIEF: '/broadcastBrief',
   GET_MONTHLY_OVERVIEW: '/getMonthlyOverview',
+  GET_BANK_LIST: '/bank-list',
 }
 
 const ResponseStatus = {
@@ -100,6 +101,10 @@ const OverviewTableField = [
   },
 ]
 
+const Platform = ['Tiktok', 'Instagram', 'Twitter', 'Youtube']
+
+const KolType = ['ED', 'BA', 'PP', 'KAS', 'GA', 'Lain-lain', 'Refund']
+
 export {
   StoredProcedure,
   EventColor,
@@ -112,4 +117,6 @@ export {
   PostStatisticKey,
   OverviewParams,
   OverviewTableField,
+  Platform,
+  KolType,
 }
