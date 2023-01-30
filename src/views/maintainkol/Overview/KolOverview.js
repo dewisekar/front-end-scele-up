@@ -19,7 +19,7 @@ import { NumberFormat, RupiahCurrency } from 'src/components'
 const KolOverview = () => {
   useEffect(() => {
     const fetchData = async () => {
-      const { message: fetchedKol } = await getALLKolName()
+      const { message: fetchedKol = [] } = await getALLKolName()
       const { message: fetchedOverview } = await getRequestByUri(URL.GET_POST_AND_COST_OVERVIEW)
       setPostCostOverview(fetchedOverview)
       setKolList(fetchedKol)

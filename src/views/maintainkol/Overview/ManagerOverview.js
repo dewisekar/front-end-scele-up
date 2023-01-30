@@ -15,7 +15,7 @@ import { NumberFormat, RupiahCurrency } from 'src/components'
 const ManagerOverview = () => {
   useEffect(() => {
     const fetchData = async () => {
-      const { message: fetchedManager } = await getRequestByUri(URL.GET_MANAGER_LIST)
+      const { message: fetchedManager = [] } = await getRequestByUri(URL.GET_MANAGER_LIST)
       const { message: fetchedOverview } = await getRequestByUri(URL.GET_POST_AND_COST_OVERVIEW)
       const mappedData = fetchedManager.map((data) => {
         return { Id: data['Manager Id'], label: data['Manager Name'] }

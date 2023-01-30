@@ -100,8 +100,8 @@ const InputNewContract = () => {
     }
   }, [])
   const ShowRequestInputRef = useRef()
-  const [listKolName, setListKolName] = useState(null)
-  const [listSubMedia, setListSubMedia] = useState(null)
+  const [listKolName, setListKolName] = useState([])
+  const [listSubMedia, setListSubMedia] = useState([])
   const [isViewDetailDatta, setIsViewDetailData] = useState(false)
   const [detailData, setDetailData] = useState(null)
   const [id, setId] = useState(0)

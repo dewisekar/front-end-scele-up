@@ -59,7 +59,9 @@ const ListKontrak = () => {
 
   const downloadContract = async (fileId) => {
     try {
-      const { filename } = await getRequestByUri('/checkFileStatus?FileId=' + fileId.toString())
+      const result = await getRequestByUri('/checkFileStatus?FileId=' + fileId.toString())
+      console.log('result', result)
+      const { filename } = result
       const downloadedFile = await generalDownload('/downloadFile?file=' + filename)
       console.log('resDownloadFile: ', downloadedFile)
       if (downloadedFile !== undefined) {

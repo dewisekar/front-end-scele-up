@@ -15,7 +15,7 @@ import { NumberFormat, RupiahCurrency } from 'src/components'
 const BriefOverview = () => {
   useEffect(() => {
     const fetchData = async () => {
-      const { message: fetchedBrief } = await getRequestByUri(URL.GET_BRIEF_LIST)
+      const { message: fetchedBrief = [] } = await getRequestByUri(URL.GET_BRIEF_LIST)
       const { message: fetchedOverview } = await getRequestByUri(URL.GET_POST_AND_COST_OVERVIEW)
       const mappedData = fetchedBrief.map((data) => {
         return { Id: data['Brief Id'], label: data['Brief Code Tema'] }
