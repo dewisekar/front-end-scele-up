@@ -29,9 +29,9 @@ const InputNewPost = () => {
   const errorTitle = 'Submit Error'
   const errorMessage = `Please select / fill `
 
-  const [kolList, setKolList] = useState(null)
-  const [managerList, setManagerList] = useState(null)
-  const [briefCodeList, setBriefCodeList] = useState(null)
+  const [kolList, setKolList] = useState([])
+  const [managerList, setManagerList] = useState([])
+  const [briefCodeList, setBriefCodeList] = useState([])
   const [kolDetail, setKolDetail] = useState(null)
 
   const [show, setShow] = useState(false)
@@ -45,6 +45,7 @@ const InputNewPost = () => {
     const fetchData = async () => {
       try {
         const { message: contractListIteration } = await getRequestByUri(URL.GET_CONTRACT_ITERATION)
+        console.log(contractListIteration)
         const { message: manager } = await getRequestByUri(URL.GET_MANAGER_LIST)
         const { message: briefList } = await getRequestByUri(URL.GET_BRIEF_LIST)
         setKolList(contractListIteration)

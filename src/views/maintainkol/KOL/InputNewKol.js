@@ -9,17 +9,20 @@ import {
   CFormInput,
   CRow,
   CFormSelect,
+  CSpinner,
 } from '@coreui/react'
+import Select from 'react-select'
 
 import { insertNewKOL } from '../../../utils/request-marketing'
-import { execSPWithoutInput } from '../../../utils/request-marketing'
-import { StoredProcedure } from 'src/constants'
+import { execSPWithoutInput, getRequestByUri } from '../../../utils/request-marketing'
+import { StoredProcedure, URL, Platform, KolType } from 'src/constants'
+import { convertDataToSelectOptions } from '../../../utils/GeneralFormInput'
 
 const InputNewKol = () => {
   const [jenisEndorse, setJenisEndorse] = useState('default')
   const [jenisPlatform, setJenisPlatform] = useState('default')
-  const [kategoriKOL, setKategoriKOL] = useState('default')
-  const [kodeBank, setKodeBank] = useState('default')
+  const [kategoriKOL, setKategoriKOL] = useState(null)
+  const [kodeBank, setKodeBank] = useState(null)
   const [namaKOL, setNamaKol] = useState('')
   const [cursorNamaKOL, setCursorNamaKol] = useState(null)
   const [usernameKOL, setUserNamaKol] = useState('')
@@ -32,35 +35,12 @@ const InputNewKol = () => {
   const [NorekKOL, setNorekKOL] = useState('')
   const [cursorNoKTP, setCursorNoKTP] = useState(null)
   const [noKTP, setNoKTP] = useState('')
-  const [listJenisEndorse, setListJenisEndorse] = useState([
-    'ED',
-    'BA',
-    'PP',
-    'KAS',
-    'GA',
-    'Lain-lain',
-    'Refund',
-  ])
-  const [listPlatform, setListPlatform] = useState([
-    'Tiktok',
-    'Instagram',
-    'Twitter',
-    'Youtube',
-    'All Platform',
-  ])
   const [listKategoriKol, setListKategoriKol] = useState([])
-  const [listBank, setListBank] = useState([
-    'BCA',
-    'BANK MANDIRI',
-    'BNI',
-    'BRI',
-    'BTN',
-    'BANK MEGA',
-    'BTPN',
-  ])
+  const [listBank, setListBank] = useState([])
   const [show, setShow] = useState(false)
   const [errMessage, setErrorMessage] = useState('')
   const [modalTitle, setModalTitle] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
@@ -70,7 +50,9 @@ const InputNewKol = () => {
         const { message: fetchedCategory } = await execSPWithoutInput(
           StoredProcedure.GET_KOL_CATEGORY,
         )
+        const { message: fetchedBank } = await getRequestByUri(URL.GET_BANK_LIST)
         setListKategoriKol(fetchedCategory)
+        setListBank(fetchedBank)
       } catch (error) {
         console.log(error)
       }
@@ -82,8 +64,8 @@ const InputNewKol = () => {
   const resetAllVariable = () => {
     setJenisEndorse('default')
     setJenisPlatform('default')
-    setKategoriKOL('default')
-    setKodeBank('default')
+    setKategoriKOL(null)
+    setKodeBank(null)
     setNoKTP('')
     setNamaKol('')
     setUserNamaKol('')
@@ -93,60 +75,61 @@ const InputNewKol = () => {
   }
 
   const handleOnSubmit = () => {
-    if (jenisEndorse == 'default') {
+    if (jenisEndorse === 'default') {
       setErrorMessage('Please input jenis KOL')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (jenisPlatform == 'default') {
+    } else if (jenisPlatform === 'default') {
       setErrorMessage('Please input jenis Platform')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (kategoriKOL == 'default') {
+    } else if (kategoriKOL === null) {
       setErrorMessage('Please input Kategori KOL')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (namaKOL == '') {
+    } else if (namaKOL === '') {
       setErrorMessage('Please input nama KOL')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (usernameKOL == '') {
+    } else if (usernameKOL === '') {
       setErrorMessage('Please input username KOL')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (NoWhatsapp == '') {
+    } else if (NoWhatsapp === '') {
       setErrorMessage('Please input no Whatsapp KOL')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (NorekKOL == '') {
+    } else if (NorekKOL === '') {
       setErrorMessage('Please input no rekening KOL')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (kodeBank == 'default') {
+    } else if (kodeBank === null) {
       setErrorMessage('Please input bank')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (AlamatKOL == '') {
+    } else if (AlamatKOL === '') {
       setErrorMessage('Please input alamat KOL')
       setModalTitle('Submit Error')
       handleShow()
-    } else if (noKTP == '') {
+    } else if (noKTP === '') {
       setErrorMessage('Please input nomor KTP')
       setModalTitle('Submit Error')
       handleShow()
     } else {
       try {
+        setIsSubmitting(true)
         let user = sessionStorage.getItem('user')
         let resInsertNewKOL = insertNewKOL(
           jenisEndorse,
           jenisPlatform,
-          kategoriKOL,
+          kategoriKOL.value,
           namaKOL,
           usernameKOL,
           NoWhatsapp,
           AlamatKOL,
           NorekKOL,
           noKTP,
-          kodeBank,
+          kodeBank.value,
           user,
         )
         resInsertNewKOL.then(function (result) {
@@ -162,6 +145,7 @@ const InputNewKol = () => {
             handleShow()
             console.log('err')
           }
+          setIsSubmitting(false)
         })
       } catch (err) {
         console.log(err)
@@ -202,7 +186,7 @@ const InputNewKol = () => {
                   }}
                 >
                   <option value="default">Pilih Jenis</option>
-                  {listJenisEndorse.map((value) => (
+                  {KolType.map((value) => (
                     <option key={value} value={value}>
                       {value}
                     </option>
@@ -222,7 +206,7 @@ const InputNewKol = () => {
                   }}
                 >
                   <option value="default">Pilih Jenis Platform</option>
-                  {listPlatform.map((value) => (
+                  {Platform.map((value) => (
                     <option key={value} value={value}>
                       {value}
                     </option>
@@ -235,21 +219,15 @@ const InputNewKol = () => {
                 <div className="p-2 border bg-light">Pilih Kategori KOL</div>
               </CCol>
               <CCol xs={9}>
-                <CFormSelect
-                  aria-label="Large select example"
+                <Select
+                  options={convertDataToSelectOptions(listKategoriKol, 'id', 'category')}
+                  placeholder="Pilih Kategori KOL"
+                  isClearable
+                  value={kategoriKOL}
                   onChange={(e) => {
-                    setKategoriKOL(e.target.value)
+                    setKategoriKOL(e)
                   }}
-                >
-                  <option value="default">Pilih Kategori</option>
-                  {listKategoriKol.map((data) => {
-                    return (
-                      <option key={data.id} value={data.id}>
-                        {data.category}
-                      </option>
-                    )
-                  })}
-                </CFormSelect>
+                />
               </CCol>
             </CRow>
             <CRow className="mb-1">
@@ -348,19 +326,15 @@ const InputNewKol = () => {
                 <div className="p-2 border bg-light">Pilih Bank</div>
               </CCol>
               <CCol xs={9}>
-                <CFormSelect
-                  aria-label="Large select example"
+                <Select
+                  options={convertDataToSelectOptions(listBank, 'code', 'name')}
+                  placeholder="Pilih Bank"
+                  isClearable
+                  value={kodeBank}
                   onChange={(e) => {
-                    setKodeBank(e.target.value)
+                    setKodeBank(e)
                   }}
-                >
-                  <option value="default">Pilih Bank</option>
-                  {listBank.map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </CFormSelect>
+                />
               </CCol>
             </CRow>
             <CRow className="mb-1">
@@ -406,15 +380,21 @@ const InputNewKol = () => {
               </CCol>
             </CRow>
             <div className="d-grid gap-2 mt-4">
-              <CButton
-                color="secondary"
-                active={'active' === 'active'}
-                variant="outline"
-                key="1"
-                onClick={handleOnSubmit}
-              >
-                Submit
-              </CButton>
+              {!isSubmitting ? (
+                <CButton
+                  color="secondary"
+                  active={'active' === 'active'}
+                  variant="outline"
+                  key="1"
+                  onClick={handleOnSubmit}
+                >
+                  Submit
+                </CButton>
+              ) : (
+                <CCol lg={12} className="text-center">
+                  <CSpinner color="primary" />
+                </CCol>
+              )}
             </div>
           </CCardBody>
         </CCard>

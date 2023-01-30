@@ -7,9 +7,20 @@ import React, {
   Suspense,
 } from 'react'
 import { Modal } from 'react-bootstrap'
-import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow, CFormSelect } from '@coreui/react'
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CFormSelect,
+  CSpinner,
+} from '@coreui/react'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
+import Select from 'react-select'
+
 import {
   getALLKolName,
   getKolDetailById,
@@ -26,6 +37,7 @@ import { format } from 'date-fns'
 import fileDownload from 'js-file-download'
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker'
 import { Bars } from 'react-loader-spinner'
+import { convertDataToSelectOptions } from '../../../utils/GeneralFormInput'
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -105,6 +117,7 @@ const InputNewContract = () => {
   const [isViewDetailDatta, setIsViewDetailData] = useState(false)
   const [detailData, setDetailData] = useState(null)
   const [id, setId] = useState(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [show, setShow] = useState(false)
   const [errMessage, setErrorMessage] = useState('')
@@ -164,6 +177,7 @@ const InputNewContract = () => {
     } else {
       console.log('masuk sini gak')
       try {
+        setIsSubmitting(true)
         let resInsertNewKontrak = insertNewKontrak(
           id,
           subMedia,
@@ -215,6 +229,7 @@ const InputNewContract = () => {
             handleShow()
             console.log('err')
           }
+          setIsSubmitting(false)
         })
       } catch (err) {
         console.log(err)
@@ -393,7 +408,7 @@ const InputNewContract = () => {
     const [jenisSubMedia, setJenisSubMedia] = useState('default')
     const [tanggalAwalKerjaSama, setTanggalAwalKerjaSama] = useState(new Date())
     const [tanggalAkhirKerjaSama, setTanggalAkhirKerjaSama] = useState(new Date())
-    const [managerList, setManagerList] = useState(null)
+    const [managerList, setManagerList] = useState([])
     const [managerKol, setManagerKol] = useState('default')
 
     useEffect(() => {
@@ -471,7 +486,7 @@ const InputNewContract = () => {
         setTanggalAkhirKerjaSama(new Date())
       },
       getManagerKOL: () => {
-        return managerKol
+        return managerKol.value
       },
       resetManagerKOL: () => {
         setManagerKol('default')
@@ -576,20 +591,15 @@ const InputNewContract = () => {
               <div className="p-2 border bg-light">Pilih Manager</div>
             </CCol>
             <CCol xs={10}>
-              <CFormSelect
-                aria-label="Large select example"
+              <Select
+                options={convertDataToSelectOptions(managerList, 'Manager Id', 'Manager Name')}
+                placeholder="Pilih Manager"
+                isClearable
+                value={managerKol}
                 onChange={(e) => {
-                  setManagerKol(e.target.value)
+                  setManagerKol(e)
                 }}
-              >
-                <option value="default">Pilih Manager</option>
-                {managerList != null &&
-                  managerList.map((value, index) => (
-                    <option key={index} value={value['Manager Id']}>
-                      {value['Manager Name']}
-                    </option>
-                  ))}
-              </CFormSelect>
+              />
             </CCol>
           </CRow>
           {/* <CRow className="mb-1">
@@ -637,18 +647,24 @@ const InputNewContract = () => {
             </CCol>
           </CRow>
           <CRow className="mt-4">
-            <CButton
-              color="secondary"
-              active={'active' === 'active'}
-              variant="outline"
-              key="1"
-              onClick={() => {
-                // console.log('listSubMedia:', listSubMedia)
-                onSubmit()
-              }}
-            >
-              Submit
-            </CButton>
+            {!isSubmitting ? (
+              <CButton
+                color="secondary"
+                active={'active' === 'active'}
+                variant="outline"
+                key="1"
+                onClick={() => {
+                  // console.log('listSubMedia:', listSubMedia)
+                  onSubmit()
+                }}
+              >
+                Submit
+              </CButton>
+            ) : (
+              <CCol lg={12} className="text-center">
+                <CSpinner color="primary" />
+              </CCol>
+            )}
           </CRow>
         </CCardBody>
       </CCard>
