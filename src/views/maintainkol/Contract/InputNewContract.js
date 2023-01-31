@@ -88,12 +88,10 @@ const calculateDP = (biaya, DP) => {
 
 const formatCurrency = (numString) => {
   let curr = numString.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-  // curr = 'Rp ' + curr
   return curr
 }
 
 const unFormatCurrency = (numString) => {
-  // let num = numString.replace('Rp ', '')
   let num = numString.replace(/\./g, '')
   return num
 }
@@ -104,16 +102,42 @@ const InputNewContract = () => {
       resGetALLKolName.then(function (result) {
         console.log('resGetALLKolName:', result.status)
         if (result.status === 'true') {
-          setListKolName(result.message)
+          const fetchedData = result.message
+          const data = fetchedData.map((item) => {
+            const { label } = item
+            return {
+              ...item,
+              label: label + ' - ' + (item.isHasContract === 'YES' ? '(✓)' : '(𐄂)'),
+            }
+          })
+          console.log(data)
+          const kolWithContract = data.filter((item) => item.isHasContract === 'YES')
+          const kolWithoutContract = data.filter((item) => item.isHasContract === 'NO')
+          setListKolName({
+            ALL: data,
+            WITH_CONTRACT: kolWithContract,
+            WITHOUT_CONTRACT: kolWithoutContract,
+          })
         }
       })
     } catch (err) {
       console.log(err)
     }
   }, [])
+  const filter = [
+    { id: 'ALL', label: 'All KOL' },
+    { id: 'WITH_CONTRACT', label: 'KOL dengan Kontrak' },
+    { id: 'WITHOUT_CONTRACT', label: 'KOL tanpa Kontrak' },
+  ]
+
   const ShowRequestInputRef = useRef()
-  const [listKolName, setListKolName] = useState([])
+  const [listKolName, setListKolName] = useState({
+    ALL: [],
+    WITH_CONTRACT: [],
+    WITHOUT_CONTRACT: [],
+  })
   const [listSubMedia, setListSubMedia] = useState([])
+  const [chosenFilter, setChosenFilter] = useState({ id: 'ALL', label: 'All KOL' })
   const [isViewDetailDatta, setIsViewDetailData] = useState(false)
   const [detailData, setDetailData] = useState(null)
   const [id, setId] = useState(0)
@@ -122,15 +146,20 @@ const InputNewContract = () => {
   const [show, setShow] = useState(false)
   const [errMessage, setErrorMessage] = useState('')
   const [modalTitle, setModalTitle] = useState('')
-  const handleClose = () => setShow(false)
+  const handleClose = () => {
+    setShow(false)
+    window.location.reload()
+  }
   const handleShow = () => setShow(true)
 
   const [showButtonDownloadFIle, setShowButtonDownloadFIle] = useState(false)
   const [fileId, setFileId] = useState(null)
   const [disableBtnDwnld, setDisableBtnDwnld] = useState(false)
+  const [chosenKol, setChosenKol] = useState(null)
 
   const inputNameHandle = (value) => {
     if (value != null) {
+      setChosenKol(value)
       let id = value.ID
       let resGetKolDetailById = getKolDetailById(id)
       try {
@@ -139,6 +168,7 @@ const InputNewContract = () => {
           if (result.status === 'true') {
             setId(id)
             setIsViewDetailData(true)
+
             setDetailData(result.message)
           }
         })
@@ -148,6 +178,11 @@ const InputNewContract = () => {
     } else {
       setIsViewDetailData(false)
     }
+  }
+  const changeFilterHandler = (value) => {
+    setChosenFilter(value)
+    setDetailData(null)
+    setChosenKol(null)
   }
   const handleOnSubmit_backup = () => {
     console.log('tes masuk sini ga')
@@ -339,7 +374,7 @@ const InputNewContract = () => {
 
   const ErrorModal = () => {
     return (
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} backdrop={'static'}>
         <Modal.Header closeButton>
           <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
@@ -739,16 +774,40 @@ const InputNewContract = () => {
               <strong>Input new contract</strong>
             </CCardHeader>
             <CCardBody>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={listKolName}
-                sx={{ width: 300 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Please input KOL name" size="small" />
-                )}
-                onChange={(event, value) => inputNameHandle(value)}
-              />
+              <CRow className="mb-2">
+                <CCol>
+                  <b>Filter:</b>
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCol lg={12} style={{ display: 'inline-flex' }}>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={filter}
+                    sx={{ width: 250 }}
+                    style={{ marginRight: '20px' }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Choose Filter" size="small" />
+                    )}
+                    value={chosenFilter}
+                    clearIcon={false}
+                    onChange={(event, value) => changeFilterHandler(value)}
+                  />
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={listKolName[chosenFilter.id]}
+                    sx={{ width: 300 }}
+                    className="m-0"
+                    value={chosenKol}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Choose KOL" size="small" />
+                    )}
+                    onChange={(event, value) => inputNameHandle(value)}
+                  />
+                </CCol>
+              </CRow>
             </CCardBody>
           </CCard>
           {isViewDetailDatta && detailData != null && <ShowDetailData />}
