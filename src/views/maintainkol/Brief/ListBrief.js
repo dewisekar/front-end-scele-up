@@ -88,7 +88,8 @@ const ListBrief = () => {
         )
         return { ...data, action }
       })
-      const mappedKolData = fetchedKol.map((data) => {
+      const filteredKol = fetchedKol.filter((item) => item.isHasContract === 'YES')
+      const mappedKolData = filteredKol.map((data) => {
         const { label, ID } = data
         return { label, value: ID }
       })
