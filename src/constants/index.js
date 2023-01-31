@@ -103,7 +103,15 @@ const OverviewTableField = [
 
 const Platform = ['Tiktok', 'Instagram', 'Twitter', 'Youtube']
 
-const KolType = ['ED', 'BA', 'PP', 'KAS', 'GA', 'Lain-lain', 'Refund']
+const KolType = [
+  'Endorse',
+  'Brand Ambassador',
+  'Paid Promote',
+  'KAS',
+  'Giveaway',
+  'Lain-lain',
+  'Refund',
+]
 
 export {
   StoredProcedure,
