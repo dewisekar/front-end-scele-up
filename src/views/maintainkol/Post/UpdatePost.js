@@ -130,6 +130,12 @@ const UpdatePost = () => {
       return
     }
 
+    if (state.isLinkChecked && state.uploadDate === null) {
+      setErrorModalMessage({ message: 'Mohon isi upload date', title: errorModalTitle })
+      handleErrorModalShow()
+      return
+    }
+
     if (!state.isLinkChecked) {
       setErrorModalMessage({
         message: 'Please check post link validity!',
