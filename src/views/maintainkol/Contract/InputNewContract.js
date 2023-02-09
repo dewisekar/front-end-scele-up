@@ -38,6 +38,7 @@ import fileDownload from 'js-file-download'
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker'
 import { Bars } from 'react-loader-spinner'
 import { convertDataToSelectOptions } from '../../../utils/GeneralFormInput'
+import { URL } from 'src/constants'
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -97,32 +98,24 @@ const unFormatCurrency = (numString) => {
 }
 const InputNewContract = () => {
   useEffect(() => {
-    let resGetALLKolName = getALLKolName()
-    try {
-      resGetALLKolName.then(function (result) {
-        console.log('resGetALLKolName:', result.status)
-        if (result.status === 'true') {
-          const fetchedData = result.message
-          const data = fetchedData.map((item) => {
-            const { label } = item
-            return {
-              ...item,
-              label: label + ' - ' + (item.isHasContract === 'YES' ? '(✓)' : '(𐄂)'),
-            }
-          })
-          console.log(data)
-          const kolWithContract = data.filter((item) => item.isHasContract === 'YES')
-          const kolWithoutContract = data.filter((item) => item.isHasContract === 'NO')
-          setListKolName({
-            ALL: data,
-            WITH_CONTRACT: kolWithContract,
-            WITHOUT_CONTRACT: kolWithoutContract,
-          })
-        }
+    const fetchData = async () => {
+      const { message: fetchedKol = [] } = await getALLKolName()
+      const { message: fetchedActiveKol = [] } = await getRequestByUri(URL.GET_ACTIVE_KOL)
+      const mappedActiveKol = fetchedActiveKol.map((data) => {
+        return { ID: data.kolId, label: data.kolName }
       })
-    } catch (err) {
-      console.log(err)
+      const activeIds = []
+      mappedActiveKol.forEach((data) => activeIds.push(data.ID))
+
+      const notActiveKol = fetchedKol.filter((kol) => !activeIds.includes(kol.ID))
+      setListKolName({
+        ALL: fetchedKol,
+        WITH_CONTRACT: mappedActiveKol,
+        WITHOUT_CONTRACT: notActiveKol,
+      })
     }
+
+    fetchData()
   }, [])
   const filter = [
     { id: 'ALL', label: 'All KOL' },

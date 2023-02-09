@@ -41,6 +41,7 @@ const URL = {
   BROADCAST_BRIEF: '/broadcastBrief',
   GET_MONTHLY_OVERVIEW: '/getMonthlyOverview',
   GET_BANK_LIST: '/bank-list',
+  GET_ACTIVE_KOL: '/kol/active',
 }
 
 const ResponseStatus = {

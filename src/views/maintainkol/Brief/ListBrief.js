@@ -20,7 +20,6 @@ import Select from 'react-select'
 
 import {
   getRequestByUri,
-  getALLKolName,
   execSPWithoutInput,
   postRequestByUri,
 } from '../../../utils/request-marketing'
@@ -59,7 +58,7 @@ const ListBrief = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { message: fetchedBrief = [] } = await getRequestByUri(URL.GET_BRIEF_LIST)
-      const { message: fetchedKol = [] } = await getALLKolName()
+      const { message: fetchedKol = [] } = await getRequestByUri(URL.GET_ACTIVE_KOL)
       const { message: fetchedCategory = [] } = await execSPWithoutInput(
         StoredProcedure.GET_KOL_CATEGORY,
       )
@@ -88,10 +87,9 @@ const ListBrief = () => {
         )
         return { ...data, action }
       })
-      const filteredKol = fetchedKol.filter((item) => item.isHasContract === 'YES')
-      const mappedKolData = filteredKol.map((data) => {
-        const { label, ID } = data
-        return { label, value: ID }
+      const mappedKolData = fetchedKol.map((data) => {
+        const { kolName, kolId } = data
+        return { label: kolName, value: kolId }
       })
       const mappedKolCategoryData = fetchedCategory.map((data) => {
         const { category, id } = data
