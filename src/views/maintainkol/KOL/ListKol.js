@@ -33,6 +33,13 @@ const ListKol = () => {
               >
                 View
               </NavLink>
+              <NavLink
+                to={'/Kol/edit?id=' + data['Kol Id']}
+                className="btn btn-dark btn-sm"
+                style={{ marginRight: '8px' }}
+              >
+                Edit
+              </NavLink>
             </>
           )
           return { ...data, action }

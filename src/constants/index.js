@@ -42,6 +42,7 @@ const URL = {
   GET_MONTHLY_OVERVIEW: '/getMonthlyOverview',
   GET_BANK_LIST: '/bank-list',
   GET_ACTIVE_KOL: '/kol/active',
+  KOL_WITH_PARAMS: '/kol/',
 }
 
 const ResponseStatus = {

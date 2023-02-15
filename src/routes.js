@@ -63,6 +63,7 @@ const RekapPengiriman = React.lazy(() => import('./views/dashboard/RekapPengirim
 const InputNewKol = React.lazy(() => import('./views/maintainkol/KOL/InputNewKol'))
 const ListKol = React.lazy(() => import('./views/maintainkol/KOL/ListKol'))
 const ViewKol = React.lazy(() => import('./views/maintainkol/KOL/ViewKol'))
+const EditKol = React.lazy(() => import('./views/maintainkol/KOL/EditKol'))
 const InputNewContract = React.lazy(() => import('./views/maintainkol/Contract/InputNewContract'))
 const ListKontrak = React.lazy(() => import('./views/maintainkol/Contract/ListKontrak'))
 const InputNewBrief = React.lazy(() => import('./views/maintainkol/Brief/InputNewBrief'))
@@ -156,6 +157,7 @@ const routes = [
   { path: '/Kol/InputNewKol', name: 'Input New Kol', element: InputNewKol },
   { path: '/Kol/ListKol', name: 'List Kol', element: ListKol },
   { path: '/Kol/ViewKol', name: 'View Kol', element: ViewKol },
+  { path: '/Kol/edit', name: 'Edit Kol', element: EditKol },
   {
     path: '/Contract/InputNewContract',
     name: 'Input New Contract',
