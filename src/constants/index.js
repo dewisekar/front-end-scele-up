@@ -43,6 +43,7 @@ const URL = {
   GET_BANK_LIST: '/bank-list',
   GET_ACTIVE_KOL: '/kol/active',
   KOL_WITH_PARAMS: '/kol/',
+  CONTRACT_WITH_PARAMS: '/kontrak/',
 }
 
 const ResponseStatus = {

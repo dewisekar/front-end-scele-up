@@ -39,6 +39,13 @@ const ListKontrak = () => {
             >
               View
             </NavLink>
+            <NavLink
+              to={'/Contract/edit?id=' + data['Kontrak Id']}
+              className="btn btn-dark btn-sm mb-1"
+              style={{ marginRight: '8px' }}
+            >
+              Edit
+            </NavLink>
             <CButton onClick={() => downloadContract(data['Kontrak Id'])}>Download File</CButton>
           </>
         )
