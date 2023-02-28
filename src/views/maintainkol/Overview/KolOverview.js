@@ -53,7 +53,7 @@ const KolOverview = () => {
         label.push(data.yearMonth)
         return {
           ...data,
-          avgCpm: roundScore(data.avgCpm),
+          avgCpm: <RupiahCurrency balance={roundScore(data.avgCpm)} />,
           avgViews: <NumberFormat number={roundScore(data.avgViews)} />,
           totalViews: <NumberFormat number={totalViews} />,
         }

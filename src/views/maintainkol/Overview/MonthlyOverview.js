@@ -42,7 +42,10 @@ const MonthlyOverview = () => {
         return {
           ...data,
           maxViews: <NumberFormat number={roundScore(maxViews)} />,
-          maxCpm: <NumberFormat number={roundScore(maxCpm)} />,
+          maxCpm: new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+          }).format(maxCpm),
         }
       })
       setPostCostOverview(fetchedOverview)

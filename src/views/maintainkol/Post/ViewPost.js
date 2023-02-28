@@ -21,6 +21,7 @@ import { URL, ColumnSizePercentage, PostStatus } from 'src/constants'
 import { VerticalTableRow, LoadingAnimation } from 'src/components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 import { countPostStatistic } from 'src/utils/postUtil'
+import { RupiahCurrency } from 'src/components'
 
 const ViewPost = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -49,11 +50,21 @@ const ViewPost = () => {
 
         const mappedStatistic = fetchedStatistic.map((data) => {
           const countedStat = countPostStatistic({ ...data, costPerSlot }, postStatisticKey)
+          const { cpm, costPerViews } = countedStat
+          console.log(countedStat)
 
           return {
             ...data,
             dayNumber: 'H+' + data.dayNumber,
             ...countedStat,
+            cpm: new Intl.NumberFormat('id-ID', {
+              style: 'currency',
+              currency: 'IDR',
+            }).format(cpm),
+            costPerViews: new Intl.NumberFormat('id-ID', {
+              style: 'currency',
+              currency: 'IDR',
+            }).format(costPerViews),
           }
         })
 
@@ -62,6 +73,7 @@ const ViewPost = () => {
           postStatus,
           deadlineDate: convertedDeadline,
           uploadDate: convertedUpload,
+          costPerSlot: <RupiahCurrency balance={costPerSlot} />,
         })
         setPostStatistic(mappedStatistic)
         setIsLoading(false)

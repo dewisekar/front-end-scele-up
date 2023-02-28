@@ -13,6 +13,7 @@ const tableField = [
   { label: 'Nama Brief', field: 'briefName', type: 'text' },
   { label: 'PIC KOL', field: 'kolManager', type: 'text' },
   { label: 'Link Post', field: 'linkPost', type: 'link' },
+  { label: 'Cost Per Slot', field: 'costPerSlot', type: 'text' },
 ]
 
 const statisticField = [
