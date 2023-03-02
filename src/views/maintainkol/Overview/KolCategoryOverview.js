@@ -57,6 +57,7 @@ const KolCategoryOverview = () => {
           avgCpm: <RupiahCurrency balance={roundScore(data.avgCpm)} />,
           avgViews: <NumberFormat number={roundScore(data.avgViews)} />,
           totalViews: <NumberFormat number={totalViews} />,
+          totalCostPerSlot: <RupiahCurrency balance={roundScore(data.totalCostPerSlot)} />,
         }
       })
       setStatisticData(mappedData)

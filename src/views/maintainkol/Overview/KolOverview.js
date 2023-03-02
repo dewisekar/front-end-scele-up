@@ -47,7 +47,7 @@ const KolOverview = () => {
       const cpm = []
       const label = []
       const mappedData = fetchedOverview.map((data) => {
-        const { totalViews, avgViews: noAvgViews } = data
+        const { totalViews, avgViews: noAvgViews, totalCostPerSlot } = data
         views.push(noAvgViews)
         cpm.push(data.avgCpm)
         label.push(data.yearMonth)
@@ -55,6 +55,7 @@ const KolOverview = () => {
           ...data,
           avgCpm: <RupiahCurrency balance={roundScore(data.avgCpm)} />,
           avgViews: <NumberFormat number={roundScore(data.avgViews)} />,
+          totalCostPerSlot: <RupiahCurrency balance={roundScore(totalCostPerSlot)} />,
           totalViews: <NumberFormat number={totalViews} />,
         }
       })

@@ -91,6 +91,10 @@ const OverviewTableField = [
     label: 'Jumlah Post',
   },
   {
+    field: 'totalCostPerSlot',
+    label: 'Total Cost',
+  },
+  {
     field: 'totalViews',
     label: 'Total Views',
   },
