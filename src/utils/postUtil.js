@@ -19,8 +19,6 @@ const countPostStatistic = (data, fields) => {
     result[field] = Math.round(Scores[field] * 100) / 100
   })
 
-  console.log('ini result')
-
   return result
 }
 

@@ -16,6 +16,7 @@ import ConfirmationModal from './ConfirmationModal'
 import RupiahCurrency from './RupiahCurrency'
 import VerticalTable from './VerticalTable'
 import NumberFormat from './NumberFormat'
+import StatusBadge from './StatusBadge'
 
 export {
   AppBreadcrumb,
@@ -36,4 +37,5 @@ export {
   RupiahCurrency,
   VerticalTable,
   NumberFormat,
+  StatusBadge,
 }

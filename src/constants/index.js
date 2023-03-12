@@ -17,9 +17,9 @@ const DateMode = {
 }
 
 const PostStatus = {
-  FULFILLED: 'FULFILLED',
-  ONSCHEDULE: 'ON SCHEDULE',
-  MISSED: 'MISSED',
+  FULFILLED: 'Terpenuhi',
+  ONSCHEDULE: 'Terjadwal',
+  MISSED: 'Lewat Deadline',
 }
 
 const URL = {

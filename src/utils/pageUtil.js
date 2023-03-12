@@ -29,4 +29,12 @@ const convertDate = (date, mode = DateMode.DDMMYYYY) => {
   return DateModes[mode]
 }
 
-export { getPostStatus, convertDate }
+const getRupiahString = (balance) =>
+  new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  }).format(balance)
+
+const getNumberFormat = (number) => new Intl.NumberFormat('id-ID').format(number)
+
+export { getPostStatus, convertDate, getRupiahString, getNumberFormat }
