@@ -1,10 +1,26 @@
-import React, { useState, useEffect } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CBadge } from '@coreui/react'
+import React, { useState, useEffect, useMemo } from 'react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CAlert,
+  CBadge,
+  CFormInput,
+  CButton,
+  CAccordion,
+  CAccordionBody,
+  CAccordionHeader,
+  CAccordionItem,
+} from '@coreui/react'
 import { NavLink } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
+import Select from 'react-select'
 
-import { execSPWithoutInput } from '../../../utils/request-marketing'
+import ListPostFilter from './ListPostFilter'
+import { execSPWithoutInput, getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation } from '../../../components'
 import { StatusBadge } from '../../../components'
 import { getPostStatus, convertDate, getRupiahString, getNumberFormat } from 'src/utils/pageUtil'
@@ -12,8 +28,10 @@ import { StoredProcedure, PostStatus } from 'src/constants'
 import { columns } from './ListPost.config'
 
 const ListPost = () => {
-  const [dataTable, setDataTable] = useState(null)
+  const [dataTable, setDataTable] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
+  const [filteredPost, setFilteredPost] = useState([])
 
   const BadgeEnum = {
     Terpenuhi: 'success',
@@ -26,6 +44,17 @@ const ListPost = () => {
       {amount}
     </CBadge>
   )
+
+  const onSearch = (data) => {
+    console.log('ii data', data)
+    const filteredItems = dataTable.filter((item) => {
+      return item.deadlinePost.toLowerCase().includes(data.deadlinePost || '')
+      // return Object.keys(otherItem).some((key) =>
+      //   otherItem[key].toLowerCase().includes(filterText.toLowerCase()),
+    })
+    setResetPaginationToggle(!resetPaginationToggle)
+    setFilteredPost(filteredItems)
+  }
 
   const customSort = (rows, field, direction) => {
     const RealFields = {
@@ -54,7 +83,6 @@ const ListPost = () => {
     const fetchData = async () => {
       try {
         const { message: fetchedPost = [] } = await execSPWithoutInput(StoredProcedure.GET_ALL_POST)
-
         const listPosData = fetchedPost.map((item) => {
           const {
             deadlinePost,
@@ -120,6 +148,7 @@ const ListPost = () => {
         })
 
         setDataTable(listPosData)
+        setFilteredPost(listPosData)
         setIsLoading(false)
       } catch (error) {
         console.log(error)
@@ -145,18 +174,21 @@ const ListPost = () => {
             <CCardHeader>
               <strong>List Post</strong>
             </CCardHeader>
-            <CCardBody>
+            <CCardBody className="data-table">
               <CAlert color="info">
                 Demi kelancaran pengumpulan data statistik, jangan lupa untuk update data post
                 setelah KOL melakukan <i>upload</i> di sosial media,{' '}
                 <b>maksimal H+1 waktu KOL upload post.</b>
               </CAlert>
+              <ListPostFilter onSearch={onSearch} />
               <DataTable
                 columns={columns}
-                data={dataTable}
+                data={filteredPost}
                 pagination
                 paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 sortFunction={customSort}
+                paginationResetDefaultPage={resetPaginationToggle}
+                dense
               />
             </CCardBody>
           </CCard>

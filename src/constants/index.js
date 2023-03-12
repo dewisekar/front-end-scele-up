@@ -22,6 +22,27 @@ const PostStatus = {
   MISSED: 'Lewat Deadline',
 }
 
+const PostStatusOptions = [
+  { value: 'Terjadwal', label: 'Terjadwal' },
+  { value: 'Terpenuhi', label: 'Terpenuhi' },
+  { value: 'Lewat Deadline', label: 'Lewat Deadline' },
+]
+
+const FypStatusOptions = [
+  { value: 1, label: 'FYP' },
+  { value: 0, label: 'Belum FYP' },
+]
+
+const EndorseTypeOptions = [
+  { label: 'Endorse', value: 'Endorse' },
+  { label: 'Brand Ambassador', value: 'Brand Ambassador' },
+  { label: 'Paid Promote', value: 'Paid Promote' },
+  { label: 'KAS', value: 'KAS' },
+  { label: 'Giveaway', value: 'Giveaway' },
+  { label: 'Lain-lain', value: 'Lain-lain' },
+  { label: 'Refund', value: 'Refund' },
+]
+
 const URL = {
   GET_POST_DETAIL: '/getPostDetail?id=',
   GET_KOL_DETAIL: '/getKolDetail?Id=',
@@ -134,4 +155,7 @@ export {
   OverviewTableField,
   Platform,
   KolType,
+  PostStatusOptions,
+  FypStatusOptions,
+  EndorseTypeOptions,
 }
