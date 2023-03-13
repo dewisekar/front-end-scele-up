@@ -29,8 +29,8 @@ const PostStatusOptions = [
 ]
 
 const FypStatusOptions = [
-  { value: 1, label: 'FYP' },
-  { value: 0, label: 'Belum FYP' },
+  { value: 2, label: 'FYP' },
+  { value: 1, label: 'Belum FYP' },
 ]
 
 const EndorseTypeOptions = [

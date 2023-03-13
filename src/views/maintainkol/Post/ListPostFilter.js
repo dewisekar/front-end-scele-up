@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
+import CIcon from '@coreui/icons-react'
 import {
-  CBadge,
   CFormInput,
   CButton,
   CAccordion,
@@ -8,9 +8,7 @@ import {
   CAccordionHeader,
   CAccordionItem,
 } from '@coreui/react'
-import { NavLink } from 'react-router-dom'
-import DataTable from 'react-data-table-component'
-import orderBy from 'lodash/orderBy'
+import { cilReload, cilZoom } from '@coreui/icons'
 import Select from 'react-select'
 
 import { execSPWithoutInput, getRequestByUri } from '../../../utils/request-marketing'
@@ -29,22 +27,51 @@ const ListPostFilter = ({ onSearch }) => {
   const [managerList, setManagerList] = useState([])
   const intialState = {
     deadlinePost: '',
-    isFyp: '',
-    status: '',
-    jenis: '',
-    category: '',
-    brief: '',
+    isFyp: null,
+    status: null,
+    jenis: null,
+    category: null,
+    brief: null,
     other: '',
-    manager: '',
+    manager: null,
   }
   const [state, setState] = useState(intialState)
 
   const onFormChange = (event) => {
-    const { name, value = '', checked, type } = event.target
-    const newValue = type === 'checkbox' ? checked : value
-    console.log('ini name vale', name, newValue)
+    const { name, value, action, label } = event.target
+    console.log(value, label)
+    const newValue =
+      action && value
+        ? { value: typeof value === 'string' ? value.toLowerCase() : value, label }
+        : value
 
-    setState({ ...state, [name]: newValue.toLowerCase() })
+    setState({ ...state, [name]: newValue })
+  }
+
+  const onReset = () => {
+    setState(intialState)
+    onSearch({
+      deadlinePost: '',
+      isFyp: '',
+      status: '',
+      jenis: '',
+      category: '',
+      brief: '',
+      other: '',
+      manager: '',
+    })
+  }
+
+  const handleSearch = () => {
+    let payload = {}
+    for (const key in state) {
+      const data = state[key] || ''
+      const { value } = data
+      const newValue = value ? value : data
+      payload[key] = typeof newValue === 'string' ? newValue.toLowerCase() : newValue
+    }
+
+    onSearch(payload)
   }
 
   useEffect(() => {
@@ -75,7 +102,12 @@ const ListPostFilter = ({ onSearch }) => {
             <div className="row">
               <div className="col-md-3">
                 <small>Deadline Post</small>
-                <CFormInput type="date" name="deadlinePost" onChange={onFormChange} />
+                <CFormInput
+                  type="date"
+                  name="deadlinePost"
+                  onChange={onFormChange}
+                  value={state.deadlinePost}
+                />
               </div>
               <div className="col-md-3">
                 <small>Status</small>
@@ -83,6 +115,7 @@ const ListPostFilter = ({ onSearch }) => {
                   placeholder="Status..."
                   isClearable
                   name="status"
+                  value={state.status}
                   options={PostStatusOptions}
                   onChange={(value, action) => {
                     onFormChange({ target: { ...value, ...action } })
@@ -95,6 +128,7 @@ const ListPostFilter = ({ onSearch }) => {
                   placeholder="PIC..."
                   isClearable
                   name="manager"
+                  value={state.manager}
                   options={managerList}
                   onChange={(value, action) => {
                     onFormChange({ target: { ...value, ...action } })
@@ -107,6 +141,7 @@ const ListPostFilter = ({ onSearch }) => {
                   placeholder="FYP Status..."
                   isClearable
                   name="isFyp"
+                  value={state.isFyp}
                   options={FypStatusOptions}
                   onChange={(value, action) => {
                     onFormChange({ target: { ...value, ...action } })
@@ -121,6 +156,7 @@ const ListPostFilter = ({ onSearch }) => {
                   placeholder="Jenis..."
                   isClearable
                   name="jenis"
+                  value={state.jenis}
                   options={EndorseTypeOptions}
                   onChange={(value, action) => {
                     onFormChange({ target: { ...value, ...action } })
@@ -134,6 +170,7 @@ const ListPostFilter = ({ onSearch }) => {
                   isClearable
                   name="category"
                   options={kolCategory}
+                  value={state.category}
                   onChange={(value, action) => {
                     onFormChange({ target: { ...value, ...action } })
                   }}
@@ -145,6 +182,7 @@ const ListPostFilter = ({ onSearch }) => {
                   placeholder="Brief..."
                   isClearable
                   name="brief"
+                  value={state.brief}
                   options={briefList}
                   onChange={(value, action) => {
                     onFormChange({ target: { ...value, ...action } })
@@ -153,20 +191,22 @@ const ListPostFilter = ({ onSearch }) => {
               </div>
               <div className="col-md-3">
                 <small>Lainnya</small>
-                <CFormInput type="text" name="other" onChange={onFormChange} />
+                <CFormInput type="text" name="other" onChange={onFormChange} value={state.other} />
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col-md-3">
+              <div className="col-md-12">
                 <CButton
                   color="primary"
                   className="btn-sm"
                   style={{ marginRight: '10px' }}
-                  onClick={() => onSearch(state)}
+                  onClick={handleSearch}
                 >
+                  <CIcon icon={cilZoom} style={{ marginRight: '5px' }} />
                   Filter
                 </CButton>
-                <CButton color="dark" className="btn-sm">
+                <CButton color="dark" className="btn-sm" onClick={onReset}>
+                  <CIcon icon={cilReload} style={{ marginRight: '5px' }} />
                   Reset Filter
                 </CButton>
               </div>
