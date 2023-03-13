@@ -11,6 +11,7 @@ const columns = [
   { name: 'Manager', selector: 'managerName', sortable: true, width: '300px' },
   { name: 'Brief Name', selector: 'Brief Name', width: '300px', sortable: true },
   { name: 'Action', selector: 'action', width: '10rem' },
+  { name: 'FYP', selector: 'isFyp', sortable: true },
   { name: 'CPM', selector: 'cpm', sortable: true },
   { name: 'Views', selector: 'views', sortable: true },
   { name: 'Likes', selector: 'likes', sortable: true },

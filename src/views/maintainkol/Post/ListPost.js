@@ -1,26 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CRow,
-  CAlert,
-  CBadge,
-  CFormInput,
-  CButton,
-  CAccordion,
-  CAccordionBody,
-  CAccordionHeader,
-  CAccordionItem,
-} from '@coreui/react'
+import React, { useState, useEffect } from 'react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CBadge } from '@coreui/react'
 import { NavLink } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
-import Select from 'react-select'
 
 import ListPostFilter from './ListPostFilter'
-import { execSPWithoutInput, getRequestByUri } from '../../../utils/request-marketing'
+import { execSPWithoutInput } from '../../../utils/request-marketing'
 import { LoadingAnimation } from '../../../components'
 import { StatusBadge } from '../../../components'
 import { getPostStatus, convertDate, getRupiahString, getNumberFormat } from 'src/utils/pageUtil'
@@ -39,6 +24,11 @@ const ListPost = () => {
     Terjadwal: 'warning',
   }
 
+  const FYPEnum = {
+    FYP: 'success',
+    'Belum FYP': 'warning',
+  }
+
   const renderBadge = (amount) => (
     <CBadge color="primary" shape="rounded-pill">
       {amount}
@@ -47,9 +37,11 @@ const ListPost = () => {
 
   const onSearch = (data) => {
     const { deadlinePost, isFyp, status, jenis, category, brief, other, manager } = data
+    const filteredFyp = isFyp !== ''
     const filteredItems = dataTable.filter((item) => {
       const { username, kontrakName, Platform } = item
       const searchAbles = { username, kontrakName, Platform }
+      const fypFilter = filteredFyp ? item.realIsFyp === isFyp : item.realIsFyp
       return (
         item.deadlinePost.toLowerCase().includes(deadlinePost) &&
         item.managerName.toLowerCase().includes(manager) &&
@@ -57,6 +49,7 @@ const ListPost = () => {
         item.jenis.toLowerCase().includes(jenis) &&
         item['KOL Specialist'].toLowerCase().includes(category) &&
         item['Brief Name'].toLowerCase().includes(brief) &&
+        fypFilter &&
         Object.keys(searchAbles).some((key) => searchAbles[key].toLowerCase().includes(other))
       )
     })
@@ -74,6 +67,7 @@ const ListPost = () => {
       likes: 'realLikes',
       status: 'realStatus',
       cpm: 'realCpm',
+      isFyp: 'realIsFyp',
     }
 
     const handleField = (row) => {
@@ -103,6 +97,9 @@ const ListPost = () => {
             comments,
             cpm,
           } = item
+
+          const isFyp = item.isFyp ? item.isFyp : 1
+          const convertedFyp = isFyp === 1 ? 'Belum FYP' : 'FYP'
           const convertedDeadlineDate = new Date(deadlinePost)
           const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
 
@@ -153,6 +150,8 @@ const ListPost = () => {
               </CBadge>
             ),
             realCpm: parseFloat(cpm),
+            isFyp: <StatusBadge enumType={FYPEnum} content={convertedFyp} />,
+            realIsFyp: isFyp,
           }
         })
 

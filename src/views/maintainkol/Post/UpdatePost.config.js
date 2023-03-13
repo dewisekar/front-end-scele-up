@@ -9,6 +9,7 @@ const tableField = [
   { label: 'PIC KOL', field: 'kolManager', type: 'text', disabled: true },
   { label: 'Tanggal Deadline', field: 'deadlineDate', type: 'date', disabled: false },
   { label: 'Tanggal Upload', field: 'uploadDate', type: 'date', disabled: false },
+  { label: 'Masuk FYP', field: 'isFyp', type: 'checkbox', disabled: false },
   { label: 'Link Post', field: 'linkPost', type: 'text', disabled: false },
 ]
 

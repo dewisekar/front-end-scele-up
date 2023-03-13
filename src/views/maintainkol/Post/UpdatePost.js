@@ -9,6 +9,7 @@ import {
   CFormInput,
   CButton,
   CSpinner,
+  CFormCheck,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
@@ -49,7 +50,7 @@ const UpdatePost = () => {
       const fetchData = async () => {
         const { message: fetchedDetail } = await getRequestByUri(URL.GET_POST_DETAIL + postId)
 
-        const { uploadDate, deadlineDate, postLink } = fetchedDetail
+        const { uploadDate, deadlineDate, postLink, isFyp = 1 } = fetchedDetail
         const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
 
         const postStatus = PostStatus[getPostStatus(new Date(deadlineDate), convertedUploadDate)]
@@ -63,6 +64,7 @@ const UpdatePost = () => {
           deadlineDate: convertedDeadline,
           uploadDate: convertedUpload,
           isLinkChecked,
+          isFyp: isFyp === 1 ? false : true,
         })
         setPostDetail(fetchedDetail)
       }
@@ -155,6 +157,7 @@ const UpdatePost = () => {
       uploadDate: state.uploadDate,
       linkPost: state.linkPost,
       platform: state.platform,
+      isFyp: state.isFyp || 1,
     }
     setIsUpdating(true)
 
@@ -184,12 +187,53 @@ const UpdatePost = () => {
 
   const onFormChange = (e) => {
     const { name, value, checked, type } = e.target
-    const newVal = type === 'checkbox' ? checked : value
+    const ValueChecked = {
+      true: 2,
+      false: 1,
+    }
+    const newVal = type === 'checkbox' ? ValueChecked[checked] : value
 
     setState({
       ...state,
       [name]: newVal,
     })
+  }
+
+  const renderInput = (labelProps, data) => {
+    const { disabled: isFormDisabled, field, type, label } = labelProps
+
+    const Input = {
+      date: (
+        <CFormInput
+          type={type}
+          disabled={isFormDisabled}
+          name={field}
+          value={data[field]}
+          onChange={onFormChange}
+        />
+      ),
+      text: (
+        <CFormInput
+          type={type}
+          disabled={isFormDisabled}
+          name={field}
+          value={data[field]}
+          onChange={onFormChange}
+        />
+      ),
+      checkbox: (
+        <CFormCheck
+          type="checkbox"
+          name={field}
+          id="gridCheck"
+          label={label}
+          onChange={onFormChange}
+          defaultChecked={data[field]}
+        />
+      ),
+    }
+
+    return Input[type]
   }
 
   const renderForm = (fields, data) => {
@@ -230,15 +274,7 @@ const UpdatePost = () => {
             </CCol>
           </>
         ) : (
-          <CCol xs={9}>
-            <CFormInput
-              type={type}
-              disabled={isFormDisabled}
-              name={field}
-              value={data[field]}
-              onChange={onFormChange}
-            />
-          </CCol>
+          <CCol xs={9}>{renderInput(labelProps, data)}</CCol>
         )}
       </CRow>
     )
@@ -268,13 +304,7 @@ const UpdatePost = () => {
         <CRow className="mt-3">
           <CCol xs={12} className="text-center">
             {!isUpdating ? (
-              <CButton
-                color="info"
-                className="w-100"
-                onClick={onFormSubmit}
-                active
-                disabled={state.postStatus === PostStatus.FULFILLED}
-              >
+              <CButton color="info" className="w-100" onClick={onFormSubmit} active>
                 Update
               </CButton>
             ) : (

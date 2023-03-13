@@ -39,7 +39,6 @@ const ListPostFilter = ({ onSearch }) => {
 
   const onFormChange = (event) => {
     const { name, value, action, label } = event.target
-    console.log(value, label)
     const newValue =
       action && value
         ? { value: typeof value === 'string' ? value.toLowerCase() : value, label }
