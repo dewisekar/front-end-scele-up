@@ -41,8 +41,9 @@ const ViewPost = () => {
           URL.GET_POST_STATISTIC_BY_POST_ID + postId,
         )
 
-        const { uploadDate, deadlineDate, costPerSlot } = fetchedDetail
+        const { uploadDate, deadlineDate, costPerSlot, isFyp } = fetchedDetail
         const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
+        const convertedIsFyp = isFyp === 2 ? 'FYP' : 'Belum FYP'
 
         const postStatus = PostStatus[getPostStatus(new Date(deadlineDate), convertedUploadDate)]
         const convertedDeadline = convertDate(deadlineDate)
@@ -51,7 +52,6 @@ const ViewPost = () => {
         const mappedStatistic = fetchedStatistic.map((data) => {
           const countedStat = countPostStatistic({ ...data, costPerSlot }, postStatisticKey)
           const { cpm, costPerViews } = countedStat
-          console.log(countedStat)
 
           return {
             ...data,
@@ -74,6 +74,7 @@ const ViewPost = () => {
           deadlineDate: convertedDeadline,
           uploadDate: convertedUpload,
           costPerSlot: <RupiahCurrency balance={costPerSlot} />,
+          isFyp: convertedIsFyp,
         })
         setPostStatistic(mappedStatistic)
         setIsLoading(false)

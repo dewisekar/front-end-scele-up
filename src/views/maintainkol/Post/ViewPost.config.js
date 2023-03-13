@@ -14,6 +14,7 @@ const tableField = [
   { label: 'PIC KOL', field: 'kolManager', type: 'text' },
   { label: 'Link Post', field: 'linkPost', type: 'link' },
   { label: 'Cost Per Slot', field: 'costPerSlot', type: 'text' },
+  { label: 'FYP', field: 'isFyp', type: 'text' },
 ]
 
 const statisticField = [
