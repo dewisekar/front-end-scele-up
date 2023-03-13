@@ -46,11 +46,19 @@ const ListPost = () => {
   )
 
   const onSearch = (data) => {
-    console.log('ii data', data)
+    const { deadlinePost, isFyp, status, jenis, category, brief, other, manager } = data
     const filteredItems = dataTable.filter((item) => {
-      return item.deadlinePost.toLowerCase().includes(data.deadlinePost || '')
-      // return Object.keys(otherItem).some((key) =>
-      //   otherItem[key].toLowerCase().includes(filterText.toLowerCase()),
+      const { username, kontrakName, Platform } = item
+      const searchAbles = { username, kontrakName, Platform }
+      return (
+        item.deadlinePost.toLowerCase().includes(deadlinePost) &&
+        item.managerName.toLowerCase().includes(manager) &&
+        item.realStatus.toLowerCase().includes(status) &&
+        item.jenis.toLowerCase().includes(jenis) &&
+        item['KOL Specialist'].toLowerCase().includes(category) &&
+        item['Brief Name'].toLowerCase().includes(brief) &&
+        Object.keys(searchAbles).some((key) => searchAbles[key].toLowerCase().includes(other))
+      )
     })
     setResetPaginationToggle(!resetPaginationToggle)
     setFilteredPost(filteredItems)
@@ -138,6 +146,7 @@ const ListPost = () => {
             realComments: parseFloat(comments),
             realLikes: parseFloat(likes),
             realStatus: status,
+            kontrakName: item['Kontrak Name'],
             cpm: (
               <CBadge color="success" shape="rounded-pill">
                 {getNumberFormat(cpm)}

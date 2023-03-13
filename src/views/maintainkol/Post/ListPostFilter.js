@@ -27,10 +27,19 @@ const ListPostFilter = ({ onSearch }) => {
   const [kolCategory, setKolCategory] = useState([])
   const [briefList, setBriefList] = useState([])
   const [managerList, setManagerList] = useState([])
-  const [state, setState] = useState({})
+  const intialState = {
+    deadlinePost: '',
+    isFyp: '',
+    status: '',
+    jenis: '',
+    category: '',
+    brief: '',
+    other: '',
+    manager: '',
+  }
+  const [state, setState] = useState(intialState)
 
   const onFormChange = (event) => {
-    console.log('ini state', state, event)
     const { name, value = '', checked, type } = event.target
     const newValue = type === 'checkbox' ? checked : value
     console.log('ini name vale', name, newValue)
