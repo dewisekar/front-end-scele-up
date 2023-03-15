@@ -80,7 +80,7 @@ const MultiplePropertyFilter = ({ onSubmit, fields = [], title }) => {
                   isClearable
                 />
               </div>
-              <div className="col-md-1">
+              <div className="col-md-2">
                 <CFormInput
                   className="border-gray-300"
                   placeholder="Year"
@@ -88,7 +88,9 @@ const MultiplePropertyFilter = ({ onSubmit, fields = [], title }) => {
                   onChange={onFormChange}
                 />
               </div>
-              <div className="col-md-1">
+            </div>
+            <div className="row mt-3">
+              <div className="col-md-4" style={{ display: 'flex', alignItems: 'center' }}>
                 <CButton onClick={onClick} style={{ display: 'flex', alignItems: 'center' }}>
                   <CIcon icon={cilSearch} className="me-2" /> Search
                 </CButton>
