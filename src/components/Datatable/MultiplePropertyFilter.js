@@ -13,7 +13,7 @@ import { cilSearch } from '@coreui/icons'
 
 import { MonthsSelectOptions } from 'src/constants'
 
-const MultiplePropertyFilter = ({ onSubmit, fields = [], title }) => {
+const MultiplePropertyFilter = ({ onSubmit, fields = [], title, isWithTime = true }) => {
   const [state, setState] = useState({})
 
   useEffect(() => {}, [])
@@ -69,25 +69,30 @@ const MultiplePropertyFilter = ({ onSubmit, fields = [], title }) => {
           <CAccordionBody className="">
             <div className="row">
               {fields.map((item) => renderCFormInput(item))}
-              <div className="col-md-2">
-                <Select
-                  options={MonthsSelectOptions}
-                  name="month"
-                  onChange={(value, action) => {
-                    onFormChange({ target: { ...value, ...action } })
-                  }}
-                  placeholder="Month..."
-                  isClearable
-                />
-              </div>
-              <div className="col-md-2">
-                <CFormInput
-                  className="border-gray-300"
-                  placeholder="Year"
-                  name="year"
-                  onChange={onFormChange}
-                />
-              </div>
+
+              {isWithTime && (
+                <>
+                  <div className="col-md-2">
+                    <Select
+                      options={MonthsSelectOptions}
+                      name="month"
+                      onChange={(value, action) => {
+                        onFormChange({ target: { ...value, ...action } })
+                      }}
+                      placeholder="Month..."
+                      isClearable
+                    />
+                  </div>
+                  <div className="col-md-2">
+                    <CFormInput
+                      className="border-gray-300"
+                      placeholder="Year"
+                      name="year"
+                      onChange={onFormChange}
+                    />
+                  </div>
+                </>
+              )}
               <div className="col-md-2">
                 <CFormInput
                   className="border-gray-300"
