@@ -14,24 +14,21 @@ import {
   CSpinner,
   CTable,
 } from '@coreui/react'
-import { MDBDataTable } from 'mdbreact'
 import { NavLink } from 'react-router-dom'
 import Select from 'react-select'
+import DataTable from 'react-data-table-component'
 
 import {
   getRequestByUri,
   execSPWithoutInput,
   postRequestByUri,
 } from '../../../utils/request-marketing'
-import { LoadingAnimation, NoDataAvailable } from 'src/components'
+import { LoadingAnimation, MultiplePropertyFilter } from 'src/components'
 import { URL, StoredProcedure } from 'src/constants'
-const tableField = [
-  { label: 'Brief Code', field: 'Brief Code' },
-  { label: 'Tema', field: 'Tema' },
-  { label: 'Konsep', field: 'Konsep' },
-  { label: 'Manager Name', field: 'Manager Name' },
-  { label: 'Action', field: 'action' },
-]
+import { tableColumns, customSort } from './ListBrief.config'
+import { getRupiahString, getNumberFormat } from 'src/utils/pageUtil'
+import { convertDataToSelectOptions } from 'src/utils/GeneralFormInput'
+
 const kolInBriefField = [{ label: 'Nama KOL', key: 'kolName' }]
 const broadcastOptions = [
   { value: 'kol', label: 'KOL' },
@@ -43,6 +40,8 @@ const ListBrief = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [choosenBrief, setChoosenBrief] = useState({})
   const [isBroadcastModalShown, setIsBroadcastModalShown] = useState(false)
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
+  const [filterText, setFilterText] = useState({ manager: '', year: '', month: '' })
   const [choosenBroadcastOption, setChoosenBroadcastOption] = useState({
     value: 'kol',
     label: 'KOL',
@@ -52,13 +51,24 @@ const ListBrief = () => {
   const [broadcastDestination, setBroadcastDestination] = useState([])
   const [kolInBrief, setKolInBrief] = useState([])
   const [isContentLoading, setIsContentLoading] = useState(false)
+  const [managerList, setManagerList] = useState([])
   const [isSendingBroadCast, setIsSendingBroadcast] = useState(false)
   const [isDestinationEmpty, setIsDestinationEmpty] = useState(false)
+
+  const filterConfig = [
+    {
+      name: 'manager',
+      formType: 'select',
+      placeholder: 'PIC...',
+      options: managerList,
+    },
+  ]
 
   useEffect(() => {
     const fetchData = async () => {
       const { message: fetchedBrief = [] } = await getRequestByUri(URL.GET_BRIEF_LIST)
       const { message: fetchedKol = [] } = await getRequestByUri(URL.GET_ACTIVE_KOL)
+      const { message: fetchedManager } = await getRequestByUri(URL.GET_MANAGER_LIST)
       const { message: fetchedCategory = [] } = await execSPWithoutInput(
         StoredProcedure.GET_KOL_CATEGORY,
       )
@@ -67,25 +77,39 @@ const ListBrief = () => {
         const briefCode = data['Brief Code'] + ' - ' + data['Tema']
         const id = data['Brief Id']
         const briefPayload = { id, briefCode }
+        const { totalCost, totalViews, totalCpm } = data
+        const manager = data['Manager Name']
 
         const action = (
-          <>
+          <div className="my-1">
             <NavLink
               to={'/Brief/ViewBrief?id=' + data['Brief Id']}
-              className="btn btn-dark btn-sm mb-1"
-              style={{ marginRight: '8px' }}
+              className="btn btn-dark btn-sm"
+              style={{ marginRight: '8px', fontSize: '10px' }}
             >
               View
             </NavLink>
             <CButton
               color="secondary"
+              className="btn-sm"
+              style={{ fontSize: '10px' }}
               onClick={async () => await handleBroadcastModalShow(briefPayload)}
             >
               Broadcast
             </CButton>
-          </>
+          </div>
         )
-        return { ...data, action }
+        return {
+          ...data,
+          action,
+          totalCost: getRupiahString(totalCost),
+          realTotalCost: totalCost,
+          totalCpm: getRupiahString(totalCpm),
+          realTotalCpm: parseFloat(totalCpm),
+          totalViews: getNumberFormat(totalViews),
+          realTotalViews: parseFloat(totalViews),
+          manager,
+        }
       })
       const mappedKolData = fetchedKol.map((data) => {
         const { kolName, kolId } = data
@@ -96,6 +120,7 @@ const ListBrief = () => {
         return { label: category, value: id }
       })
 
+      setManagerList(convertDataToSelectOptions(fetchedManager, 'Manager Name', 'Manager Name'))
       setDataTable(mappedBriefData)
       setKolList(mappedKolData)
       setKolCategoryList(mappedKolCategoryData)
@@ -104,6 +129,14 @@ const ListBrief = () => {
 
     fetchData()
   }, [])
+
+  const filteredBrief = dataTable.filter((item) => {
+    const { yearMonth, manager } = item
+    const date = filterText.year + '/' + filterText.month
+    return (
+      manager.toLowerCase().includes(filterText.manager) && yearMonth.toLowerCase().includes(date)
+    )
+  })
 
   const handleBroadcastModalShow = async (payload) => {
     setIsContentLoading(true)
@@ -263,6 +296,12 @@ const ListBrief = () => {
     )
   }
 
+  const onFilter = (data) => {
+    const { manager = '', year = '', month = '' } = data
+    setFilterText({ manager, year, month })
+    setResetPaginationToggle(!resetPaginationToggle)
+  }
+
   const renderLoadingAnimation = () => {
     return (
       <CRow>
@@ -287,7 +326,8 @@ const ListBrief = () => {
                   </CCol>
                 </CRow>
               )}
-              {!isContentLoading && renderDatatable(dataTable)}
+
+              {!isContentLoading && renderDatatable()}
             </CCardBody>
           </CCard>
         </CCol>
@@ -296,15 +336,22 @@ const ListBrief = () => {
     )
   }
 
-  const renderDatatable = (data) => {
-    if (dataTable !== []) {
-      let dataInput = {
-        columns: tableField,
-        rows: data,
-      }
-      return <MDBDataTable striped bordered data={dataInput}></MDBDataTable>
-    }
-    return <NoDataAvailable />
+  const renderDatatable = () => {
+    return (
+      <>
+        <MultiplePropertyFilter title="Filter Brief" fields={filterConfig} onSubmit={onFilter} />
+        <DataTable
+          className="mt-3"
+          columns={tableColumns}
+          data={filteredBrief}
+          pagination
+          paginationRowsPerPageOptions={[10, 25, 50, 100]}
+          sortFunction={customSort}
+          paginationResetDefaultPage={resetPaginationToggle}
+          dense
+        />
+      </>
+    )
   }
 
   return <> {isLoading ? renderLoadingAnimation() : renderContent()}</>

@@ -17,6 +17,8 @@ import RupiahCurrency from './RupiahCurrency'
 import VerticalTable from './VerticalTable'
 import NumberFormat from './NumberFormat'
 import StatusBadge from './StatusBadge'
+import MultiplePropertyFilter from './Datatable/MultiplePropertyFilter'
+// import Input from './Input'
 
 export {
   AppBreadcrumb,
@@ -38,4 +40,6 @@ export {
   VerticalTable,
   NumberFormat,
   StatusBadge,
+  MultiplePropertyFilter,
+  // Input,
 }
