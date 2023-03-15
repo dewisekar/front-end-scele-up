@@ -41,7 +41,7 @@ const ListBrief = () => {
   const [choosenBrief, setChoosenBrief] = useState({})
   const [isBroadcastModalShown, setIsBroadcastModalShown] = useState(false)
   const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
-  const [filterText, setFilterText] = useState({ manager: '', year: '', month: '' })
+  const [filterText, setFilterText] = useState({ manager: '', year: '', month: '', other: '' })
   const [choosenBroadcastOption, setChoosenBroadcastOption] = useState({
     value: 'kol',
     label: 'KOL',
@@ -131,10 +131,12 @@ const ListBrief = () => {
   }, [])
 
   const filteredBrief = dataTable.filter((item) => {
-    const { yearMonth, manager } = item
+    const { yearMonth, manager, Tema: theme } = item
     const date = filterText.year + '/' + filterText.month
     return (
-      manager.toLowerCase().includes(filterText.manager) && yearMonth.toLowerCase().includes(date)
+      manager.toLowerCase().includes(filterText.manager) &&
+      yearMonth.toLowerCase().includes(date) &&
+      theme.toLowerCase().includes(filterText.other)
     )
   })
 
@@ -297,8 +299,8 @@ const ListBrief = () => {
   }
 
   const onFilter = (data) => {
-    const { manager = '', year = '', month = '' } = data
-    setFilterText({ manager, year, month })
+    const { manager = '', year = '', month = '', other = '' } = data
+    setFilterText({ manager, year, month, other })
     setResetPaginationToggle(!resetPaginationToggle)
   }
 

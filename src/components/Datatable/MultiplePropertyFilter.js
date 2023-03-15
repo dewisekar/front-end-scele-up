@@ -88,6 +88,14 @@ const MultiplePropertyFilter = ({ onSubmit, fields = [], title }) => {
                   onChange={onFormChange}
                 />
               </div>
+              <div className="col-md-2">
+                <CFormInput
+                  className="border-gray-300"
+                  placeholder="Other..."
+                  name="other"
+                  onChange={onFormChange}
+                />
+              </div>
             </div>
             <div className="row mt-3">
               <div className="col-md-4" style={{ display: 'flex', alignItems: 'center' }}>
