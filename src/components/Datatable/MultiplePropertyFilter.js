@@ -63,7 +63,7 @@ const MultiplePropertyFilter = ({ onSubmit, fields = [], title, isWithTime = tru
 
   return (
     <>
-      <CAccordion style={{ width: '100%' }} className="mb-5">
+      <CAccordion style={{ width: '100%' }} className="mb-3">
         <CAccordionItem itemKey={1}>
           <CAccordionHeader>{title}</CAccordionHeader>
           <CAccordionBody className="">
