@@ -156,6 +156,13 @@ const MonthsSelectOptions = [
   { value: '12', label: 'December' },
 ]
 
+const longDateOptions = {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}
+
 export {
   StoredProcedure,
   EventColor,
@@ -174,4 +181,5 @@ export {
   FypStatusOptions,
   EndorseTypeOptions,
   MonthsSelectOptions,
+  longDateOptions,
 }

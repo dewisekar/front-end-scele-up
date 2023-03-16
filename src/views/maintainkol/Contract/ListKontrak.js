@@ -3,58 +3,85 @@ import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/reac
 import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 import { NavLink } from 'react-router-dom'
 import fileDownload from 'js-file-download'
+import DataTable from 'react-data-table-component'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { generalDownload } from '../../../utils/axios-request'
-import { LoadingAnimation, NoDataAvailable } from '../../../components'
-import { URL } from 'src/constants'
+import { LoadingAnimation } from '../../../components'
+import { URL, longDateOptions } from 'src/constants'
 import { convertDate } from 'src/utils/pageUtil'
-const tableField = [
-  { field: 'Name', label: 'Nama Kol' },
-  { field: 'Platform', label: 'Platform' },
-  { field: 'Sub Media', label: 'Sub Media' },
-  { field: 'Username', label: 'Username' },
-  { field: 'Kontrak Ke', label: 'Kontrak Ke' },
-  { field: 'Booking Slot', label: 'Jumlah Booking Slot' },
-  { field: 'managerName', label: 'Manager' },
-  { field: 'Masa Kontrak Akhir', label: 'Masa Kontrak Akhir' },
-  { field: 'contractStatus', label: 'Status Kontrak' },
-  { field: 'action', label: 'Action' },
-]
+import { tableColumns, customSort } from './ListKontrak.config'
+import { getRupiahString } from 'src/utils/pageUtil'
 
 const ListKontrak = () => {
   const [dataTable, setDataTable] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       const { message: fetchedContract = [] } = await getRequestByUri(URL.GET_CONTRACT_LIST)
       const mappedData = fetchedContract.map((data) => {
+        const {
+          contractStatus,
+          managerName: manager,
+          Username: username,
+          Platform: platform,
+          Name: name,
+        } = data
         const action = (
           <>
             <NavLink
               to={'/Contract/ViewContract?id=' + data['Kontrak Id']}
-              className="btn btn-dark btn-sm mb-1"
-              style={{ marginRight: '8px' }}
+              className="btn btn-dark btn-sm my-1"
+              style={{ marginRight: '8px', fontSize: '10px' }}
             >
               View
             </NavLink>
             <NavLink
               to={'/Contract/edit?id=' + data['Kontrak Id']}
-              className="btn btn-dark btn-sm mb-1"
-              style={{ marginRight: '8px' }}
+              className="btn btn-dark btn-sm my-1"
+              style={{ marginRight: '8px', fontSize: '10px' }}
             >
               Edit
             </NavLink>
-            <CButton onClick={() => downloadContract(data['Kontrak Id'])}>Download File</CButton>
+            <CButton
+              className="my-1"
+              style={{ fontSize: '10px' }}
+              onClick={() => downloadContract(data['Kontrak Id'])}
+            >
+              Download File
+            </CButton>
           </>
         )
         const convertedDate = convertDate(new Date(data['Masa Kontrak Akhir']))
 
         return {
-          ...data,
+          contractStatus,
+          username,
+          platform,
+          name,
           action,
-          'Masa Kontrak Akhir': convertedDate,
+          subMedia: data['Sub Media'],
+          contractNo: data['Kontrak Ke'],
+          totalSlot: data['Booking Slot'],
+          manager,
+          usedSlot: data['Booking Slot'] - data['Sisa Slot'],
+          slotLeft: data['Sisa Slot'],
+          price: getRupiahString(data['Total Kerjasama']),
+          realPrice: parseFloat(data['Total Kerjasama']),
+          costPerSlot: getRupiahString(data['Cost Per Slot']),
+          realCostPerSlot: parseFloat(data['Cost Per Slot']),
+          startDate: new Date(data['Masa Kontrak Mulai']).toLocaleDateString(
+            'id-ID',
+            longDateOptions,
+          ),
+          realStartDate: new Date(data['Masa Kontrak Mulai']),
+          endDate: new Date(data['Masa Kontrak Akhir']).toLocaleDateString(
+            'id-ID',
+            longDateOptions,
+          ),
+          realEndDate: new Date(data['Masa Kontrak Akhir']),
         }
       })
       setDataTable(mappedData)
@@ -94,29 +121,22 @@ const ListKontrak = () => {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>List Kontrak</strong> {/*<small>File input</small>*/}
+              <strong>List Kontrak</strong>
             </CCardHeader>
-            <CCardBody style={{ overflowX: 'scroll' }}>
-              <DatatablePage data={dataTable} />
+            <CCardBody>
+              <DataTable
+                columns={tableColumns}
+                data={dataTable}
+                pagination
+                paginationRowsPerPageOptions={[10, 25, 50, 100]}
+                paginationResetDefaultPage={resetPaginationToggle}
+                dense
+                sortFunction={customSort}
+              />
             </CCardBody>
           </CCard>
         </CCol>
       </CRow>
-    )
-  }
-
-  const DatatablePage = (props) => {
-    let dataInput = {
-      columns: tableField,
-      rows: props.data,
-    }
-    return props.data.length > 0 ? (
-      <MDBDataTable striped bordered data={dataInput}>
-        <MDBTableHead columns={dataInput.columns} />
-        <MDBTableBody rows={dataInput.rows} />
-      </MDBDataTable>
-    ) : (
-      <NoDataAvailable />
     )
   }
 
