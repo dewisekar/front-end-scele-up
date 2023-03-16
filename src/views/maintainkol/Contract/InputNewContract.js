@@ -30,7 +30,7 @@ import {
 } from '../../../utils/request-marketing'
 import { generalDownload } from '../../../utils/axios-request'
 import { GeneralFormInput } from '../../../utils/GeneralFormInput'
-// import ControlledInput from '../../utils/GeneralFormInput'
+import { LoadingAnimation } from 'src/components'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { format } from 'date-fns'
@@ -100,27 +100,30 @@ const InputNewContract = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { message: fetchedKol = [] } = await getALLKolName()
+      const convertedKol = convertDataToSelectOptions(fetchedKol, 'ID', 'label')
       const { message: fetchedActiveKol = [] } = await getRequestByUri(URL.GET_ACTIVE_KOL)
       const mappedActiveKol = fetchedActiveKol.map((data) => {
-        return { ID: data.kolId, label: data.kolName }
+        return { value: data.kolId, label: data.kolName }
       })
       const activeIds = []
-      mappedActiveKol.forEach((data) => activeIds.push(data.ID))
+      mappedActiveKol.forEach((data) => activeIds.push(data.value))
 
-      const notActiveKol = fetchedKol.filter((kol) => !activeIds.includes(kol.ID))
+      const notActiveKol = fetchedKol.filter((kol) => !activeIds.includes(kol.value))
       setListKolName({
-        ALL: fetchedKol,
+        ALL: convertedKol,
         WITH_CONTRACT: mappedActiveKol,
         WITHOUT_CONTRACT: notActiveKol,
       })
+      setIsInitialLoading(false)
     }
 
     fetchData()
   }, [])
+
   const filter = [
-    { id: 'ALL', label: 'All KOL' },
-    { id: 'WITH_CONTRACT', label: 'KOL dengan Kontrak' },
-    { id: 'WITHOUT_CONTRACT', label: 'KOL tanpa Kontrak' },
+    { value: 'ALL', label: 'All KOL' },
+    { value: 'WITH_CONTRACT', label: 'KOL dengan Kontrak' },
+    { value: 'WITHOUT_CONTRACT', label: 'KOL tanpa Kontrak' },
   ]
 
   const ShowRequestInputRef = useRef()
@@ -130,11 +133,13 @@ const InputNewContract = () => {
     WITHOUT_CONTRACT: [],
   })
   const [listSubMedia, setListSubMedia] = useState([])
-  const [chosenFilter, setChosenFilter] = useState({ id: 'ALL', label: 'All KOL' })
-  const [isViewDetailDatta, setIsViewDetailData] = useState(false)
+  const [chosenFilter, setChosenFilter] = useState({ value: 'ALL', label: 'All KOL' })
+  const [isViewDetailData, setIsViewDetailData] = useState(false)
   const [detailData, setDetailData] = useState(null)
   const [id, setId] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false)
 
   const [show, setShow] = useState(false)
   const [errMessage, setErrorMessage] = useState('')
@@ -148,127 +153,32 @@ const InputNewContract = () => {
   const [showButtonDownloadFIle, setShowButtonDownloadFIle] = useState(false)
   const [fileId, setFileId] = useState(null)
   const [disableBtnDwnld, setDisableBtnDwnld] = useState(false)
-  const [chosenKol, setChosenKol] = useState(null)
 
-  const inputNameHandle = (value) => {
-    if (value != null) {
-      setChosenKol(value)
-      let id = value.ID
-      let resGetKolDetailById = getKolDetailById(id)
-      try {
-        resGetKolDetailById.then(function (result) {
-          console.log('resGetKolDetailById:', result.status)
-          if (result.status === 'true') {
-            setId(id)
-            setIsViewDetailData(true)
+  const inputNameHandle = (id) => {
+    setIsLoadingDetail(true)
+    let resGetKolDetailById = getKolDetailById(id)
+    try {
+      resGetKolDetailById.then(function (result) {
+        console.log('resGetKolDetailById:', result.status)
+        if (result.status === 'true') {
+          setId(id)
+          setIsViewDetailData(true)
 
-            setDetailData(result.message)
-          }
-        })
-      } catch (err) {
-        console.log(err)
-      }
-    } else {
-      setIsViewDetailData(false)
+          setDetailData(result.message)
+        }
+      })
+    } catch (err) {
+      console.log(err)
     }
+    setIsLoadingDetail(false)
   }
+
   const changeFilterHandler = (value) => {
     setChosenFilter(value)
     setDetailData(null)
-    setChosenKol(null)
-  }
-  const handleOnSubmit_backup = () => {
-    console.log('tes masuk sini ga')
-    let user = sessionStorage.getItem('user')
-    let subMedia = ShowRequestInputRef.current.getJenisSubMedia()
-    let bookingSlot = ShowRequestInputRef.current.getBookingSlot()
-    let biayaKerjaSama = ShowRequestInputRef.current.getBiayaKerjaSama()
-    let tanggalAwalKerjaSama = ShowRequestInputRef.current.getTanggalAwalKerjaSama()
-    let tanggalAkhirKerjaSama = ShowRequestInputRef.current.getTanggalAkhirKerjaSama()
-    let managerKOL = ShowRequestInputRef.current.getManagerKOL()
-    if (subMedia == 'default') {
-      setErrorMessage('Please select sub media')
-      setModalTitle('Submit Error')
-      handleShow()
-    } else if (bookingSlot == '') {
-      setErrorMessage('Please input booking slot')
-      setModalTitle('Submit Error')
-      handleShow()
-    } else if (biayaKerjaSama == '') {
-      setErrorMessage('Please input biaya kerjasama')
-      setModalTitle('Submit Error')
-      handleShow()
-    } else if (managerKOL == 'default') {
-      setErrorMessage('Please select manager')
-      setModalTitle('Submit Error')
-      handleShow()
-    } else {
-      console.log('masuk sini gak')
-      try {
-        setIsSubmitting(true)
-        let resInsertNewKontrak = insertNewKontrak(
-          id,
-          subMedia,
-          bookingSlot,
-          biayaKerjaSama,
-          managerKOL,
-          format(tanggalAwalKerjaSama, 'yyyy-MM-dd'),
-          format(tanggalAkhirKerjaSama, 'yyyy-MM-dd'),
-          user,
-        )
-        resInsertNewKontrak.then(function (result) {
-          if (result.status === 'true') {
-            setModalTitle('Submit Success')
-            let errorMessage =
-              'Insert new kontrak success, Kontrak ID : ' +
-              result.kontrakId +
-              ', Kontrak Ke : ' +
-              result.kontrakKe
-
-            if (result.filename !== undefined) {
-              console.log('test')
-              let fileKontrak = result.filename
-              let resDownloadFile = generalDownload('/downloadFile?file=' + fileKontrak)
-              try {
-                resDownloadFile.then(function (result) {
-                  console.log('resDownloadFile: ', result)
-                  if (result !== undefined) {
-                    let fileOnly = fileKontrak.split('/')[fileKontrak.split('/').length - 1]
-                    console.log('fileOnly:', fileOnly)
-                    fileDownload(result, fileOnly)
-                  }
-                })
-              } catch (err) {
-                console.log(err)
-              }
-            } else {
-              errorMessage = errorMessage + '\n File still being processed'
-              setShowButtonDownloadFIle(true)
-              setFileId(result.FILE_ID)
-            }
-            // let fileName = result.filename
-            setErrorMessage(errorMessage)
-            handleShow()
-            console.log('success')
-            resetAllVariable()
-          } else {
-            setModalTitle('Submit Error')
-            setErrorMessage('Gagal Insert New KOL')
-            handleShow()
-            console.log('err')
-          }
-          setIsSubmitting(false)
-        })
-      } catch (err) {
-        console.log(err)
-        setErrorMessage(err)
-        setShow(true)
-      }
-    }
   }
 
   const handleOnSubmit = () => {
-    console.log('tes masuk sini ga')
     let user = sessionStorage.getItem('user')
     let subMedia = ShowRequestInputRef.current.getJenisSubMedia()
     let bookingSlot = ShowRequestInputRef.current.getBookingSlot()
@@ -302,7 +212,7 @@ const InputNewContract = () => {
       setModalTitle('Submit Error')
       handleShow()
     } else {
-      console.log('masuk sini mba')
+      setIsSubmitting(true)
       try {
         trackPromise(
           insertNewKontrak(
@@ -326,7 +236,6 @@ const InputNewContract = () => {
                   result.kontrakKe
 
                 if (result.filename !== undefined) {
-                  console.log('test')
                   let fileKontrak = result.filename
                   trackPromise(
                     generalDownload('/downloadFile?file=' + fileKontrak).then(function (result) {
@@ -362,6 +271,7 @@ const InputNewContract = () => {
         setErrorMessage(err)
         setShow(true)
       }
+      setIsSubmitting(false)
     }
   }
 
@@ -443,7 +353,6 @@ const InputNewContract = () => {
       let resGetSubMediaById = getSubMediaById(id)
       try {
         resGetSubMediaById.then(function (result) {
-          console.log('resGetSubMediaById:', result.message)
           if (result.status === 'true') {
             setSubMediaList(result.message)
           }
@@ -455,7 +364,6 @@ const InputNewContract = () => {
       let resGetListManager = getRequestByUri('/getListManager')
       try {
         resGetListManager.then(function (result) {
-          console.log('resGetListManager:', result.status)
           if (result.status === 'true') {
             setManagerList(result.message)
           }
@@ -572,16 +480,12 @@ const InputNewContract = () => {
             </CCol>
             <CCol xs={10}>
               <GeneralFormInput
-                // autoFocus="autofocus"
                 type="text"
                 placeholder="input biaya kerja sama" //"Input uername KOL"
                 value={formatCurrency(biayaKerjaSama)}
                 onChange={(event) => {
-                  // console.log('event.target.value', event.target.value)
-                  // console.log('unformat', unFormatCurrency(event.target.value))
                   setBiayaKerjaSama(unFormatCurrency(event.target.value))
                 }}
-                // regexInput={/^[0-9\b]+$/}
               />
             </CCol>
           </CRow>
@@ -630,22 +534,6 @@ const InputNewContract = () => {
               />
             </CCol>
           </CRow>
-          {/* <CRow className="mb-1">
-            <CCol xs={2}>
-              <div className="p-2 border bg-light">Link file MoU</div>
-            </CCol>
-            <CCol xs={10}>
-              <GeneralFormInput
-                // autoFocus="autofocus"
-                type="text"
-                placeholder="input link file MoU" //"Input uername KOL"
-                value={fileMou}
-                onChange={(event) => {
-                  setFileMou(event.target.value)
-                }}
-              />
-            </CCol>
-          </CRow> */}
           <CRow className="mb-1">
             <CCol xs={2}>
               <div className="p-2 border bg-light">Tanggal Awal Kerjasama</div>
@@ -682,7 +570,6 @@ const InputNewContract = () => {
                 variant="outline"
                 key="1"
                 onClick={() => {
-                  // console.log('listSubMedia:', listSubMedia)
                   onSubmit()
                 }}
               >
@@ -699,6 +586,19 @@ const InputNewContract = () => {
     )
   })
   ShowRequestInput.displayName = 'ShowRequestInput'
+
+  const renderLoadingAnimation = () => {
+    return <LoadingAnimation />
+  }
+
+  const renderDetailData = () => {
+    return (
+      <>
+        <ShowDetailData />
+        <ShowRequestInput ref={ShowRequestInputRef} onSubmit={handleOnSubmit} id={id} />
+      </>
+    )
+  }
 
   const ShowDetailData = () => {
     return (
@@ -767,46 +667,40 @@ const InputNewContract = () => {
               <strong>Input new contract</strong>
             </CCardHeader>
             <CCardBody>
-              <CRow className="mb-2">
-                <CCol>
-                  <b>Filter:</b>
-                </CCol>
-              </CRow>
-              <CRow>
-                <CCol lg={12} style={{ display: 'inline-flex' }}>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={filter}
-                    sx={{ width: 250 }}
-                    style={{ marginRight: '20px' }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Choose Filter" size="small" />
-                    )}
-                    value={chosenFilter}
-                    clearIcon={false}
-                    onChange={(event, value) => changeFilterHandler(value)}
-                  />
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={listKolName[chosenFilter.id]}
-                    sx={{ width: 300 }}
-                    className="m-0"
-                    value={chosenKol}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Choose KOL" size="small" />
-                    )}
-                    onChange={(event, value) => inputNameHandle(value)}
-                  />
-                </CCol>
-              </CRow>
+              {isInitialLoading ? (
+                renderLoadingAnimation()
+              ) : (
+                <>
+                  <CRow className="mb-2">
+                    <CCol>
+                      <b>Filter:</b>
+                    </CCol>
+                  </CRow>
+                  <CRow>
+                    <CCol md={3}>
+                      <Select
+                        placeholder="Select Filter..."
+                        styles={{ width: '100% !important' }}
+                        options={filter}
+                        value={chosenFilter}
+                        onChange={(event) => changeFilterHandler(event)}
+                      />
+                    </CCol>
+                    <CCol md={4}>
+                      <Select
+                        placeholder="Select KOL..."
+                        styles={{ width: '100% !important' }}
+                        options={listKolName[chosenFilter.value]}
+                        onChange={({ value }) => inputNameHandle(value)}
+                      />
+                    </CCol>
+                  </CRow>
+                </>
+              )}
             </CCardBody>
           </CCard>
-          {isViewDetailDatta && detailData != null && <ShowDetailData />}
-          {isViewDetailDatta && detailData != null && (
-            <ShowRequestInput ref={ShowRequestInputRef} onSubmit={handleOnSubmit} id={id} />
-          )}
+          {isLoadingDetail && renderLoadingAnimation()}
+          {isViewDetailData && detailData != null && !isLoadingDetail && renderDetailData()}
         </CCol>
       </CRow>
     </Suspense>
