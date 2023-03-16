@@ -16,6 +16,7 @@ import {
   CRow,
   CFormSelect,
   CSpinner,
+  CBadge,
 } from '@coreui/react'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
@@ -100,10 +101,12 @@ const InputNewContract = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { message: fetchedKol = [] } = await getALLKolName()
-      const convertedKol = convertDataToSelectOptions(fetchedKol, 'ID', 'label')
+      const convertedKol = fetchedKol.map((data) => {
+        return { value: data.ID, label: data.label, platform: data.platform }
+      })
       const { message: fetchedActiveKol = [] } = await getRequestByUri(URL.GET_ACTIVE_KOL)
       const mappedActiveKol = fetchedActiveKol.map((data) => {
-        return { value: data.kolId, label: data.kolName }
+        return { value: data.kolId, label: data.kolName, platform: data.platform }
       })
       const activeIds = []
       mappedActiveKol.forEach((data) => activeIds.push(data.value))
@@ -692,6 +695,21 @@ const InputNewContract = () => {
                         styles={{ width: '100% !important' }}
                         options={listKolName[chosenFilter.value]}
                         onChange={({ value }) => inputNameHandle(value)}
+                        getOptionValue={(e) => e.label}
+                        getOptionLabel={(e) => (
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                            }}
+                          >
+                            <span>{e.label}</span>
+                            <CBadge color="info" shape="rounded-pill">
+                              {e.platform}
+                            </CBadge>
+                          </div>
+                        )}
                       />
                     </CCol>
                   </CRow>
