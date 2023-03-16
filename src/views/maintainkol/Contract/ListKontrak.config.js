@@ -24,6 +24,7 @@ const customSort = (rows, field, direction) => {
     price: 'realPrice',
     endDate: 'realEndDate',
     startDate: 'realStartDate',
+    contractStatus: 'realContractStatus',
   }
 
   const handleField = (row) => {
@@ -37,4 +38,25 @@ const customSort = (rows, field, direction) => {
   return orderBy(rows, handleField, direction)
 }
 
-export { tableColumns, customSort }
+const BadgeEnum = {
+  AKTIF: 'success',
+  'SLOT PENUH': 'primary',
+  'PERLU DIPERBARUI': 'warning',
+  'TIDAK AKTIF': 'danger',
+}
+
+const platformOptions = [
+  { label: 'Tiktok', value: 'Tiktok' },
+  { label: 'Instagram', value: 'Instagram' },
+  { label: 'Twitter', value: 'Twitter' },
+  { label: 'Youtube', value: 'Youtube' },
+]
+
+const contractStatusOptions = [
+  { label: 'AKTIF', value: 'AKTIF' },
+  { label: 'SLOT PENUH', value: 'SLOT PENUH' },
+  { label: 'PERLU DIPERBARUI', value: 'PERLU DIPERBARUI' },
+  { label: 'TIDAK AKTIF', value: 'TIDAK AKTIF' },
+]
+
+export { tableColumns, customSort, BadgeEnum, platformOptions, contractStatusOptions }

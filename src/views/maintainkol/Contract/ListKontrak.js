@@ -1,26 +1,62 @@
 import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/react'
-import { MDBDataTable, MDBTableHead, MDBTableBody } from 'mdbreact'
 import { NavLink } from 'react-router-dom'
 import fileDownload from 'js-file-download'
 import DataTable from 'react-data-table-component'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { generalDownload } from '../../../utils/axios-request'
-import { LoadingAnimation } from '../../../components'
+import { convertDataToSelectOptions } from 'src/utils/GeneralFormInput'
+import { LoadingAnimation, MultiplePropertyFilter } from '../../../components'
 import { URL, longDateOptions } from 'src/constants'
-import { convertDate } from 'src/utils/pageUtil'
-import { tableColumns, customSort } from './ListKontrak.config'
+import {
+  tableColumns,
+  customSort,
+  BadgeEnum,
+  platformOptions,
+  contractStatusOptions,
+} from './ListKontrak.config'
 import { getRupiahString } from 'src/utils/pageUtil'
+import { StatusBadge } from '../../../components'
 
 const ListKontrak = () => {
-  const [dataTable, setDataTable] = useState(null)
+  const [dataTable, setDataTable] = useState([])
+  const [managerList, setManagerList] = useState([])
+  const [filterText, setFilterText] = useState({
+    other: '',
+    contractStatus: '',
+    platform: '',
+    manager: '',
+  })
   const [isLoading, setIsLoading] = useState(true)
   const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
+
+  const filterFields = [
+    {
+      name: 'platform',
+      formType: 'select',
+      placeholder: 'Platform...',
+      options: platformOptions,
+    },
+    {
+      name: 'contractStatus',
+      formType: 'select',
+      placeholder: 'Status...',
+      options: contractStatusOptions,
+    },
+    {
+      name: 'manager',
+      formType: 'select',
+      placeholder: 'PIC...',
+      options: managerList,
+    },
+  ]
 
   useEffect(() => {
     const fetchData = async () => {
       const { message: fetchedContract = [] } = await getRequestByUri(URL.GET_CONTRACT_LIST)
+      const { message: fetchedManager } = await getRequestByUri(URL.GET_MANAGER_LIST)
+      setManagerList(convertDataToSelectOptions(fetchedManager, 'Manager Name', 'Manager Name'))
       const mappedData = fetchedContract.map((data) => {
         const {
           contractStatus,
@@ -54,10 +90,10 @@ const ListKontrak = () => {
             </CButton>
           </>
         )
-        const convertedDate = convertDate(new Date(data['Masa Kontrak Akhir']))
 
         return {
-          contractStatus,
+          contractStatus: <StatusBadge enumType={BadgeEnum} content={contractStatus} />,
+          realContractStatus: contractStatus,
           username,
           platform,
           name,
@@ -114,6 +150,24 @@ const ListKontrak = () => {
       </CRow>
     )
   }
+  const onFilter = (data) => {
+    const { contractStatus = '', other = '', platform = '', manager = '' } = data
+    setFilterText({ contractStatus, other, platform, manager })
+    setResetPaginationToggle(!resetPaginationToggle)
+  }
+
+  const filteredContract = dataTable.filter((item) => {
+    const { platform, realContractStatus, subMedia, username, name, manager } = item
+    const otherItem = { username, name, subMedia }
+
+    return Object.keys(otherItem).some(
+      (key) =>
+        otherItem[key].toLowerCase().includes(filterText.other.toLowerCase()) &&
+        platform.toLowerCase().includes(filterText.platform) &&
+        realContractStatus.toLowerCase().includes(filterText.contractStatus) &&
+        manager.toLowerCase().includes(filterText.manager),
+    )
+  })
 
   const renderTable = () => {
     return (
@@ -124,9 +178,15 @@ const ListKontrak = () => {
               <strong>List Kontrak</strong>
             </CCardHeader>
             <CCardBody>
+              <MultiplePropertyFilter
+                title="Filter KOL Kontrak"
+                fields={filterFields}
+                isWithTime={false}
+                onSubmit={onFilter}
+              />
               <DataTable
                 columns={tableColumns}
-                data={dataTable}
+                data={filteredContract}
                 pagination
                 paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 paginationResetDefaultPage={resetPaginationToggle}
