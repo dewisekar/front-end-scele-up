@@ -2,9 +2,8 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CSpinner } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
 import 'react-datepicker/dist/react-datepicker.css'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
 import { MDBDataTable } from 'mdbreact'
+import Select from 'react-select'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
@@ -18,7 +17,7 @@ const ManagerOverview = () => {
       const { message: fetchedManager = [] } = await getRequestByUri(URL.GET_MANAGER_LIST)
       const { message: fetchedOverview } = await getRequestByUri(URL.GET_POST_AND_COST_OVERVIEW)
       const mappedData = fetchedManager.map((data) => {
-        return { Id: data['Manager Id'], label: data['Manager Name'] }
+        return { value: data['Manager Id'], label: data['Manager Name'] }
       })
       setManagerList(mappedData)
       setPostCostOverview(fetchedOverview)
@@ -40,7 +39,7 @@ const ManagerOverview = () => {
   const fetchViewDataHandler = async (value) => {
     setIsContentLoading(true)
     try {
-      const url = URL.GET_OVERVIEW + 'params=' + OverviewParams.MANAGER + '&id=' + value.Id
+      const url = URL.GET_OVERVIEW + 'params=' + OverviewParams.MANAGER + '&id=' + value.value
       const { message: fetchedOverview } = await getRequestByUri(url)
       const views = []
       const cpm = []
@@ -92,16 +91,12 @@ const ManagerOverview = () => {
               </CCardHeader>
               <CCardBody>
                 <CRow>
-                  <CCol lg={6}>
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
+                  <CCol lg={4}>
+                    <Select
+                      placeholder="Select Manager..."
+                      styles={{ width: '100% !important' }}
                       options={managerList}
-                      sx={{ width: 300 }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Choose Manager" size="small" />
-                      )}
-                      onChange={(event, value) => fetchViewDataHandler(value)}
+                      onChange={fetchViewDataHandler}
                     />
                   </CCol>
                   <CCol lg={6}>

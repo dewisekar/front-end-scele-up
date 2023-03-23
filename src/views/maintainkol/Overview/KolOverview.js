@@ -2,8 +2,6 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CSpinner, CBadge } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
 import 'react-datepicker/dist/react-datepicker.css'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
 import { MDBDataTable } from 'mdbreact'
 import Select from 'react-select'
 

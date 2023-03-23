@@ -2,8 +2,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow, CSpinner, CAlert } from '@coreui/react'
 import { MDBDataTable } from 'mdbreact'
 import 'react-datepicker/dist/react-datepicker.css'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import Select from 'react-select'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
@@ -48,7 +47,7 @@ const ViewCpm = () => {
         const { message: fetchedManager } = await getRequestByUri(URL.GET_MANAGER_LIST)
         const { message: fetchedOverview } = await getRequestByUri(URL.GET_POST_AND_COST_OVERVIEW)
         const mappedData = fetchedManager.map((data) => {
-          return { Id: data['Manager Id'], label: data['Manager Name'] }
+          return { value: data['Manager Id'], label: data['Manager Name'] }
         })
         setManagerList(mappedData)
         setPostCostOverview(fetchedOverview)
@@ -71,7 +70,7 @@ const ViewCpm = () => {
     setIsContentLoading(true)
     try {
       const { message: fetchedViews } = await getRequestByUri(
-        URL.GET_POST_VIEW_BY_MANAGER + value.Id,
+        URL.GET_POST_VIEW_BY_MANAGER + value.value,
       )
       const mappedData = fetchedViews.map((data) => {
         const { views } = data
@@ -120,16 +119,12 @@ const ViewCpm = () => {
               </CCardHeader>
               <CCardBody>
                 <CRow>
-                  <CCol lg={6}>
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
+                  <CCol lg={4}>
+                    <Select
+                      placeholder="Select Manager..."
+                      styles={{ width: '100% !important' }}
                       options={managerList}
-                      sx={{ width: 300 }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Choose Manager" size="small" />
-                      )}
-                      onChange={(event, value) => fetchViewDataHandler(value)}
+                      onChange={fetchViewDataHandler}
                     />
                   </CCol>
                   <CCol lg={6}>
