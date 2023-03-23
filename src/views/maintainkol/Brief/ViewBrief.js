@@ -17,6 +17,7 @@ const ViewBrief = () => {
     { key: 'concept', label: 'Konsep' },
     { key: 'reference', label: 'Link Referensi' },
     { key: 'script', label: 'Script' },
+    { key: 'link', label: 'Link' },
   ]
 
   useEffect(() => {
@@ -24,8 +25,17 @@ const ViewBrief = () => {
       const fetchData = async () => {
         let id = searchParams.get('id')
         const { message: fetchedDetail } = await getRequestByUri(URL.GET_BRIEF_DETAIL + id)
+        const { link } = fetchedDetail
+        const convertedLink = link ? (
+          <a href={link} target="_blank" rel="noreferrer">
+            {' '}
+            Link{' '}
+          </a>
+        ) : (
+          '-'
+        )
 
-        setBriefDetail(fetchedDetail)
+        setBriefDetail({ ...fetchedDetail, link: convertedLink })
         setIsLoading(false)
       }
 
