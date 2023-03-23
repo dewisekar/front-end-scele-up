@@ -79,11 +79,6 @@ const ListBrief = () => {
         const briefPayload = { id, briefCode }
         const { totalCost, totalViews, totalCpm, link = '#' } = data
         const manager = data['Manager Name']
-        const linkPost = (
-          <a href={link} target="_blank" rel="noreferrer">
-            Link
-          </a>
-        )
 
         const action = (
           <div className="my-1">
