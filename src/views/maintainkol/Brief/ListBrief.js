@@ -77,8 +77,13 @@ const ListBrief = () => {
         const briefCode = data['Brief Code'] + ' - ' + data['Tema']
         const id = data['Brief Id']
         const briefPayload = { id, briefCode }
-        const { totalCost, totalViews, totalCpm } = data
+        const { totalCost, totalViews, totalCpm, link = '#' } = data
         const manager = data['Manager Name']
+        const linkPost = (
+          <a href={link} target="_blank" rel="noreferrer">
+            Link
+          </a>
+        )
 
         const action = (
           <div className="my-1">
@@ -109,6 +114,14 @@ const ListBrief = () => {
           totalViews: getNumberFormat(totalViews),
           realTotalViews: parseFloat(totalViews),
           manager,
+          link: link ? (
+            <a href={link} target="_blank" rel="noreferrer">
+              {' '}
+              Link{' '}
+            </a>
+          ) : (
+            '-'
+          ),
         }
       })
       const mappedKolData = fetchedKol.map((data) => {

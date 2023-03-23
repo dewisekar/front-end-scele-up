@@ -14,6 +14,7 @@ const InputNewBrief = () => {
   const [konsep, setKonsep] = useState('')
   const [script, setScript] = useState('')
   const [refLink, setRefLink] = useState('')
+  const [link, setLink] = useState('')
   const [show, setShow] = useState(false)
   const [errMessage, setErrorMessage] = useState('')
   const [modalTitle, setModalTitle] = useState('')
@@ -80,6 +81,7 @@ const InputNewBrief = () => {
           refLink,
           managerKol.value,
           user,
+          link,
         )
         resInsertNewBrief.then(function (result) {
           if (result.status === 'true') {
@@ -181,6 +183,21 @@ const InputNewBrief = () => {
                   value={refLink}
                   onChange={(event) => {
                     setRefLink(event.target.value)
+                  }}
+                />
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol xs={2}>
+                <div className="p-2 border bg-light">Link Brief</div>
+              </CCol>
+              <CCol xs={10}>
+                <GeneralTextArea
+                  text={''}
+                  placeholder="Input Link Brief"
+                  value={link}
+                  onChange={(event) => {
+                    setLink(event.target.value)
                   }}
                 />
               </CCol>

@@ -10,6 +10,7 @@ const tableColumns = [
   { name: 'Total CPM', selector: 'totalCpm', sortable: true, width: '150px' },
   { name: 'Digunakan (X)', selector: 'totalPost', sortable: true, width: '130px' },
   { name: 'Total FYP', selector: 'totalFyp', sortable: true, width: '150px' },
+  { name: 'Link', selector: 'link', sortable: true, width: '150px' },
 ]
 
 const customSort = (rows, field, direction) => {
