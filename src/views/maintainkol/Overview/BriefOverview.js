@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import { MDBDataTable } from 'mdbreact'
+import Select from 'react-select'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
@@ -18,7 +19,7 @@ const BriefOverview = () => {
       const { message: fetchedBrief = [] } = await getRequestByUri(URL.GET_BRIEF_LIST)
       const { message: fetchedOverview } = await getRequestByUri(URL.GET_POST_AND_COST_OVERVIEW)
       const mappedData = fetchedBrief.map((data) => {
-        return { Id: data['Brief Id'], label: data['Brief Code Tema'] }
+        return { value: data['Brief Id'], label: data['Brief Code Tema'] }
       })
       setBriefList(mappedData)
       setPostCostOverview(fetchedOverview)
@@ -40,7 +41,7 @@ const BriefOverview = () => {
   const fetchViewDataHandler = async (value) => {
     setIsContentLoading(true)
     try {
-      const url = URL.GET_OVERVIEW + 'params=' + OverviewParams.BRIEF + '&id=' + value.Id
+      const url = URL.GET_OVERVIEW + 'params=' + OverviewParams.BRIEF + '&id=' + value.value
       const { message: fetchedOverview } = await getRequestByUri(url)
       const views = []
       const cpm = []
@@ -92,16 +93,12 @@ const BriefOverview = () => {
               </CCardHeader>
               <CCardBody>
                 <CRow>
-                  <CCol lg={6}>
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
+                  <CCol lg={4}>
+                    <Select
+                      placeholder="Select Brief..."
+                      styles={{ width: '100% !important' }}
                       options={BriefList}
-                      sx={{ width: 300 }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Choose Brief" size="small" />
-                      )}
-                      onChange={(event, value) => fetchViewDataHandler(value)}
+                      onChange={fetchViewDataHandler}
                     />
                   </CCol>
                   <CCol lg={6}>
