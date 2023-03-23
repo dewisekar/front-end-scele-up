@@ -1,10 +1,11 @@
 import React, { useState, useEffect, Suspense } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CSpinner } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CSpinner, CBadge } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
 import 'react-datepicker/dist/react-datepicker.css'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import { MDBDataTable } from 'mdbreact'
+import Select from 'react-select'
 
 import {
   getRequestByUri,
@@ -20,9 +21,12 @@ const KolOverview = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { message: fetchedKol = [] } = await getALLKolName()
+      const convertedKol = fetchedKol.map((data) => {
+        return { value: data.ID, label: data.label, platform: data.platform }
+      })
       const { message: fetchedOverview } = await getRequestByUri(URL.GET_POST_AND_COST_OVERVIEW)
       setPostCostOverview(fetchedOverview)
-      setKolList(fetchedKol)
+      setKolList(convertedKol)
       setIsLoading(false)
     }
 
@@ -41,7 +45,7 @@ const KolOverview = () => {
   const fetchViewDataHandler = async (value) => {
     setIsContentLoading(true)
     try {
-      const url = URL.GET_OVERVIEW + 'params=' + OverviewParams.KOL + '&id=' + value.ID
+      const url = URL.GET_OVERVIEW + 'params=' + OverviewParams.KOL + '&id=' + value.value
       const { message: fetchedOverview } = await getRequestByUri(url)
       const views = []
       const cpm = []
@@ -92,16 +96,27 @@ const KolOverview = () => {
               </CCardHeader>
               <CCardBody>
                 <CRow>
-                  <CCol lg={6}>
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
+                  <CCol lg={4}>
+                    <Select
+                      placeholder="Select KOL..."
+                      styles={{ width: '100% !important' }}
                       options={kolList}
-                      sx={{ width: 300 }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Choose KOL" size="small" />
+                      onChange={fetchViewDataHandler}
+                      getOptionValue={(e) => e.label}
+                      getOptionLabel={(e) => (
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <span>{e.label}</span>
+                          <CBadge color="info" shape="rounded-pill">
+                            {e.platform}
+                          </CBadge>
+                        </div>
                       )}
-                      onChange={(event, value) => fetchViewDataHandler(value)}
                     />
                   </CCol>
                   <CCol lg={6}>
