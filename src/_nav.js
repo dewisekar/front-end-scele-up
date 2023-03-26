@@ -135,6 +135,21 @@ const _nav = [
     level: ['MK', 'MKSU'],
   },
   {
+    component: CNavGroup,
+    name: 'KOL Listing',
+    to: '/Kol',
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+    items: [
+      {
+        component: CNavLink,
+        name: 'Tiktok',
+        to: '/Kol/listing/tiktok',
+        level: ['MK', 'MKSU'],
+      },
+    ],
+  },
+  {
     component: CNavTitle,
     name: 'Maintain Kontrak Kol',
     level: ['MK', 'MKSU'],
