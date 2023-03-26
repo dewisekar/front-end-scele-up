@@ -1,10 +1,6 @@
 import axios from 'axios'
-import configData from '../appconfig.json'
+import { baseUrl, pythonUrl } from './baseUrl'
 
-// const baseUrl = 'http://localhost:5002'
-const baseUrl = configData.MW_SERVER_URL
-// const pythonUrl = 'http://127.0.0.1:5000'
-const pythonUrl = configData.PYTHON_SERVER_URL
 const getRequestByUri = async (endpoint) => {
   // let data = JSON.stringify({
   //   Date: uploaddate,
@@ -173,7 +169,7 @@ const insertNewKontrak = async (
   }
 }
 
-const insertNewBrief = async (tema, konsep, script, refLink, managerId, user) => {
+const insertNewBrief = async (tema, konsep, script, refLink, managerId, user, link) => {
   let data = JSON.stringify({
     Tema: tema,
     Konsep: konsep,
@@ -181,6 +177,7 @@ const insertNewBrief = async (tema, konsep, script, refLink, managerId, user) =>
     RefLink: refLink,
     ManagerId: managerId,
     User: user,
+    link,
   })
   try {
     const res = await axios.post(baseUrl + '/insertNewBrief', data, {
