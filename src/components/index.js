@@ -18,6 +18,7 @@ import VerticalTable from './VerticalTable'
 import NumberFormat from './NumberFormat'
 import StatusBadge from './StatusBadge'
 import MultiplePropertyFilter from './Datatable/MultiplePropertyFilter'
+import TextInput from './Input/TextInput/TextInput'
 // import Input from './Input'
 
 export {
@@ -41,5 +42,6 @@ export {
   NumberFormat,
   StatusBadge,
   MultiplePropertyFilter,
+  TextInput,
   // Input,
 }

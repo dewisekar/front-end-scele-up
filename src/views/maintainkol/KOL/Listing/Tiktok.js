@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CButton,
+  CAccordionBody,
+  CAccordionHeader,
+  CAccordionItem,
+  CAccordion,
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
 import { NavLink } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
+import { useForm } from 'react-hook-form'
+import { cilSearch } from '@coreui/icons'
 
 import { getListKol, execSPWithoutInput } from '../../../../utils/request-marketing'
 import { convertDataToSelectOptions } from 'src/utils/GeneralFormInput'
-import { LoadingAnimation, MultiplePropertyFilter } from 'src/components'
-// import { tableColumns, platformOptions, typeOptions } from './ListKol.config'
-import { StoredProcedure } from 'src/constants'
+import { LoadingAnimation, MultiplePropertyFilter, TextInput } from 'src/components'
+import { formFields } from './Tiktok.config'
 
 const KolListingTiktok = () => {
   const [dataTable, setDataTable] = useState([])
@@ -16,69 +29,18 @@ const KolListingTiktok = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
   const [filterText, setFilterText] = useState({ platform: '', type: '', category: '', other: '' })
   const isWithTime = false
-
-  //   const filterFields = [
-  //     {
-  //       name: 'platform',
-  //       formType: 'select',
-  //       placeholder: 'Platform...',
-  //       options: platformOptions,
-  //     },
-  //     {
-  //       name: 'type',
-  //       formType: 'select',
-  //       placeholder: 'Jenis...',
-  //       options: typeOptions,
-  //     },
-  //     {
-  //       name: 'category',
-  //       formType: 'select',
-  //       placeholder: 'Kategori...',
-  //       options: kolCategoryList,
-  //     },
-  //   ]
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { message: fetchedKol = [] } = await getListKol()
-        const { message: fetchedCategory } = await execSPWithoutInput(
-          StoredProcedure.GET_KOL_CATEGORY,
-        )
-
-        const mappedData = fetchedKol.map((data) => {
-          const { Name, Username, Platform, Jenis } = data
-          const action = (
-            <>
-              <NavLink
-                to={'/Kol/ViewKol?id=' + data['Kol Id']}
-                className="btn btn-dark btn-sm"
-                style={{ marginRight: '8px', fontSize: '10px' }}
-              >
-                View
-              </NavLink>
-              <NavLink
-                to={'/Kol/edit?id=' + data['Kol Id']}
-                className="btn btn-dark btn-sm"
-                style={{ marginRight: '8px', fontSize: '10px' }}
-              >
-                Edit
-              </NavLink>
-            </>
-          )
-          return {
-            action,
-            name: Name,
-            username: Username,
-            platform: Platform,
-            type: Jenis,
-            category: data['Kategori Kol'],
-          }
-        })
-        const mappedCategory = convertDataToSelectOptions(fetchedCategory, 'category', 'category')
-
-        setKolCategoryList(mappedCategory)
-        setDataTable(mappedData)
+        setKolCategoryList([])
+        setDataTable([])
         setIsLoading(false)
       } catch (error) {
         console.log(error)
@@ -94,6 +56,10 @@ const KolListingTiktok = () => {
         <LoadingAnimation />
       </CRow>
     )
+  }
+
+  const onGetCpm = (data) => {
+    console.log('ini data', data)
   }
 
   const onFilter = (data) => {
@@ -114,29 +80,71 @@ const KolListingTiktok = () => {
     )
   })
 
+  const renderFields = () => {
+    const input = formFields.map((item) => {
+      const formProps = { ...item, register, errors, control }
+
+      return (
+        <>
+          <CCol xs={6} className="mt-2">
+            <TextInput {...formProps} key={item.name} />
+          </CCol>
+        </>
+      )
+    })
+    return input
+  }
+
+  const renderForm = () => (
+    <CAccordion style={{ width: '100%' }} className="mb-3">
+      <CAccordionItem itemKey={1}>
+        <CAccordionHeader>Input Username and Cost per Slot</CAccordionHeader>
+        <CAccordionBody className="">
+          <form>
+            <CRow>{renderFields()}</CRow>
+            <CRow className="mt-4">
+              <CCol xs={12}>
+                <CButton color="light" className="w-100" onClick={handleSubmit(onGetCpm)}>
+                  <CIcon icon={cilSearch} className="me-2" /> Get CPM
+                </CButton>
+              </CCol>
+            </CRow>
+          </form>
+        </CAccordionBody>
+      </CAccordionItem>
+    </CAccordion>
+  )
+
+  const renderTable = () => (
+    <>
+      <MultiplePropertyFilter
+        title="Filter KOL"
+        fields={[]}
+        isWithTime={isWithTime}
+        onSubmit={onFilter}
+      />
+      <DataTable
+        columns={[]}
+        data={filteredKol}
+        pagination
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
+        paginationResetDefaultPage={resetPaginationToggle}
+        dense
+      />
+    </>
+  )
+
   const renderContent = () => {
     return (
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>List Kol</strong> {/*<small>File input</small>*/}
+              <strong>Data Listing KOL Tiktok</strong>
             </CCardHeader>
             <CCardBody>
-              <MultiplePropertyFilter
-                title="Filter KOL"
-                fields={[]}
-                isWithTime={isWithTime}
-                onSubmit={onFilter}
-              />
-              <DataTable
-                columns={[]}
-                data={filteredKol}
-                pagination
-                paginationRowsPerPageOptions={[10, 25, 50, 100]}
-                paginationResetDefaultPage={resetPaginationToggle}
-                dense
-              />
+              {renderForm()}
+              {renderTable()}
             </CCardBody>
           </CCard>
         </CCol>
