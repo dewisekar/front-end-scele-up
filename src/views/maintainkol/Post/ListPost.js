@@ -47,8 +47,8 @@ const ListPost = () => {
         item.managerName.toLowerCase().includes(manager) &&
         item.realStatus.toLowerCase().includes(status) &&
         item.jenis.toLowerCase().includes(jenis) &&
-        item['KOL Specialist'].toLowerCase().includes(category) &&
-        item['Brief Name'].toLowerCase().includes(brief) &&
+        item.category.toLowerCase().includes(category) &&
+        item.briefName.toLowerCase().includes(brief) &&
         fypFilter &&
         Object.keys(searchAbles).some((key) => searchAbles[key].toLowerCase().includes(other))
       )
