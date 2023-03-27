@@ -140,11 +140,15 @@ const ListBrief = () => {
   }, [])
 
   const filteredBrief = dataTable.filter((item) => {
-    const { yearMonth, manager, Tema: theme } = item
-    const date = filterText.year + '/' + filterText.month
+    const { year, month, manager, Tema: theme } = item
+    const { year: wantedYear, month: wantedMonth } = filterText
+    const yearFilter = wantedYear === '' ? year : year.toLowerCase() === wantedYear
+    const monthFilter = wantedMonth === '' ? month : month.toLowerCase() === wantedMonth
+
     return (
       manager.toLowerCase().includes(filterText.manager) &&
-      yearMonth.toLowerCase().includes(date) &&
+      yearFilter &&
+      monthFilter &&
       theme.toLowerCase().includes(filterText.other)
     )
   })

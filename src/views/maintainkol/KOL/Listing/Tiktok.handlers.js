@@ -59,6 +59,7 @@ const convertData = (data) => {
       maxViews: getNumberFormat(maxViews),
       followers: getNumberFormat(followers),
       avgCpm: getRupiahString(avgCpm),
+      avgViews: getNumberFormat(avgViews),
       ...realProps,
     }
   })
