@@ -37,4 +37,17 @@ const getRupiahString = (balance) =>
 
 const getNumberFormat = (number) => new Intl.NumberFormat('id-ID').format(number)
 
-export { getPostStatus, convertDate, getRupiahString, getNumberFormat }
+const getRealValuesForTable = (data) => {
+  let result = {}
+  const keys = Object.keys(data)
+
+  keys.forEach((key) => {
+    const lastKey = key.toString().substring(1, key.length)
+    const newKey = 'real' + key[0].toUpperCase() + lastKey
+    result[newKey] = data[key]
+  })
+
+  return result
+}
+
+export { getPostStatus, convertDate, getRupiahString, getNumberFormat, getRealValuesForTable }

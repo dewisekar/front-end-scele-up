@@ -10,24 +10,28 @@ import {
   CAccordionHeader,
   CAccordionItem,
   CAccordion,
+  CAlert,
+  CBadge,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { NavLink } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import { useForm } from 'react-hook-form'
 import { cilSearch } from '@coreui/icons'
 
-import { getListKol, execSPWithoutInput } from '../../../../utils/request-marketing'
-import { convertDataToSelectOptions } from 'src/utils/GeneralFormInput'
-import { LoadingAnimation, MultiplePropertyFilter, TextInput } from 'src/components'
-import { formFields } from './Tiktok.config'
+import { getRequestByUri } from '../../../../utils/request-marketing'
+import { getRupiahString, getNumberFormat } from 'src/utils/pageUtil'
+import { LoadingAnimation, MultiplePropertyFilter, TextInput, ErrorModal } from 'src/components'
+import { formFields, tableField, customSort } from './Tiktok.config'
+import './Listing.css'
+import { handleGetKolCpm, convertData } from './Tiktok.handlers'
 
 const KolListingTiktok = () => {
-  const [dataTable, setDataTable] = useState([])
-  const [kolCategoryList, setKolCategoryList] = useState([])
+  const [kolList, setKolList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isAlertModalShown, setIsAlertModalShown] = useState(false)
+  const [modalMessage, setModalMessage] = useState({ title: '', message: '' })
   const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
-  const [filterText, setFilterText] = useState({ platform: '', type: '', category: '', other: '' })
+  const [filterText, setFilterText] = useState({ other: '' })
   const isWithTime = false
   const {
     register,
@@ -39,8 +43,26 @@ const KolListingTiktok = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setKolCategoryList([])
-        setDataTable([])
+        const { message: fetchedListing } = await getRequestByUri('/tiktok/fetch-listing')
+        const firstConvertedData = convertData(fetchedListing)
+        const finalConvertedData = firstConvertedData.map((item) => {
+          const { avgCpm, totalViews } = item
+          return {
+            ...item,
+            avgCpm: (
+              <CBadge color="primary" className="ms-2">
+                {avgCpm}
+              </CBadge>
+            ),
+            totalViews: (
+              <CBadge color="primary" className="ms-2">
+                {totalViews}
+              </CBadge>
+            ),
+          }
+        })
+
+        setKolList(finalConvertedData)
         setIsLoading(false)
       } catch (error) {
         console.log(error)
@@ -50,6 +72,29 @@ const KolListingTiktok = () => {
     fetchData()
   }, [])
 
+  const refetchData = async () => {
+    const { message: fetchedListing } = await getRequestByUri('/tiktok/fetch-listing')
+    const firstConvertedData = convertData(fetchedListing)
+    const finalConvertedData = firstConvertedData.map((item) => {
+      const { avgCpm, totalViews } = item
+      return {
+        ...item,
+        avgCpm: (
+          <CBadge color="primary" className="ms-2">
+            {avgCpm}
+          </CBadge>
+        ),
+        totalViews: (
+          <CBadge color="primary" className="ms-2">
+            {totalViews}
+          </CBadge>
+        ),
+      }
+    })
+
+    setKolList(finalConvertedData)
+  }
+
   const renderLoadingAnimation = () => {
     return (
       <CRow>
@@ -58,26 +103,30 @@ const KolListingTiktok = () => {
     )
   }
 
-  const onGetCpm = (data) => {
-    console.log('ini data', data)
+  const onGetCpm = async (data) => {
+    const handlers = { setIsAlertModalShown, setModalMessage }
+    setIsLoading(true)
+
+    const status = await handleGetKolCpm(data, handlers)
+
+    if (status) {
+      setFilterText({ other: '' })
+      setResetPaginationToggle(!resetPaginationToggle)
+      await refetchData()
+    }
+
+    setIsLoading(false)
   }
 
   const onFilter = (data) => {
-    const { platform = '', type = '', category = '', other = '' } = data
-    setFilterText({ platform, type, category, other })
+    const { other = '' } = data
+    setFilterText({ other })
     setResetPaginationToggle(!resetPaginationToggle)
   }
 
-  const filteredKol = dataTable.filter((item) => {
-    const { platform, type, category, username, name } = item
-    const otherItem = { username, name }
-    return Object.keys(otherItem).some(
-      (key) =>
-        otherItem[key].toLowerCase().includes(filterText.other.toLowerCase()) &&
-        platform.toLowerCase().includes(filterText.platform) &&
-        type.toLowerCase().includes(filterText.type) &&
-        category.toLowerCase().includes(filterText.category),
-    )
+  const filteredKol = kolList.filter((item) => {
+    const { username } = item
+    return username.toLowerCase().includes(filterText.other)
   })
 
   const renderFields = () => {
@@ -104,7 +153,12 @@ const KolListingTiktok = () => {
             <CRow>{renderFields()}</CRow>
             <CRow className="mt-4">
               <CCol xs={12}>
-                <CButton color="light" className="w-100" onClick={handleSubmit(onGetCpm)}>
+                <CButton
+                  color="light"
+                  className="w-100"
+                  onClick={handleSubmit(onGetCpm)}
+                  disabled={isLoading}
+                >
                   <CIcon icon={cilSearch} className="me-2" /> Get CPM
                 </CButton>
               </CCol>
@@ -124,12 +178,13 @@ const KolListingTiktok = () => {
         onSubmit={onFilter}
       />
       <DataTable
-        columns={[]}
+        columns={tableField}
         data={filteredKol}
         pagination
         paginationRowsPerPageOptions={[10, 25, 50, 100]}
         paginationResetDefaultPage={resetPaginationToggle}
         dense
+        sortFunction={customSort}
       />
     </>
   )
@@ -143,16 +198,24 @@ const KolListingTiktok = () => {
               <strong>Data Listing KOL Tiktok</strong>
             </CCardHeader>
             <CCardBody>
+              <CAlert color="info" className="text-center pt-2 pb-2">
+                Data diambil dari 10 post terakhir KOL
+              </CAlert>
               {renderForm()}
-              {renderTable()}
+              {isLoading ? renderLoadingAnimation() : renderTable()}
             </CCardBody>
           </CCard>
         </CCol>
+        <ErrorModal
+          isVisible={isAlertModalShown}
+          onClose={() => setIsAlertModalShown(false)}
+          modalMessage={modalMessage}
+        />
       </CRow>
     )
   }
 
-  return <>{isLoading ? renderLoadingAnimation() : renderContent()}</>
+  return <>{renderContent()}</>
 }
 
 export default KolListingTiktok
