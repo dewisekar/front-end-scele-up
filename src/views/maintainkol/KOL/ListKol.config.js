@@ -1,10 +1,10 @@
 const tableColumns = [
-  { name: 'Name', selector: 'name', sortable: true },
-  { name: 'Username', selector: 'username', sortable: true },
-  { name: 'Platform', selector: 'platform', sortable: true },
-  { name: 'Kategori', selector: 'category', sortable: true },
-  { name: 'Jenis', selector: 'type', sortable: true },
-  { name: 'Action', selector: 'action' },
+  { name: 'Name', selector: (row) => row.name, sortable: true },
+  { name: 'Username', selector: (row) => row.username, sortable: true },
+  { name: 'Platform', selector: (row) => row.platform, sortable: true },
+  { name: 'Kategori', selector: (row) => row.category, sortable: true },
+  { name: 'Jenis', selector: (row) => row.type, sortable: true },
+  { name: 'Action', selector: (row) => row.action },
 ]
 
 const platformOptions = [
