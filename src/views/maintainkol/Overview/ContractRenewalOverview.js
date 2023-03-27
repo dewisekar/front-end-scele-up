@@ -11,15 +11,19 @@ import { customSort } from './ContractRenewalOverview.config'
 
 const ContractRenewalOverview = () => {
   const tableField = [
-    { selector: 'kolName', name: 'Nama KOL', sortable: true, width: '250px' },
-    { selector: 'platform', name: 'Platform', sortable: true },
-    { selector: 'contractNumber', name: 'Kontrak Ke' },
-    { selector: 'totalSlot', name: 'Jumlah Slot' },
-    { selector: 'uploadedPost', name: 'Slot Terpenuhi' },
-    { selector: 'missedPost', name: 'Slot Tidak Terpenuhi' },
-    { selector: 'contractEndDate', name: 'Tanggal Kontrak Berakhir', sortable: true },
-    { selector: 'dateDifference', name: 'Jumlah Hari Sebelum Kadaluarsa', sortable: true },
-    { selector: 'action', name: 'Action' },
+    { selector: (row) => row.kolName, name: 'Nama KOL', sortable: true, width: '250px' },
+    { selector: (row) => row.platform, name: 'Platform', sortable: true },
+    { selector: (row) => row.contractNumber, name: 'Kontrak Ke' },
+    { selector: (row) => row.totalSlot, name: 'Jumlah Slot' },
+    { selector: (row) => row.uploadedPost, name: 'Slot Terpenuhi' },
+    { selector: (row) => row.missedPost, name: 'Slot Tidak Terpenuhi' },
+    { selector: (row) => row.contractEndDate, name: 'Tanggal Kontrak Berakhir', sortable: true },
+    {
+      selector: (row) => row.dateDifference,
+      name: 'Jumlah Hari Sebelum Kadaluarsa',
+      sortable: true,
+    },
+    { selector: (row) => row.action, name: 'Action' },
   ]
   const [contractData, setContractData] = useState([])
   const [isLoading, setIsLoading] = useState(true)

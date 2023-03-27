@@ -5,12 +5,14 @@ const customSort = (rows, field, direction) => {
     contractEndDate: 'realContractEndDate',
   }
 
+  const [, fieldName] = field.toString().split('row => row.')
+
   const handleField = (row) => {
-    if (RealFields[field]) {
-      return row[RealFields[field]]
+    if (RealFields[fieldName]) {
+      return row[RealFields[fieldName]]
     }
 
-    return row[field]
+    return row[fieldName]
   }
 
   return orderBy(rows, handleField, direction)
