@@ -117,6 +117,7 @@ const ListBrief = () => {
           ) : (
             '-'
           ),
+          briefCode: data['Brief Code'],
         }
       })
       const mappedKolData = fetchedKol.map((data) => {
