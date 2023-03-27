@@ -1,21 +1,21 @@
 import orderBy from 'lodash/orderBy'
 
 const tableColumns = [
-  { selector: 'name', name: 'Nama Kol', sortable: true, width: '300px' },
-  { selector: 'username', name: 'Username', sortable: true, width: '200px' },
-  { selector: 'platform', name: 'Platform', sortable: true },
-  { selector: 'subMedia', name: 'Sub Media', sortable: true, width: '150px' },
-  { selector: 'contractNo', name: 'Kontrak Ke', sortable: true },
-  { selector: 'contractStatus', name: 'Status Kontrak', sortable: true, width: '170px' },
-  { selector: 'action', name: 'Action', width: '220px' },
-  { selector: 'startDate', name: 'Kontrak Mulai', sortable: true, width: '200px' },
-  { selector: 'endDate', name: 'Kontrak Selesai', sortable: true, width: '200px' },
-  { selector: 'manager', name: 'PIC', sortable: true, width: '280px' },
-  { selector: 'totalSlot', name: 'Jumlah Slot', sortable: true },
-  { selector: 'usedSlot', name: 'Slot Terpakai', sortable: true },
-  { selector: 'slotLeft', name: 'Sisa Slot', sortable: true },
-  { selector: 'price', name: 'Biaya', sortable: true, width: '150px' },
-  { selector: 'costPerSlot', name: 'Cost Per Slot', sortable: true, width: '150px' },
+  { selector: (row) => row.name, name: 'Nama Kol', sortable: true, width: '300px' },
+  { selector: (row) => row.username, name: 'Username', sortable: true, width: '200px' },
+  { selector: (row) => row.platform, name: 'Platform', sortable: true },
+  { selector: (row) => row.subMedia, name: 'Sub Media', sortable: true, width: '150px' },
+  { selector: (row) => row.contractNo, name: 'Kontrak Ke', sortable: true },
+  { selector: (row) => row.contractStatus, name: 'Status Kontrak', sortable: true, width: '170px' },
+  { selector: (row) => row.action, name: 'Action', width: '220px' },
+  { selector: (row) => row.startDate, name: 'Kontrak Mulai', sortable: true, width: '200px' },
+  { selector: (row) => row.endDate, name: 'Kontrak Selesai', sortable: true, width: '200px' },
+  { selector: (row) => row.manager, name: 'PIC', sortable: true, width: '280px' },
+  { selector: (row) => row.totalSlot, name: 'Jumlah Slot', sortable: true },
+  { selector: (row) => row.usedSlot, name: 'Slot Terpakai', sortable: true },
+  { selector: (row) => row.slotLeft, name: 'Sisa Slot', sortable: true },
+  { selector: (row) => row.price, name: 'Biaya', sortable: true, width: '150px' },
+  { selector: (row) => row.costPerSlot, name: 'Cost Per Slot', sortable: true, width: '150px' },
 ]
 
 const customSort = (rows, field, direction) => {
@@ -27,12 +27,14 @@ const customSort = (rows, field, direction) => {
     contractStatus: 'realContractStatus',
   }
 
+  const [, fieldName] = field.toString().split('row => row.')
+
   const handleField = (row) => {
-    if (RealFields[field]) {
-      return row[RealFields[field]]
+    if (RealFields[fieldName]) {
+      return row[RealFields[fieldName]]
     }
 
-    return row[field]
+    return row[fieldName]
   }
 
   return orderBy(rows, handleField, direction)
