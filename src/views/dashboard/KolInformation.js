@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { CCol, CRow, CWidgetStatsB, CSpinner, CCard } from '@coreui/react'
+import { CCol, CRow, CWidgetStatsB } from '@coreui/react'
 
 import { getRequestByUri } from 'src/utils/request-marketing'
+import CardSpinner from './CardSpinner'
 
 const KolInformation = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -21,21 +22,13 @@ const KolInformation = () => {
     init()
   }, [])
 
-  const renderSpinner = () => {
-    return (
-      <CCard className="px-5 py-3" style={{ alignItems: 'center', display: 'flex' }}>
-        <CSpinner color="secondary" />
-      </CCard>
-    )
-  }
-
   const { numberOfActiveKol, totalSlotLeft } = kolInfo
 
   return (
     <CRow className="mb-4">
       <CCol xs={6}>
         {isLoading ? (
-          renderSpinner()
+          <CardSpinner />
         ) : (
           <CWidgetStatsB
             progress={{ color: 'info', value: 100 }}
@@ -47,7 +40,7 @@ const KolInformation = () => {
       </CCol>
       <CCol xs={6}>
         {isLoading ? (
-          renderSpinner()
+          <CardSpinner />
         ) : (
           <CWidgetStatsB
             progress={{ color: 'success', value: 100 }}
