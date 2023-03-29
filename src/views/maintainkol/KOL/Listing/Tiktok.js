@@ -19,7 +19,6 @@ import { useForm } from 'react-hook-form'
 import { cilSearch } from '@coreui/icons'
 
 import { getRequestByUri } from '../../../../utils/request-marketing'
-import { getRupiahString, getNumberFormat } from 'src/utils/pageUtil'
 import { LoadingAnimation, MultiplePropertyFilter, TextInput, ErrorModal } from 'src/components'
 import { formFields, tableField, customSort } from './Tiktok.config'
 import './Listing.css'

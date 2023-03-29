@@ -1,6 +1,7 @@
 import React, { Component, Suspense, useState } from 'react'
 import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import './scss/style.scss'
+import 'react-datepicker/dist/react-datepicker.css'
 
 const loading = (
   <div className="pt-3 text-center">
