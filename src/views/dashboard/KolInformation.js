@@ -44,7 +44,7 @@ const KolInformation = () => {
         ) : (
           <CWidgetStatsB
             progress={{ color: 'success', value: 100 }}
-            text="Total slot kontrak yang belum terjadwalkan"
+            text="Total slot kontrak yang belum terjadwalkan/terupload"
             title="Slot Tersedia"
             value={totalSlotLeft}
           />

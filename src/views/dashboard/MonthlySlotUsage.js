@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
-import { CCol, CRow, CCardBody, CCard } from '@coreui/react'
+import { CCol, CRow, CCardBody, CCard, CWidgetStatsB } from '@coreui/react'
 import { CChartBar } from '@coreui/react-chartjs'
-import CIcon from '@coreui/icons-react'
-import { cilPeople, cilDescription } from '@coreui/icons'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -12,17 +10,29 @@ import CardSpinner from './CardSpinner'
 
 const MonthlySlotUsage = () => {
   const [year, setYear] = useState(new Date())
+  const [monthlyOverview, setMonthlyOverview] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
+  const today = new Date()
+  const dateOptions = { year: 'numeric', month: 'long' }
+  const nowMonthYear = today.toLocaleDateString('id-ID', dateOptions)
 
   useEffect(() => {
     const init = async () => {
-      setIsLoading(true)
       const yearOnly = year.getFullYear()
+      const monthOnly = today.getMonth() + 1
+      setIsLoading(true)
 
       try {
-        const { message } = await getRequestByUri('/marketing/dashboard/slot-usage/' + yearOnly)
-        setData(message)
+        const { message: slotUsage } = await getRequestByUri(
+          '/marketing/dashboard/slot-usage/' + yearOnly,
+        )
+        const { message } = await getRequestByUri(
+          '/marketing/dashboard/monthly-post-usage/year/' + yearOnly + '/month/' + monthOnly,
+        )
+        console.log(message)
+        setData(slotUsage)
+        setMonthlyOverview(message)
       } catch (error) {
         console.log('Error:', error)
       }
@@ -31,6 +41,62 @@ const MonthlySlotUsage = () => {
 
     init()
   }, [year])
+
+  const renderReminder = () => (
+    <CWidgetStatsB
+      progress={{ color: 'primary', value: 100 }}
+      title="Jadwal Perlu Followup"
+      value={monthlyOverview.numberPostToBeFollowedUp.totalPost}
+    />
+  )
+
+  const renderThisMonthsPost = () => (
+    <CWidgetStatsB
+      progress={{ color: 'success', value: 100 }}
+      text={nowMonthYear}
+      title="Jumlah Post Bulan Ini"
+      value={monthlyOverview.numberOfPost.totalPost}
+    />
+  )
+
+  const renderChart = () => (
+    <CChartBar
+      data={{
+        labels: data.monthLabel,
+        datasets: [
+          {
+            label: 'Slot Tersedia',
+            backgroundColor: '#f87979',
+            data: data.planned,
+          },
+          {
+            label: 'Slot Terpakai',
+            backgroundColor: '#f89012',
+            data: data.used,
+          },
+        ],
+      }}
+      labels="months"
+      options={{
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (tooltipItem) {
+                return (
+                  tooltipItem.dataset.label +
+                  ': ' +
+                  new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                  }).format(tooltipItem.raw)
+                )
+              },
+            },
+          },
+        },
+      }}
+    />
+  )
 
   return (
     <CRow>
@@ -57,42 +123,11 @@ const MonthlySlotUsage = () => {
                   />
                 </CCol>
               </CRow>
-              <CChartBar
-                data={{
-                  labels: data.monthLabel,
-                  datasets: [
-                    {
-                      label: 'Slot Tersedia',
-                      backgroundColor: '#f87979',
-                      data: data.planned,
-                    },
-                    {
-                      label: 'Slot Terpakai',
-                      backgroundColor: '#f89012',
-                      data: data.used,
-                    },
-                  ],
-                }}
-                labels="months"
-                options={{
-                  plugins: {
-                    tooltip: {
-                      callbacks: {
-                        label: function (tooltipItem) {
-                          return (
-                            tooltipItem.dataset.label +
-                            ': ' +
-                            new Intl.NumberFormat('id-ID', {
-                              style: 'currency',
-                              currency: 'IDR',
-                            }).format(tooltipItem.raw)
-                          )
-                        },
-                      },
-                    },
-                  },
-                }}
-              />
+              <CRow>{renderChart()}</CRow>
+              <CRow className="mt-4">
+                <CCol xs={6}>{renderReminder()}</CCol>
+                <CCol xs={6}>{renderThisMonthsPost()}</CCol>
+              </CRow>
             </CCardBody>
           </CCard>
         )}

@@ -105,6 +105,7 @@ const InputNewContract = () => {
         return { value: data.ID, label: data.label, platform: data.platform }
       })
       const { message: fetchedActiveKol = [] } = await getRequestByUri(URL.GET_ACTIVE_KOL)
+      console.log(fetchedActiveKol.length)
       const mappedActiveKol = fetchedActiveKol.map((data) => {
         return { value: data.kolId, label: data.kolName, platform: data.platform }
       })
