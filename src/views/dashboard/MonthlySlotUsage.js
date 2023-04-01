@@ -21,6 +21,7 @@ const MonthlySlotUsage = () => {
     const init = async () => {
       const yearOnly = year.getFullYear()
       const monthOnly = today.getMonth() + 1
+      const yearOnlyForMonthly = today.getFullYear()
       setIsLoading(true)
 
       try {
@@ -28,9 +29,12 @@ const MonthlySlotUsage = () => {
           '/marketing/dashboard/slot-usage/' + yearOnly,
         )
         const { message } = await getRequestByUri(
-          '/marketing/dashboard/monthly-post-usage/year/' + yearOnly + '/month/' + monthOnly,
+          '/marketing/dashboard/monthly-post-usage/year/' +
+            yearOnlyForMonthly +
+            '/month/' +
+            monthOnly,
         )
-        console.log(message)
+
         setData(slotUsage)
         setMonthlyOverview(message)
       } catch (error) {

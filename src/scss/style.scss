@@ -28,6 +28,10 @@ $enable-rtl: true;
     padding-right: 10px;
 }
 
+.react-datepicker__input-container > .big{
+    height: 38px;
+}
+
 .react-datepicker__triangle{
     display: none;
 }

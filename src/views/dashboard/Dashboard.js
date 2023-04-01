@@ -47,14 +47,20 @@ import {
 
 import KolInformation from './KolInformation'
 import MonthlySlotUsage from './MonthlySlotUsage'
+import TotalViewOverview from './TotalViewOverview'
 
 const Dashboard = () => {
-  return (
+  const module = sessionStorage.getItem('level_id')
+
+  const renderMarketingDashboard = () => (
     <>
       <KolInformation />
       <MonthlySlotUsage />
+      <TotalViewOverview />
     </>
   )
+
+  return <>{module === 'MKSU' && renderMarketingDashboard()}</>
 }
 
 export default Dashboard
