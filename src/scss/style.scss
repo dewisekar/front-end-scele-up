@@ -35,3 +35,8 @@ $enable-rtl: true;
 .react-datepicker__triangle{
     display: none;
 }
+
+.dashboard-datatable{
+    max-height: 400px;
+    overflow-y: scroll;
+}
