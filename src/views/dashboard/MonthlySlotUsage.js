@@ -7,9 +7,9 @@ import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
 import DataTable from 'react-data-table-component'
 
-import { getRequestByUri, execSPWithoutInput } from 'src/utils/request-marketing'
+import { getRequestByUri } from 'src/utils/request-marketing'
 import CardSpinner from './CardSpinner'
-import { URL, StoredProcedure } from 'src/constants'
+import { URL } from 'src/constants'
 import { tableColumns, BadgeEnum, customSort } from './MonthlySlotUsage.config'
 import { StatusBadge } from 'src/components'
 
@@ -36,15 +36,13 @@ const MonthlySlotUsage = () => {
         const mappedManager = fetchedManager.map((data) => {
           return { value: data['Manager Id'], label: data['Manager Name'] }
         })
-        const { message: missedPost = [] } = await execSPWithoutInput(
-          StoredProcedure.GET_MISSED_POST,
+        const managerId = chosenPic.value
+        const { message: fetchedPost = [] } = await getRequestByUri(
+          '/marketing/dashboard/post-reminder?managerId=' + managerId,
         )
-        const { message: todayPost = [] } = await execSPWithoutInput(StoredProcedure.GET_TODAY_POST)
-        console.log(missedPost)
-        console.log(todayPost)
-        const mappedTodayPost = todayPost.map((item) => {
-          const { deadlinePost } = item
-          const status = 'Hari Ini'
+        const mappedPost = fetchedPost.map((item) => {
+          const { deadlinePost, status } = item
+
           return {
             ...item,
             status: <StatusBadge enumType={BadgeEnum} content={status} />,
@@ -54,19 +52,7 @@ const MonthlySlotUsage = () => {
           }
         })
 
-        const mappedMissedPost = missedPost.map((item) => {
-          const { deadlinePost } = item
-          const status = 'Terlambat'
-          return {
-            ...item,
-            status: <StatusBadge enumType={BadgeEnum} content={status} />,
-            realStatus: status,
-            realDeadlinePost: new Date(deadlinePost),
-            deadlinePost: new Date(deadlinePost).toLocaleDateString('id-ID'),
-          }
-        })
-
-        setPost([...mappedTodayPost, ...mappedMissedPost])
+        setPost(mappedPost)
         setManagerList([allOption, ...mappedManager])
       } catch (error) {
         console.log('Error:', error)
@@ -105,35 +91,6 @@ const MonthlySlotUsage = () => {
 
     init()
   }, [year])
-
-  // useEffect(() => {
-  //   const init = async () => {
-  //     const yearOnly = year.getFullYear()
-  //     const monthOnly = today.getMonth() + 1
-  //     const yearOnlyForMonthly = today.getFullYear()
-  //     setIsLoading(true)
-
-  //     try {
-  //       const { message: slotUsage } = await getRequestByUri(
-  //         '/marketing/dashboard/slot-usage/' + yearOnly,
-  //       )
-  //       const { message } = await getRequestByUri(
-  //         '/marketing/dashboard/monthly-post-usage/year/' +
-  //           yearOnlyForMonthly +
-  //           '/month/' +
-  //           monthOnly,
-  //       )
-
-  //       setData(slotUsage)
-  //       setMonthlyOverview(message)
-  //     } catch (error) {
-  //       console.log('Error:', error)
-  //     }
-  //     setIsLoading(false)
-  //   }
-
-  //   init()
-  // }, [year])
 
   const renderReminder = () => (
     <CWidgetStatsB

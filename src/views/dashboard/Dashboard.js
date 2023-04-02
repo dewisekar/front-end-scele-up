@@ -60,7 +60,7 @@ const Dashboard = () => {
     </>
   )
 
-  return <>{module === 'MKSU' && renderMarketingDashboard()}</>
+  return <>{module === 'MKSU' ? renderMarketingDashboard() : <>Coming Soon</>}</>
 }
 
 export default Dashboard
