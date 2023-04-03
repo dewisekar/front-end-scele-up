@@ -193,7 +193,7 @@ const MonthlySlotUsage = () => {
                   <h6 className="font-weight-bold text-center">Jadwal Perlu Follow Up</h6>
                   <CAlert color="info" className="pt-1 pb-1" style={{ fontSize: '11px' }}>
                     KOL sudah menerima reminder otomatis pada H-3 dan H-1 jadwal post. Atau anda
-                    bisa mengirim ulang reminder dengan tombol di bawah.
+                    bisa mengirim ulang reminder dengan tombol di bawah (SOON).
                   </CAlert>
                 </CCol>
               </CRow>

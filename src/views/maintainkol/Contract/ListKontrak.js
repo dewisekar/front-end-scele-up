@@ -160,11 +160,16 @@ const ListKontrak = () => {
     const { platform, realContractStatus, subMedia, username, name, manager } = item
     const otherItem = { username, name, subMedia }
 
+    const contractStatusFilter =
+      filterText.contractStatus === ''
+        ? realContractStatus
+        : realContractStatus.toLowerCase() === filterText.contractStatus
+
     return Object.keys(otherItem).some(
       (key) =>
         otherItem[key].toLowerCase().includes(filterText.other.toLowerCase()) &&
         platform.toLowerCase().includes(filterText.platform) &&
-        realContractStatus.toLowerCase().includes(filterText.contractStatus) &&
+        contractStatusFilter &&
         manager.toLowerCase().includes(filterText.manager),
     )
   })

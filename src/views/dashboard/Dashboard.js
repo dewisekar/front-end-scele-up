@@ -48,6 +48,7 @@ import {
 import KolInformation from './KolInformation'
 import MonthlySlotUsage from './MonthlySlotUsage'
 import TotalViewOverview from './TotalViewOverview'
+import ViewsByCategory from './ViewsByCategory'
 
 const Dashboard = () => {
   const module = sessionStorage.getItem('level_id')
@@ -57,6 +58,7 @@ const Dashboard = () => {
       <KolInformation />
       <MonthlySlotUsage />
       <TotalViewOverview />
+      <ViewsByCategory />
     </>
   )
 
