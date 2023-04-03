@@ -62,6 +62,7 @@ const Logout = React.lazy(() => import('./views/pages/logout/Logout'))
 const RekapPengiriman = React.lazy(() => import('./views/dashboard/RekapPengiriman'))
 const InputNewKol = React.lazy(() => import('./views/maintainkol/KOL/InputNewKol'))
 const ListKol = React.lazy(() => import('./views/maintainkol/KOL/ListKol'))
+const KolCategory = React.lazy(() => import('./views/maintainkol/KOL/KolCategory'))
 const KolListingTiktok = React.lazy(() => import('./views/maintainkol/KOL/Listing/Tiktok'))
 const ViewKol = React.lazy(() => import('./views/maintainkol/KOL/ViewKol'))
 const EditKol = React.lazy(() => import('./views/maintainkol/KOL/EditKol'))
@@ -158,6 +159,7 @@ const routes = [
   { path: '/rekapPengiriman', name: 'Rekap Pengiriman', element: RekapPengiriman },
   { path: '/Kol/InputNewKol', name: 'Input New Kol', element: InputNewKol },
   { path: '/Kol/ListKol', name: 'List Kol', element: ListKol },
+  { path: '/Kol/category', name: 'KOL Category', element: KolCategory },
   { path: '/Kol/listing/tiktok', name: 'Listing Kol Tiktok', element: KolListingTiktok },
   { path: '/Kol/ViewKol', name: 'View Kol', element: ViewKol },
   { path: '/Kol/edit', name: 'Edit Kol', element: EditKol },

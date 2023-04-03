@@ -150,6 +150,14 @@ const _nav = [
     ],
   },
   {
+    component: CNavItem,
+    name: 'KOL Category',
+    // to: '/Upload/UploadDailyTrxFile',
+    to: '/Kol/category',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    level: ['MK', 'MKSU'],
+  },
+  {
     component: CNavTitle,
     name: 'Maintain Kontrak Kol',
     level: ['MK', 'MKSU'],
