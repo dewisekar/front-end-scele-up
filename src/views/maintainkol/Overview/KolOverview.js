@@ -11,8 +11,9 @@ import {
   getALLKolName,
 } from '../../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
-import { URL, OverviewParams, OverviewTableField, StoredProcedure } from 'src/constants'
+import { URL, OverviewParams, OverviewTableField, StoredProcedure, CpmEnum } from 'src/constants'
 import { roundScore } from 'src/utils/postUtil'
+import { getCpmStatus, getRupiahString } from 'src/utils/pageUtil'
 import { NumberFormat, RupiahCurrency } from 'src/components'
 
 const KolOverview = () => {
@@ -53,9 +54,14 @@ const KolOverview = () => {
         views.push(noAvgViews)
         cpm.push(data.avgCpm)
         label.push(data.yearMonth)
+        const cpmStatus = getCpmStatus(data.avgCpm)
         return {
           ...data,
-          avgCpm: <RupiahCurrency balance={roundScore(data.avgCpm)} />,
+          avgCpm: (
+            <CBadge color={CpmEnum[cpmStatus]} className="ms-2">
+              {getRupiahString(data.avgCpm)}
+            </CBadge>
+          ),
           avgViews: <NumberFormat number={roundScore(data.avgViews)} />,
           totalCostPerSlot: <RupiahCurrency balance={roundScore(totalCostPerSlot)} />,
           totalViews: <NumberFormat number={totalViews} />,

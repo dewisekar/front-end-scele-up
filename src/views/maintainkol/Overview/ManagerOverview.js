@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CSpinner } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CSpinner, CBadge } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
 import 'react-datepicker/dist/react-datepicker.css'
 import { MDBDataTable } from 'mdbreact'
@@ -7,7 +7,8 @@ import Select from 'react-select'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation } from 'src/components'
-import { URL, OverviewParams, OverviewTableField } from 'src/constants'
+import { URL, OverviewParams, OverviewTableField, CpmEnum } from 'src/constants'
+import { getRupiahString, getCpmStatus } from 'src/utils/pageUtil'
 import { roundScore } from 'src/utils/postUtil'
 import { NumberFormat, RupiahCurrency } from 'src/components'
 
@@ -49,9 +50,14 @@ const ManagerOverview = () => {
         views.push(noAvgViews)
         cpm.push(data.avgCpm)
         label.push(data.yearMonth)
+        const cpmStatus = getCpmStatus(data.avgCpm)
         return {
           ...data,
-          avgCpm: <RupiahCurrency balance={roundScore(data.avgCpm)} />,
+          avgCpm: (
+            <CBadge color={CpmEnum[cpmStatus]} className="ms-2">
+              {getRupiahString(data.avgCpm)}
+            </CBadge>
+          ),
           avgViews: <NumberFormat number={roundScore(data.avgViews)} />,
           totalViews: <NumberFormat number={totalViews} />,
           totalCostPerSlot: <RupiahCurrency balance={roundScore(data.totalCostPerSlot)} />,

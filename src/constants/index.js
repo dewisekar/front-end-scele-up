@@ -163,6 +163,14 @@ const longDateOptions = {
   day: 'numeric',
 }
 
+const CpmEnum = {
+  BLANK: 'secondary',
+  VERY_GOOD: 'success',
+  GOOD: 'primary',
+  BAD: 'warning',
+  VERY_BAD: 'danger',
+}
+
 export {
   StoredProcedure,
   EventColor,
@@ -182,4 +190,5 @@ export {
   EndorseTypeOptions,
   MonthsSelectOptions,
   longDateOptions,
+  CpmEnum,
 }

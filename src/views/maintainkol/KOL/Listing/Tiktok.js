@@ -21,6 +21,8 @@ import { cilSearch } from '@coreui/icons'
 import { getRequestByUri } from '../../../../utils/request-marketing'
 import { LoadingAnimation, MultiplePropertyFilter, TextInput, ErrorModal } from 'src/components'
 import { formFields, tableField, customSort } from './Tiktok.config'
+import { getCpmStatus } from 'src/utils/pageUtil'
+import { CpmEnum } from 'src/constants'
 import './Listing.css'
 import { handleGetKolCpm, convertData } from './Tiktok.handlers'
 
@@ -45,11 +47,13 @@ const KolListingTiktok = () => {
         const { message: fetchedListing } = await getRequestByUri('/tiktok/fetch-listing')
         const firstConvertedData = convertData(fetchedListing)
         const finalConvertedData = firstConvertedData.map((item) => {
-          const { avgCpm, totalViews } = item
+          const { avgCpm, totalViews, realAvgCpm } = item
+          const cpmStatus = getCpmStatus(realAvgCpm)
+
           return {
             ...item,
             avgCpm: (
-              <CBadge color="primary" className="ms-2">
+              <CBadge color={CpmEnum[cpmStatus]} className="ms-2">
                 {avgCpm}
               </CBadge>
             ),

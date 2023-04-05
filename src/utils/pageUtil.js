@@ -50,4 +50,27 @@ const getRealValuesForTable = (data) => {
   return result
 }
 
-export { getPostStatus, convertDate, getRupiahString, getNumberFormat, getRealValuesForTable }
+const getCpmStatus = (cpm) => {
+  if (cpm === 0) {
+    return 'BLANK'
+  }
+  if (cpm < 5000) {
+    return 'VERY_GOOD'
+  }
+  if (cpm >= 5001 && cpm <= 10000) {
+    return 'GOOD'
+  }
+  if (cpm >= 10001 && cpm <= 25000) {
+    return 'BAD'
+  }
+  return 'VERY_BAD'
+}
+
+export {
+  getPostStatus,
+  convertDate,
+  getRupiahString,
+  getNumberFormat,
+  getRealValuesForTable,
+  getCpmStatus,
+}

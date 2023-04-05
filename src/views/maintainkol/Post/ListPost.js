@@ -8,8 +8,14 @@ import ListPostFilter from './ListPostFilter'
 import { execSPWithoutInput } from '../../../utils/request-marketing'
 import { LoadingAnimation } from '../../../components'
 import { StatusBadge } from '../../../components'
-import { getPostStatus, convertDate, getRupiahString, getNumberFormat } from 'src/utils/pageUtil'
-import { StoredProcedure, PostStatus } from 'src/constants'
+import {
+  getPostStatus,
+  convertDate,
+  getRupiahString,
+  getNumberFormat,
+  getCpmStatus,
+} from 'src/utils/pageUtil'
+import { StoredProcedure, PostStatus, CpmEnum } from 'src/constants'
 import { columns } from './ListPost.config'
 
 const ListPost = () => {
@@ -103,6 +109,7 @@ const ListPost = () => {
           const convertedFyp = isFyp === 1 ? 'Belum FYP' : 'FYP'
           const convertedDeadlineDate = new Date(deadlinePost)
           const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
+          const cpmStatus = getCpmStatus(parseFloat(cpm))
 
           const postStatus = getPostStatus(convertedDeadlineDate, convertedUploadDate)
           const status = PostStatus[postStatus]
@@ -129,6 +136,7 @@ const ListPost = () => {
           return {
             ...item,
             deadlinePost: convertDate(deadlinePost, 'YYYYMMDD'),
+            uploadDate: uploadDate && convertDate(uploadDate, 'YYYYMMDD'),
             action,
             status: <StatusBadge enumType={BadgeEnum} content={status} />,
             followers: renderBadge(getNumberFormat(followers)),
@@ -146,8 +154,8 @@ const ListPost = () => {
             realStatus: status,
             kontrakName: item['Kontrak Name'],
             cpm: (
-              <CBadge color="success" shape="rounded-pill">
-                {getNumberFormat(cpm)}
+              <CBadge color={CpmEnum[cpmStatus]} shape="rounded-pill">
+                {getRupiahString(cpm)}
               </CBadge>
             ),
             realCpm: parseFloat(cpm),
