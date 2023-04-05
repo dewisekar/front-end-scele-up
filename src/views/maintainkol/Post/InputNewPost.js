@@ -1,6 +1,15 @@
 import React, { useEffect, useState, Suspense } from 'react'
 import { Modal } from 'react-bootstrap'
-import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow, CFormInput } from '@coreui/react'
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CFormInput,
+  CFormCheck,
+} from '@coreui/react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
@@ -24,6 +33,7 @@ const InputNewPost = () => {
   const [kontrakKol, setKontrakKol] = useState(null)
   const [managerKol, setManagerKol] = useState(null)
   const [briefCode, setBriefCode] = useState(null)
+  const [isFreeSlot, setIsFreeSlot] = useState(null)
   const [totalAmountOfSlot, setTotalAmountOfSlot] = useState(0)
   const [numberOfSlot, setNumberOfSlot] = useState(0)
   const errorTitle = 'Submit Error'
@@ -59,6 +69,17 @@ const InputNewPost = () => {
 
     fetchData()
   }, [])
+
+  const onCheckboxChange = (e) => {
+    const { value, checked, type } = e.target
+    const ValueChecked = {
+      true: 2,
+      false: 1,
+    }
+    const newVal = type === 'checkbox' ? ValueChecked[checked] : value
+
+    setIsFreeSlot(newVal)
+  }
 
   const handleResetForm = () => {
     setKontrakKol(null)
@@ -100,7 +121,9 @@ const InputNewPost = () => {
       BriefId: briefCode.value,
       TglPostKontrak: tanggalUpKontrak,
       User: user,
+      isFreeSlot,
     }
+
     try {
       const { status, postId } = await insertNewPost(payload)
       if (status === ResponseStatus.TRUE) {
@@ -289,6 +312,27 @@ const InputNewPost = () => {
     )
   }
 
+  const renderFreeSlotCheckbox = () => {
+    return (
+      <CRow className="mb-1">
+        <CCol xs={3}>
+          <div className="p-2 border bg-light">Free Slot</div>
+        </CCol>
+        <CCol xs={9}>
+          <div>
+            <CFormCheck
+              type="checkbox"
+              name="isFreeSlot"
+              id="gridCheck"
+              label="Free Slot"
+              onChange={onCheckboxChange}
+            />
+          </div>
+        </CCol>
+      </CRow>
+    )
+  }
+
   const renderSubmitButton = () => {
     return (
       <CRow className="mt-4">
@@ -328,6 +372,7 @@ const InputNewPost = () => {
         {managerList && renderManager()}
         {briefCodeList && renderBriefCode()}
         {renderNumberOfSlot()}
+        {renderFreeSlotCheckbox()}
         {renderPostDate()}
         {renderSubmitButton()}
       </CCardBody>

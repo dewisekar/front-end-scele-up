@@ -50,7 +50,7 @@ const UpdatePost = () => {
       const fetchData = async () => {
         const { message: fetchedDetail } = await getRequestByUri(URL.GET_POST_DETAIL + postId)
 
-        const { uploadDate, deadlineDate, postLink, isFyp } = fetchedDetail
+        const { uploadDate, deadlineDate, postLink, isFyp, isFreeSlot } = fetchedDetail
         const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
 
         const postStatus = PostStatus[getPostStatus(new Date(deadlineDate), convertedUploadDate)]
@@ -65,6 +65,7 @@ const UpdatePost = () => {
           uploadDate: convertedUpload,
           isLinkChecked,
           isFyp: isFyp === 1 || isFyp === null ? false : true,
+          isFreeSlot: isFreeSlot === 1 || isFreeSlot === null ? false : true,
         })
         setPostDetail(fetchedDetail)
       }
@@ -158,6 +159,7 @@ const UpdatePost = () => {
       linkPost: state.linkPost,
       platform: state.platform,
       isFyp: state.isFyp || 1,
+      isFreeSlot: state.isFreeSlot || 1,
     }
     setIsUpdating(true)
 

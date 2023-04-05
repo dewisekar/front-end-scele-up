@@ -7,6 +7,7 @@ const tableField = [
   { label: 'Username', field: 'username', type: 'text' },
   { label: 'Kontrak Ke', field: 'contractNumber', type: 'text' },
   { label: 'Slot Ke', field: 'slotNumber', type: 'text' },
+  { label: 'Free Slot', field: 'isFreeSlot', type: 'text' },
   { label: 'Tanggal Deadline', field: 'deadlineDate', type: 'text' },
   { label: 'Tanggal Upload', field: 'uploadDate', type: 'text' },
   { label: 'Kode Brief', field: 'briefCode', type: 'text' },

@@ -9,6 +9,7 @@ const columns = [
   { name: 'Jenis', selector: (row) => row.jenis, width: '150px', sortable: true },
   { name: 'Kategori', selector: (row) => row.category, sortable: true },
   { name: 'Status', selector: (row) => row.status, sortable: true, width: '150px' },
+  { name: 'Free Slot', selector: (row) => row.isFreeSlot, sortable: true, width: '100px' },
   { name: 'Manager', selector: (row) => row.managerName, sortable: true, width: '300px' },
   { name: 'Brief Name', selector: (row) => row.briefName, width: '300px', sortable: true },
   { name: 'Action', selector: (row) => row.action, width: '10rem' },

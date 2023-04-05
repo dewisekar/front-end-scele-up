@@ -4,6 +4,7 @@ const tableField = [
   { label: 'Username', field: 'username', type: 'text', disabled: true },
   { label: 'Kontrak Ke', field: 'contractNumber', type: 'text', disabled: true },
   { label: 'Slot Ke', field: 'slotNumber', type: 'text', disabled: true },
+  { label: 'Free Slot', field: 'isFreeSlot', type: 'checkbox', disabled: false },
   { label: 'Kode Brief', field: 'briefCode', type: 'text', disabled: true },
   { label: 'Nama Brief', field: 'briefName', type: 'text', disabled: true },
   { label: 'PIC KOL', field: 'kolManager', type: 'text', disabled: true },
