@@ -348,6 +348,19 @@ const patchRequestByUri = async (endpoint, payload) => {
   }
 }
 
+const deleteRequestByUri = async (endpoint) => {
+  try {
+    const res = await axios.delete(baseUrl + endpoint, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 export {
   insertNewKOL,
   getFormatListKol,
@@ -368,4 +381,5 @@ export {
   putRequestByUri,
   postRequestByUri,
   patchRequestByUri,
+  deleteRequestByUri,
 }

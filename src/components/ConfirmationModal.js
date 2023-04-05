@@ -1,7 +1,14 @@
 import React from 'react'
 import { CModal, CModalBody, CModalTitle, CModalHeader, CModalFooter, CButton } from '@coreui/react'
 
-const ConfirmationModal = ({ isVisible, onClose, modalMessage, confirmButtonLabel, onConfirm }) => {
+const ConfirmationModal = ({
+  isVisible,
+  onClose,
+  modalMessage,
+  confirmButtonLabel,
+  onConfirm,
+  isDisabled = false,
+}) => {
   const { title, message } = modalMessage
 
   return (
@@ -11,10 +18,10 @@ const ConfirmationModal = ({ isVisible, onClose, modalMessage, confirmButtonLabe
       </CModalHeader>
       <CModalBody>{message}</CModalBody>
       <CModalFooter>
-        <CButton color="secondary" onClick={() => onClose()}>
-          Close
+        <CButton color="secondary" onClick={() => onClose()} disabled={isDisabled}>
+          Batal
         </CButton>
-        <CButton color="primary" onClick={() => onConfirm()}>
+        <CButton color="primary" onClick={() => onConfirm()} disabled={isDisabled}>
           {confirmButtonLabel}
         </CButton>
       </CModalFooter>
