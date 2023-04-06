@@ -7,6 +7,7 @@ import {
   CAccordionBody,
   CAccordionHeader,
   CAccordionItem,
+  CRow,
 } from '@coreui/react'
 import { cilReload, cilZoom } from '@coreui/icons'
 import Select from 'react-select'
@@ -26,7 +27,8 @@ const ListPostFilter = ({ onSearch }) => {
   const [briefList, setBriefList] = useState([])
   const [managerList, setManagerList] = useState([])
   const intialState = {
-    deadlinePost: '',
+    startDate: '',
+    endDate: '',
     isFyp: null,
     status: null,
     jenis: null,
@@ -50,7 +52,8 @@ const ListPostFilter = ({ onSearch }) => {
   const onReset = () => {
     setState(intialState)
     onSearch({
-      deadlinePost: '',
+      startDate: '',
+      endDate: '',
       isFyp: '',
       status: '',
       jenis: '',
@@ -70,7 +73,20 @@ const ListPostFilter = ({ onSearch }) => {
       payload[key] = typeof newValue === 'string' ? newValue.toLowerCase() : newValue
     }
 
-    onSearch(payload)
+    if (
+      (state.startDate !== '' && state.endDate === '') ||
+      (state.startDate === '' && state.endDate !== '')
+    ) {
+      alert('Silahkan isi tanggal mulai dan akhir. Tanggal mulai dan akhir bisa sama.')
+      return
+    }
+    const startDate = state.startDate !== '' ? new Date(state.startDate).setHours(0, 0, 0, 0) : ''
+    const endDate = state.endDate !== '' ? new Date(state.endDate).setHours(0, 0, 0, 0) : ''
+    if (endDate < startDate) {
+      alert('Tanggal akhir harus sama atau lebih besar dengan tanggal awal')
+      return
+    }
+    onSearch({ ...payload, startDate: startDate, endDate: endDate })
   }
 
   useEffect(() => {
@@ -99,16 +115,35 @@ const ListPostFilter = ({ onSearch }) => {
         <CAccordionBody className="pb-0">
           <div style={{ width: '100%' }} className="mb-4">
             <div className="row">
-              <div className="col-md-3">
-                <small>Deadline Post</small>
-                <CFormInput
-                  type="date"
-                  name="deadlinePost"
-                  onChange={onFormChange}
-                  value={state.deadlinePost}
-                />
+              <div className="col-md-4">
+                <CRow className="text-center">
+                  <small>Upload Date</small>
+                </CRow>
+                <CRow>
+                  <div className="col-md-6">
+                    <small>Start Date</small>
+                    <CFormInput
+                      type="date"
+                      name="startDate"
+                      onChange={onFormChange}
+                      value={state.startDate}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <small>End Date</small>
+                    <CFormInput
+                      type="date"
+                      name="endDate"
+                      onChange={onFormChange}
+                      value={state.endDate}
+                    />
+                  </div>
+                </CRow>
               </div>
-              <div className="col-md-3">
+              <div
+                className="col-md-3"
+                style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}
+              >
                 <small>Status</small>
                 <Select
                   placeholder="Status..."
@@ -121,7 +156,10 @@ const ListPostFilter = ({ onSearch }) => {
                   }}
                 />
               </div>
-              <div className="col-md-3">
+              <div
+                className="col-md-3"
+                style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}
+              >
                 <small>PIC</small>
                 <Select
                   placeholder="PIC..."
@@ -134,7 +172,10 @@ const ListPostFilter = ({ onSearch }) => {
                   }}
                 />
               </div>
-              <div className="col-md-3">
+              <div
+                className="col-md-2"
+                style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}
+              >
                 <small>FYP Status</small>
                 <Select
                   placeholder="FYP Status..."

@@ -42,14 +42,20 @@ const ListPost = () => {
   )
 
   const onSearch = (data) => {
-    const { deadlinePost, isFyp, status, jenis, category, brief, other, manager } = data
+    const { startDate, endDate, isFyp, status, jenis, category, brief, other, manager } = data
     const filteredFyp = isFyp !== ''
+    const isDateSearched = startDate !== '' && endDate !== ''
     const filteredItems = dataTable.filter((item) => {
-      const { username, kontrakName, Platform } = item
+      const { username, kontrakName, Platform, realUploadDate } = item
       const searchAbles = { username, kontrakName, Platform }
+
+      const uploadDateFilter = isDateSearched
+        ? realUploadDate !== null && realUploadDate >= startDate && realUploadDate <= endDate
+        : realUploadDate
+
       const fypFilter = filteredFyp ? item.realIsFyp === isFyp : item.realIsFyp
       return (
-        item.deadlinePost.toLowerCase().includes(deadlinePost) &&
+        uploadDateFilter &&
         item.managerName.toLowerCase().includes(manager) &&
         item.realStatus.toLowerCase().includes(status) &&
         item.jenis.toLowerCase().includes(jenis) &&
@@ -166,6 +172,7 @@ const ListPost = () => {
             briefName: item['Brief Name'],
             category: item['KOL Specialist'],
             isFreeSlot: convertedIsFreeSlot,
+            realUploadDate: uploadDate ? new Date(uploadDate).setHours(0, 0, 0, 0) : null,
           }
         })
 
