@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/react'
 import DataTable from 'react-data-table-component'
+import { NavLink } from 'react-router-dom'
 
 import { getRequestByUri } from '../../../utils/request-marketing'
 import { LoadingAnimation, MultiplePropertyFilter } from 'src/components'
@@ -20,11 +21,29 @@ const ListManager = () => {
         const { message: fetchedManager = [] } = await getRequestByUri(URL.GET_MANAGER_LIST)
         const mappedData = fetchedManager.map((item) => {
           const { EMAIL: email, ALIAS: alias } = item
+          const action = (
+            <>
+              <NavLink
+                to={'/Manager/edit?id=' + item['Manager Id']}
+                className="btn btn-dark btn-sm"
+                style={{ marginRight: '8px', fontSize: '10px' }}
+              >
+                Edit
+              </NavLink>
+              <CButton
+                className="btn btn-dark btn-sm"
+                style={{ marginRight: '8px', fontSize: '10px' }}
+              >
+                Delete
+              </CButton>
+            </>
+          )
           return {
             name: item['Manager Name'],
             phone: item['Phone Number'],
             email,
             alias,
+            action,
           }
         })
 

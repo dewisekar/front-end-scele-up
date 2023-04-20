@@ -72,6 +72,7 @@ const InputNewBrief = React.lazy(() => import('./views/maintainkol/Brief/InputNe
 const ListBrief = React.lazy(() => import('./views/maintainkol/Brief/ListBrief'))
 const ViewBrief = React.lazy(() => import('./views/maintainkol/Brief/ViewBrief'))
 const InputNewManager = React.lazy(() => import('./views/maintainkol/Manager/InputNewManager'))
+const EditManager = React.lazy(() => import('./views/maintainkol/Manager/EditManager'))
 const ListManager = React.lazy(() => import('./views/maintainkol/Manager/ListManager'))
 const InputNewPost = React.lazy(() => import('./views/maintainkol/Post/InputNewPost'))
 const ListPost = React.lazy(() => import('./views/maintainkol/Post/ListPost'))
@@ -190,6 +191,11 @@ const routes = [
     path: '/Manager/InputNewManager',
     name: 'Input New Manager',
     element: InputNewManager,
+  },
+  {
+    path: '/Manager/edit',
+    name: 'Edit Manager',
+    element: EditManager,
   },
   { path: '/Manager/ListManager', name: 'List Manager', element: ListManager },
   {

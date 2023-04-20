@@ -65,6 +65,8 @@ const URL = {
   GET_ACTIVE_KOL: '/kol/active',
   KOL_WITH_PARAMS: '/kol/',
   CONTRACT_WITH_PARAMS: '/kontrak/',
+  MANAGER_DETAIL: '/manager/detail/',
+  MANAGER: '/manager/',
 }
 
 const ResponseStatus = {
