@@ -3,8 +3,13 @@ import { CCard, CCardBody, CCardHeader, CCol, CRow, CButton } from '@coreui/reac
 import DataTable from 'react-data-table-component'
 import { NavLink } from 'react-router-dom'
 
-import { getRequestByUri } from '../../../utils/request-marketing'
-import { LoadingAnimation, MultiplePropertyFilter } from 'src/components'
+import { getRequestByUri, deleteRequestByUri } from '../../../utils/request-marketing'
+import {
+  LoadingAnimation,
+  MultiplePropertyFilter,
+  ConfirmationModal,
+  ErrorModal,
+} from 'src/components'
 import { columns } from './ListManager.config'
 import { URL } from 'src/constants'
 
@@ -13,7 +18,29 @@ const ListManager = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [filterText, setFilterText] = useState({ other: '' })
   const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
+  const [isAlertModalShown, setIsAlertModalShown] = useState(false)
+  const [modalMessage, setModalMessage] = useState({ title: 'Hapus Modal', message: '' })
+  const [chosenId, setChosenId] = useState(null)
   const isWithTime = false
+
+  const onDeleteManager = (id) => {
+    setChosenId(id)
+    setIsConfirmationModalVisible(true)
+  }
+
+  const closeAlertModal = () => {
+    setIsAlertModalShown(false)
+    window.location.reload()
+  }
+
+  const onConfirmDelete = async () => {
+    const { message } = await deleteRequestByUri(URL.MANAGER + chosenId)
+
+    setIsConfirmationModalVisible(false)
+    setModalMessage({ ...modalMessage, message })
+    setIsAlertModalShown(true)
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +60,7 @@ const ListManager = () => {
               <CButton
                 className="btn btn-dark btn-sm"
                 style={{ marginRight: '8px', fontSize: '10px' }}
+                onClick={() => onDeleteManager(item['Manager Id'])}
               >
                 Delete
               </CButton>
@@ -103,6 +131,21 @@ const ListManager = () => {
             </CCardBody>
           </CCard>
         </CCol>
+        <ConfirmationModal
+          isVisible={isConfirmationModalVisible}
+          onClose={() => setIsConfirmationModalVisible(false)}
+          modalMessage={{
+            title: 'Hapus Kategori',
+            message: 'Anda yakin ingin mengahapus manager ini?',
+          }}
+          onConfirm={onConfirmDelete}
+          confirmButtonLabel="Ya, Hapus"
+        />
+        <ErrorModal
+          isVisible={isAlertModalShown}
+          onClose={closeAlertModal}
+          modalMessage={modalMessage}
+        />
       </CRow>
     )
   }

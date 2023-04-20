@@ -15,7 +15,7 @@ import { GeneralFormInput, GeneralTextArea } from '../../../utils/GeneralFormInp
 import { getRequestByUri, putRequestByUri } from '../../../utils/request-marketing'
 import { URL } from '../../../constants'
 
-const InputNewManager = () => {
+const EditManager = () => {
   const [managerName, setManagerName] = useState('')
   const [noWhatsApp, setNoWhatsApp] = useState('')
   const [noKTP, setNoKTP] = useState('')
@@ -247,4 +247,4 @@ const InputNewManager = () => {
   )
 }
 
-export default InputNewManager
+export default EditManager
