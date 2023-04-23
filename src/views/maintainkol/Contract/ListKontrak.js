@@ -4,10 +4,15 @@ import { NavLink } from 'react-router-dom'
 import fileDownload from 'js-file-download'
 import DataTable from 'react-data-table-component'
 
-import { getRequestByUri } from '../../../utils/request-marketing'
+import { getRequestByUri, deleteRequestByUri } from '../../../utils/request-marketing'
 import { generalDownload } from '../../../utils/axios-request'
 import { convertDataToSelectOptions } from 'src/utils/GeneralFormInput'
-import { LoadingAnimation, MultiplePropertyFilter } from '../../../components'
+import {
+  LoadingAnimation,
+  MultiplePropertyFilter,
+  ConfirmationModal,
+  ErrorModal,
+} from '../../../components'
 import { URL, longDateOptions } from 'src/constants'
 import {
   tableColumns,
@@ -30,6 +35,28 @@ const ListKontrak = () => {
   })
   const [isLoading, setIsLoading] = useState(true)
   const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
+  const [isAlertModalShown, setIsAlertModalShown] = useState(false)
+  const [modalMessage, setModalMessage] = useState({ title: 'Hapus Kontrak', message: '' })
+  const [chosenId, setChosenId] = useState(null)
+
+  const onDeleteContract = (id) => {
+    setChosenId(id)
+    setIsConfirmationModalVisible(true)
+  }
+
+  const closeAlertModal = () => {
+    setIsAlertModalShown(false)
+    window.location.reload()
+  }
+
+  const onConfirmDelete = async () => {
+    const { message } = await deleteRequestByUri(URL.CONTRACT + chosenId)
+
+    setIsConfirmationModalVisible(false)
+    setModalMessage({ ...modalMessage, message })
+    setIsAlertModalShown(true)
+  }
 
   const filterFields = [
     {
@@ -83,10 +110,17 @@ const ListKontrak = () => {
             </NavLink>
             <CButton
               className="my-1"
-              style={{ fontSize: '10px' }}
+              style={{ marginRight: '8px', fontSize: '10px' }}
               onClick={() => downloadContract(data['Kontrak Id'])}
             >
               Download File
+            </CButton>
+            <CButton
+              className="btn btn-danger btn-sm"
+              style={{ fontSize: '10px' }}
+              onClick={() => onDeleteContract(data['Kontrak Id'])}
+            >
+              Delete
             </CButton>
           </>
         )
@@ -200,6 +234,22 @@ const ListKontrak = () => {
               />
             </CCardBody>
           </CCard>
+          <ConfirmationModal
+            isVisible={isConfirmationModalVisible}
+            onClose={() => setIsConfirmationModalVisible(false)}
+            modalMessage={{
+              title: 'Hapus Kontrak',
+              message:
+                'Anda yakin ingin menghapus kontrak ini? Semua post dan statistiknya akan iku terhapus',
+            }}
+            onConfirm={onConfirmDelete}
+            confirmButtonLabel="Ya, Hapus"
+          />
+          <ErrorModal
+            isVisible={isAlertModalShown}
+            onClose={closeAlertModal}
+            modalMessage={modalMessage}
+          />
         </CCol>
       </CRow>
     )

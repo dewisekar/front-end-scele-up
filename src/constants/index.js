@@ -68,6 +68,7 @@ const URL = {
   MANAGER_DETAIL: '/manager/detail/',
   MANAGER: '/manager/',
   POST: '/post/',
+  CONTRACT: '/contract/',
 }
 
 const ResponseStatus = {
