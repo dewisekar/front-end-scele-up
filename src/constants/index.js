@@ -67,6 +67,7 @@ const URL = {
   CONTRACT_WITH_PARAMS: '/kontrak/',
   MANAGER_DETAIL: '/manager/detail/',
   MANAGER: '/manager/',
+  POST: '/post/',
 }
 
 const ResponseStatus = {

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CBadge } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CBadge, CButton } from '@coreui/react'
 import { NavLink } from 'react-router-dom'
 import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
 
 import ListPostFilter from './ListPostFilter'
-import { execSPWithoutInput } from '../../../utils/request-marketing'
-import { LoadingAnimation } from '../../../components'
+import { execSPWithoutInput, deleteRequestByUri } from '../../../utils/request-marketing'
+import { LoadingAnimation, ConfirmationModal, ErrorModal } from '../../../components'
 import { StatusBadge } from '../../../components'
 import {
   getPostStatus,
@@ -15,7 +15,7 @@ import {
   getNumberFormat,
   getCpmStatus,
 } from 'src/utils/pageUtil'
-import { StoredProcedure, PostStatus, CpmEnum } from 'src/constants'
+import { StoredProcedure, PostStatus, CpmEnum, URL } from 'src/constants'
 import { columns } from './ListPost.config'
 
 const ListPost = () => {
@@ -23,6 +23,15 @@ const ListPost = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
   const [filteredPost, setFilteredPost] = useState([])
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
+  const [isAlertModalShown, setIsAlertModalShown] = useState(false)
+  const [modalMessage, setModalMessage] = useState({ title: 'Hapus Post', message: '' })
+  const [chosenId, setChosenId] = useState(null)
+
+  const onDeletePost = (id) => {
+    setChosenId(id)
+    setIsConfirmationModalVisible(true)
+  }
 
   const BadgeEnum = {
     Terpenuhi: 'success',
@@ -40,6 +49,19 @@ const ListPost = () => {
       {amount}
     </CBadge>
   )
+
+  const closeAlertModal = () => {
+    setIsAlertModalShown(false)
+    window.location.reload()
+  }
+
+  const onConfirmDelete = async () => {
+    const { message } = await deleteRequestByUri(URL.POST + chosenId)
+
+    setIsConfirmationModalVisible(false)
+    setModalMessage({ ...modalMessage, message })
+    setIsAlertModalShown(true)
+  }
 
   const onSearch = (data) => {
     const { startDate, endDate, isFyp, status, jenis, category, brief, other, manager } = data
@@ -134,10 +156,17 @@ const ListPost = () => {
               <NavLink
                 to={'/Post/UpdatePost?Id=' + item.Id}
                 className="btn btn-secondary btn-sm"
-                style={{ fontSize: '10px' }}
+                style={{ marginRight: '8px', fontSize: '10px' }}
               >
                 Update
               </NavLink>
+              <CButton
+                className="btn btn-danger btn-sm"
+                style={{ fontSize: '10px' }}
+                onClick={() => onDeletePost(item.Id)}
+              >
+                Delete
+              </CButton>
             </>
           )
 
@@ -222,6 +251,21 @@ const ListPost = () => {
             </CCardBody>
           </CCard>
         </CCol>
+        <ConfirmationModal
+          isVisible={isConfirmationModalVisible}
+          onClose={() => setIsConfirmationModalVisible(false)}
+          modalMessage={{
+            title: 'Hapus Post',
+            message: 'Anda yakin ingin mengahapus post ini? Semua statistik post akan iku terhapus',
+          }}
+          onConfirm={onConfirmDelete}
+          confirmButtonLabel="Ya, Hapus"
+        />
+        <ErrorModal
+          isVisible={isAlertModalShown}
+          onClose={closeAlertModal}
+          modalMessage={modalMessage}
+        />
       </CRow>
     )
   }

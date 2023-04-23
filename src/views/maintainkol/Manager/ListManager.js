@@ -20,7 +20,7 @@ const ListManager = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(true)
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false)
   const [isAlertModalShown, setIsAlertModalShown] = useState(false)
-  const [modalMessage, setModalMessage] = useState({ title: 'Hapus Modal', message: '' })
+  const [modalMessage, setModalMessage] = useState({ title: 'Hapus Manager', message: '' })
   const [chosenId, setChosenId] = useState(null)
   const isWithTime = false
 
