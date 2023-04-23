@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { CCol, CRow, CCardBody, CCard, CWidgetStatsB } from '@coreui/react'
+import { CCol, CRow, CCardBody, CCard, CWidgetStatsB, CFormInput, CButton } from '@coreui/react'
 import { CChartBar, CChartLine } from '@coreui/react-chartjs'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -15,16 +15,22 @@ const ViewsByCategory = () => {
   const [year, setYear] = useState(new Date())
   const [chosenPic, setChosenPic] = useState(allOption)
   const [isLoading, setIsLoading] = useState(true)
+  const [isAll, setIsAll] = useState(true)
   const [data, setData] = useState({})
   const [managerList, setManagerList] = useState([])
+  const [filterTime, setFilterTime] = useState({})
+  const [time, setTime] = useState({ startDate: '', endDate: '' })
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     const init = async () => {
       setIsLoading(true)
       const managerId = chosenPic.value
+      const startDate = time.startDate === '' ? 'ALL' : time.startDate
+      const endDate = time.endDate === '' ? 'ALL' : time.endDate
 
       try {
-        const urlParams = `?managerId=${managerId}`
+        const urlParams = `?managerId=${managerId}&startDate=${startDate}&endDate=${endDate}`
         const { message: totalViews } = await getRequestByUri(
           '/marketing/dashboard/views-per-category' + urlParams,
         )
@@ -32,7 +38,6 @@ const ViewsByCategory = () => {
         const mappedManager = fetchedManager.map((data) => {
           return { value: data['Manager Id'], label: data['Manager Name'] }
         })
-        console.log(totalViews)
 
         setData(totalViews)
         setManagerList([allOption, ...mappedManager])
@@ -43,7 +48,57 @@ const ViewsByCategory = () => {
     }
 
     init()
-  }, [year, chosenPic])
+  }, [year, chosenPic, time])
+
+  useEffect(() => {
+    const init = async () => {
+      setIsLoading(true)
+      try {
+        const { message: fetchedManager = [] } = await getRequestByUri(URL.GET_MANAGER_LIST)
+        const mappedManager = fetchedManager.map((data) => {
+          return { value: data['Manager Id'], label: data['Manager Name'] }
+        })
+        setManagerList([allOption, ...mappedManager])
+      } catch (error) {
+        console.log('Error:', error)
+      }
+      setIsLoading(false)
+    }
+
+    init()
+  }, [])
+
+  const onFormChange = (event) => {
+    const { name, value, action, label } = event.target
+    const newValue =
+      action && value
+        ? { value: typeof value === 'string' ? value.toLowerCase() : value, label }
+        : value
+
+    setFilterTime({ ...filterTime, [name]: newValue })
+  }
+
+  const onSetTime = () => {
+    const startDate = new Date(filterTime.startDate)
+    const endDate = new Date(filterTime.endDate)
+
+    if (
+      (filterTime.startDate === '' && filterTime.endDate !== '') ||
+      (filterTime.startDate !== '' && filterTime.endDate === '')
+    ) {
+      setErrorMessage('Masukkan tanggal yang valid')
+      return
+    }
+
+    if (endDate < startDate) {
+      setErrorMessage('Waktu mulai harus lebih dulu daripada waktu selesai')
+      return
+    }
+
+    setTime(filterTime)
+    setIsAll(filterTime.startDate === '' && filterTime.endDate === '')
+    setErrorMessage(null)
+  }
 
   const renderViewsChart = () => (
     <CChartBar
@@ -97,6 +152,37 @@ const ViewsByCategory = () => {
                     onChange={(event) => setChosenPic(event)}
                     value={chosenPic}
                   />
+                </CCol>
+                <CCol xs={6}>
+                  <CRow>
+                    <div className="col-md-5">
+                      <small>Start Date</small>
+                      <CFormInput
+                        type="date"
+                        name="startDate"
+                        onChange={onFormChange}
+                        value={filterTime.startDate}
+                      />
+                    </div>
+                    <div className="col-md-5">
+                      <small>End Date</small>
+                      <CFormInput
+                        type="date"
+                        name="endDate"
+                        onChange={onFormChange}
+                        value={filterTime.endDate}
+                      />
+                    </div>
+                    <div className="col-md-2">
+                      <CButton className="btn btn-primary" onClick={onSetTime}>
+                        Set Waktu
+                      </CButton>
+                    </div>
+                  </CRow>
+                  <CRow>
+                    {isAll && <small>Periode: Semua Waktu</small>}
+                    {errorMessage && <small className="text-danger">{errorMessage}</small>}
+                  </CRow>
                 </CCol>
               </CRow>
               <CRow>
