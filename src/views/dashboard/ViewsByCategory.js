@@ -12,7 +12,6 @@ import { URL } from 'src/constants'
 
 const ViewsByCategory = () => {
   const allOption = { value: 'ALL', label: 'Semua PIC' }
-  const [year, setYear] = useState(new Date())
   const [chosenPic, setChosenPic] = useState(allOption)
   const [isLoading, setIsLoading] = useState(true)
   const [isAll, setIsAll] = useState(true)
@@ -48,7 +47,7 @@ const ViewsByCategory = () => {
     }
 
     init()
-  }, [year, chosenPic, time])
+  }, [chosenPic, time])
 
   useEffect(() => {
     const init = async () => {
@@ -79,23 +78,27 @@ const ViewsByCategory = () => {
   }
 
   const onSetTime = () => {
-    const startDate = new Date(filterTime.startDate)
-    const endDate = new Date(filterTime.endDate)
+    const { startDate = '', endDate = '' } = filterTime
+    const convertedStartDate = new Date(startDate)
+    const convertedEndDate = new Date(endDate)
+    if (startDate === '' && endDate === '') {
+      setIsAll(true)
+      setTime({ startDate: '', endDate: '' })
+      return
+    }
 
-    if (
-      (filterTime.startDate === '' && filterTime.endDate !== '') ||
-      (filterTime.startDate !== '' && filterTime.endDate === '')
-    ) {
+    if ((startDate === '' && endDate !== '') || (startDate !== '' && endDate === '')) {
       setErrorMessage('Masukkan tanggal yang valid')
       return
     }
 
-    if (endDate < startDate) {
+    if (convertedEndDate < convertedStartDate) {
       setErrorMessage('Waktu mulai harus lebih dulu daripada waktu selesai')
       return
     }
 
     setTime(filterTime)
+    setIsAll(false)
     setIsAll(filterTime.startDate === '' && filterTime.endDate === '')
     setErrorMessage(null)
   }
