@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
-import { CCol, CRow, CCardBody, CCard, CWidgetStatsB } from '@coreui/react'
-import { CChartBar, CChartLine } from '@coreui/react-chartjs'
+import { CCol, CRow, CCardBody, CCard } from '@coreui/react'
+import { CChartLine } from '@coreui/react-chartjs'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
@@ -17,7 +17,6 @@ const TotalViewOverview = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
   const [managerList, setManagerList] = useState([])
-  const today = new Date()
 
   useEffect(() => {
     const init = async () => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
-import { CCol, CRow, CCardBody, CCard, CWidgetStatsB, CFormInput, CButton } from '@coreui/react'
-import { CChartBar, CChartLine } from '@coreui/react-chartjs'
+import { CCol, CRow, CCardBody, CCard, CButton } from '@coreui/react'
+import { CChartLine } from '@coreui/react-chartjs'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
@@ -10,53 +10,31 @@ import { getRequestByUri } from 'src/utils/request-marketing'
 import CardSpinner from './CardSpinner'
 import { URL } from 'src/constants'
 
-const ViewsByCategory = () => {
+const FypOverview = () => {
   const allOption = { value: 'ALL', label: 'Semua PIC' }
+  const currentDate = new Date()
+  const currentYear = currentDate.getFullYear()
+  const initialStart = new Date(`${currentYear}-01-01`)
+  const initialEnd = currentDate
   const [chosenPic, setChosenPic] = useState(allOption)
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
   const [managerList, setManagerList] = useState([])
-  const [filterTime, setFilterTime] = useState({})
-  const [time, setTime] = useState({ startDate: '', endDate: '' })
+  const [time, setTime] = useState({ startDate: initialStart, endDate: initialEnd })
+  const [filterTime, setFilterTime] = useState({ startDate: initialStart, endDate: initialEnd })
   const [isAll, setIsAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     const init = async () => {
       setIsLoading(true)
-      const managerId = chosenPic.value
-      const startDate = time.startDate === '' ? 'ALL' : time.startDate
-      const endDate = time.endDate === '' ? 'ALL' : time.endDate
 
       try {
-        const urlParams = `?managerId=${managerId}&startDate=${startDate}&endDate=${endDate}`
-        const { message: totalViews } = await getRequestByUri(
-          '/marketing/dashboard/views-per-category' + urlParams,
-        )
         const { message: fetchedManager = [] } = await getRequestByUri(URL.GET_MANAGER_LIST)
         const mappedManager = fetchedManager.map((data) => {
           return { value: data['Manager Id'], label: data['Manager Name'] }
         })
 
-        setData(totalViews)
-        setManagerList([allOption, ...mappedManager])
-      } catch (error) {
-        console.log('Error:', error)
-      }
-      setIsLoading(false)
-    }
-
-    init()
-  }, [chosenPic, time])
-
-  useEffect(() => {
-    const init = async () => {
-      setIsLoading(true)
-      try {
-        const { message: fetchedManager = [] } = await getRequestByUri(URL.GET_MANAGER_LIST)
-        const mappedManager = fetchedManager.map((data) => {
-          return { value: data['Manager Id'], label: data['Manager Name'] }
-        })
         setManagerList([allOption, ...mappedManager])
       } catch (error) {
         console.log('Error:', error)
@@ -67,15 +45,27 @@ const ViewsByCategory = () => {
     init()
   }, [])
 
-  const onFormChange = (event) => {
-    const { name, value, action, label } = event.target
-    const newValue =
-      action && value
-        ? { value: typeof value === 'string' ? value.toLowerCase() : value, label }
-        : value
+  useEffect(() => {
+    const init = async () => {
+      setIsLoading(true)
+      const managerId = chosenPic.value
+      const { startDate, endDate } = time
 
-    setFilterTime({ ...filterTime, [name]: newValue })
-  }
+      try {
+        const urlParams = `?managerId=${managerId}&startDate=${startDate}&endDate=${endDate}`
+        const { message: totalViews } = await getRequestByUri(
+          '/marketing/dashboard/fyp-overview' + urlParams,
+        )
+
+        setData(totalViews)
+      } catch (error) {
+        console.log('Error:', error)
+      }
+      setIsLoading(false)
+    }
+
+    init()
+  }, [time, chosenPic])
 
   const onSetTime = () => {
     const { startDate = '', endDate = '' } = filterTime
@@ -103,35 +93,21 @@ const ViewsByCategory = () => {
     setErrorMessage(null)
   }
 
-  const renderViewsChart = () => (
-    <CChartBar
+  const renderChart = () => (
+    <CChartLine
       data={{
-        labels: data.label,
+        labels: data.month,
         datasets: [
           {
-            label: 'Total Views',
-            backgroundColor: '#8e79f8',
+            label: 'Total Views: ' + chosenPic.label,
+            backgroundColor: '#79d4f8',
+            borderColor: '#79d4f8',
+            pointBackgroundColor: '#79d4f8',
+            pointBorderColor: '#79d4f8',
             data: data.totalViews,
           },
         ],
       }}
-      options={{ indexAxis: 'y' }}
-    />
-  )
-
-  const renderUsageChart = () => (
-    <CChartBar
-      data={{
-        labels: data.label,
-        datasets: [
-          {
-            label: 'Total Penggunaan',
-            backgroundColor: '#f879b0',
-            data: data.totalUsage,
-          },
-        ],
-      }}
-      options={{ indexAxis: 'y' }}
     />
   )
 
@@ -143,9 +119,13 @@ const ViewsByCategory = () => {
         ) : (
           <CCard>
             <CCardBody>
-              <CRow className="mb-1"></CRow>
+              <CRow className="mb-1">
+                <CCol className="text-center" xs={12}>
+                  <h6 className="font-weight-bold mb-0">Report Performance Post KOL FYP</h6>
+                </CCol>
+              </CRow>
               <CRow className="mb-4">
-                <CCol xs={6}>
+                <CCol xs={4}>
                   <small className="font-weight-bold">Pilih PIC:</small>
                   <Select
                     placeholder="Select Manager..."
@@ -156,27 +136,31 @@ const ViewsByCategory = () => {
                     value={chosenPic}
                   />
                 </CCol>
-                <CCol xs={6}>
+                <CCol xs={8}>
                   <CRow>
-                    <div className="col-md-5">
+                    <div className="col-md-4">
                       <small>Start Date</small>
-                      <CFormInput
-                        type="date"
+                      <DatePicker
+                        selected={filterTime.startDate}
+                        onChange={(date) => setFilterTime({ ...filterTime, startDate: date })}
+                        showMonthYearPicker
+                        dateFormat="MM/yyyy"
+                        className="w-100 big"
                         name="startDate"
-                        onChange={onFormChange}
-                        value={filterTime.startDate}
                       />
                     </div>
-                    <div className="col-md-5">
+                    <div className="col-md-4">
                       <small>End Date</small>
-                      <CFormInput
-                        type="date"
+                      <DatePicker
+                        selected={filterTime.endDate}
+                        onChange={(date) => setFilterTime({ ...filterTime, endDate: date })}
+                        showMonthYearPicker
+                        dateFormat="MM/yyyy"
+                        className="w-100 big"
                         name="endDate"
-                        onChange={onFormChange}
-                        value={filterTime.endDate}
                       />
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-4" style={{ display: 'flex', alignItems: 'flex-end' }}>
                       <CButton className="btn btn-primary" onClick={onSetTime}>
                         Set Waktu
                       </CButton>
@@ -188,10 +172,7 @@ const ViewsByCategory = () => {
                   </CRow>
                 </CCol>
               </CRow>
-              <CRow>
-                <CCol xs={6}>{renderViewsChart()}</CCol>
-                <CCol xs={6}>{renderUsageChart()}</CCol>
-              </CRow>
+              <CRow>{renderChart()}</CRow>
             </CCardBody>
           </CCard>
         )}
@@ -200,4 +181,4 @@ const ViewsByCategory = () => {
   )
 }
 
-export default ViewsByCategory
+export default FypOverview
