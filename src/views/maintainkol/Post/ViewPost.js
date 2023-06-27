@@ -14,14 +14,14 @@ import {
   CTableBody,
   CTableDataCell,
 } from '@coreui/react'
-
 import { tableField, styles, statisticField, postStatisticKey } from './ViewPost.config'
-import { getRequestByUri } from '../../../utils/request-marketing'
+import { getRequestByUri, deleteRequestByUri } from '../../../utils/request-marketing'
 import { URL, ColumnSizePercentage, PostStatus } from 'src/constants'
 import { VerticalTableRow, LoadingAnimation } from 'src/components'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
 import { countPostStatistic } from 'src/utils/postUtil'
-import { RupiahCurrency } from 'src/components'
+import { RupiahCurrency, ErrorModal } from 'src/components'
+import UpdatePostStatistic from './UpdatePostStatistic'
 
 const ViewPost = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -29,6 +29,21 @@ const ViewPost = () => {
   const [postDetail, setPostDetail] = useState({})
   const [postStatistic, setPostStatistic] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isAlertModalShown, setIsAlertModalShown] = useState(false)
+  const [alertMessage, setAlertMessage] = useState({})
+
+  const reloadPage = () => {
+    window.location.reload()
+  }
+
+  const deleteStatistic = async (id) => {
+    setIsLoading(true)
+    const { message } = await deleteRequestByUri(URL.POST_VIEW + id)
+    setAlertMessage({ message, title: 'Hapus Statistik Post' })
+
+    setIsLoading(false)
+    setIsAlertModalShown(true)
+  }
 
   useEffect(() => {
     try {
@@ -53,6 +68,16 @@ const ViewPost = () => {
         const mappedStatistic = fetchedStatistic.map((data) => {
           const countedStat = countPostStatistic({ ...data, costPerSlot }, postStatisticKey)
           const { cpm, costPerViews } = countedStat
+          const { id } = data
+          const action = (
+            <CButton
+              className="my-1 btn-danger btn-sm text-light"
+              style={{ fontSize: '10px' }}
+              onClick={() => deleteStatistic(id)}
+            >
+              Delete
+            </CButton>
+          )
 
           return {
             ...data,
@@ -66,6 +91,7 @@ const ViewPost = () => {
               style: 'currency',
               currency: 'IDR',
             }).format(costPerViews),
+            action,
           }
         })
 
@@ -98,6 +124,7 @@ const ViewPost = () => {
 
   const renderStatsRow = (data) => {
     const day = [<CTableDataCell key="dayNumber">{data.dayNumber}</CTableDataCell>]
+    const action = [<CTableDataCell key="action">{data.action}</CTableDataCell>]
     const info = statisticField.map((item, index) => {
       return (
         <CTableDataCell key={item.key} className="text-center">
@@ -105,7 +132,7 @@ const ViewPost = () => {
         </CTableDataCell>
       )
     })
-    return [...day, ...info]
+    return [...day, ...info, ...action]
   }
 
   const renderPostDetail = () => {
@@ -146,6 +173,9 @@ const ViewPost = () => {
   const renderPostStatistic = () => {
     return (
       <CRow id="post-detail">
+        <CCol xs={12}>
+          <UpdatePostStatistic />
+        </CCol>
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
@@ -202,6 +232,15 @@ const ViewPost = () => {
                         >
                           Engagement Meter
                         </CTableHeaderCell>
+                        <CTableHeaderCell
+                          scope="col"
+                          rowSpan="5"
+                          key="dayNumber"
+                          color="light"
+                          style={{ borderColor: 'black' }}
+                        >
+                          Action
+                        </CTableHeaderCell>
                       </CTableRow>
                       <CTableRow>
                         {statisticField.map((field) => (
@@ -248,6 +287,11 @@ const ViewPost = () => {
       <Suspense>
         {renderPostDetail()}
         {renderPostStatistic()}
+        <ErrorModal
+          isVisible={isAlertModalShown}
+          onClose={reloadPage}
+          modalMessage={alertMessage}
+        />
       </Suspense>
     )
   }

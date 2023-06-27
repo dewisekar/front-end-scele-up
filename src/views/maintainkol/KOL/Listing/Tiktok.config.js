@@ -11,6 +11,8 @@ const customSort = (rows, field, direction) => {
     minViews: 'realMinViews',
     maxViews: 'realMaxViews',
     avgViews: 'realAvgViews',
+    status: 'realStatus',
+    updatedAt: 'realUpdatedAt',
   }
 
   const [, fieldName] = field.toString().split('row => row.')
@@ -53,6 +55,15 @@ const tableField = [
   { selector: (row) => row.minViews, name: 'Min Views', sortable: true, width: '150px' },
   { selector: (row) => row.maxCpm, name: 'Max CPM', sortable: true, width: '150px' },
   { selector: (row) => row.maxViews, name: 'Max Views', sortable: true, width: '150px' },
+  { selector: (row) => row.status, name: 'Status', sortable: true, width: '150px' },
+  { selector: (row) => row.updatedAt, name: 'Approval Date', width: '150px' },
+  { selector: (row) => row.action, name: 'Action', width: '150px' },
 ]
 
-export { formFields, tableField, customSort }
+const StatusEnum = {
+  PENDING: 'primary',
+  APPROVED: 'success',
+  REJECTED: 'danger',
+}
+
+export { formFields, tableField, customSort, StatusEnum }

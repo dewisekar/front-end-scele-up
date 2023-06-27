@@ -69,6 +69,8 @@ const URL = {
   MANAGER: '/manager/',
   POST: '/post/',
   CONTRACT: '/contract/',
+  APPROVE_LISTING_TIKTOK: '/tiktok/listing/',
+  POST_VIEW: '/post-view/',
 }
 
 const ResponseStatus = {

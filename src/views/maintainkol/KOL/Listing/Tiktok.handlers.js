@@ -30,6 +30,7 @@ const convertData = (data) => {
       maxCpm,
       maxViews,
       followers,
+      updatedAt,
     } = item
     const realCreatedAt = new Date(createdAt)
 
@@ -49,6 +50,7 @@ const convertData = (data) => {
     return {
       ...item,
       createdAt: new Date(createdAt).toLocaleDateString('id-ID'),
+      updatedAt: updatedAt && new Date(updatedAt).toLocaleDateString('id-ID'),
       username,
       realCreatedAt,
       costPerSlot: getRupiahString(costPerSlot),

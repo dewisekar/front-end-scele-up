@@ -18,11 +18,11 @@ import DataTable from 'react-data-table-component'
 import { useForm } from 'react-hook-form'
 import { cilSearch } from '@coreui/icons'
 
-import { getRequestByUri } from '../../../../utils/request-marketing'
+import { getRequestByUri, patchRequestByUri } from '../../../../utils/request-marketing'
 import { LoadingAnimation, MultiplePropertyFilter, TextInput, ErrorModal } from 'src/components'
-import { formFields, tableField, customSort } from './Tiktok.config'
+import { formFields, tableField, customSort, StatusEnum } from './Tiktok.config'
 import { getCpmStatus } from 'src/utils/pageUtil'
-import { CpmEnum } from 'src/constants'
+import { CpmEnum, URL } from 'src/constants'
 import './Listing.css'
 import { handleGetKolCpm, convertData } from './Tiktok.handlers'
 
@@ -41,13 +41,74 @@ const KolListingTiktok = () => {
     control,
   } = useForm()
 
+  const approveListing = async (id, status) => {
+    setIsLoading(true)
+    const payload = { status }
+    await patchRequestByUri(URL.APPROVE_LISTING_TIKTOK + id, payload)
+    await refetchData()
+    setIsLoading(false)
+  }
+
+  const renderActionButton = (id) => {
+    return (
+      <>
+        <CButton
+          className="my-1 btn-secondary btn-sm"
+          style={{ marginRight: '8px', fontSize: '10px' }}
+          onClick={() => approveListing(id, 'APPROVED')}
+        >
+          Approve
+        </CButton>
+        <CButton
+          className="btn btn-danger btn-sm"
+          style={{ fontSize: '10px' }}
+          onClick={() => approveListing(id, 'REJECTED')}
+        >
+          Reject
+        </CButton>
+      </>
+    )
+  }
+
+  const refetchData = async () => {
+    const { message: fetchedListing } = await getRequestByUri('/tiktok/fetch-listing')
+    const firstConvertedData = convertData(fetchedListing)
+    const finalConvertedData = firstConvertedData.map((item) => {
+      const { avgCpm, totalViews, status: rawStatus = 'PENDING', id } = item
+      const status = rawStatus === null ? 'PENDING' : rawStatus
+      return {
+        ...item,
+        avgCpm: (
+          <CBadge color="primary" className="ms-2">
+            {avgCpm}
+          </CBadge>
+        ),
+        totalViews: (
+          <CBadge color="primary" className="ms-2">
+            {totalViews}
+          </CBadge>
+        ),
+        realStatus: status,
+        status: (
+          <CBadge color={StatusEnum[status]} className="ms-2">
+            {status}
+          </CBadge>
+        ),
+        action: status === 'PENDING' && renderActionButton(id),
+      }
+    })
+
+    setKolList(finalConvertedData)
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { message: fetchedListing } = await getRequestByUri('/tiktok/fetch-listing')
         const firstConvertedData = convertData(fetchedListing)
         const finalConvertedData = firstConvertedData.map((item) => {
-          const { avgCpm, totalViews, realAvgCpm } = item
+          const { avgCpm, totalViews, realAvgCpm, status: rawStatus = 'PENDING', id } = item
+          const status = rawStatus === null ? 'PENDING' : rawStatus
           const cpmStatus = getCpmStatus(realAvgCpm)
 
           return {
@@ -62,6 +123,13 @@ const KolListingTiktok = () => {
                 {totalViews}
               </CBadge>
             ),
+            realStatus: status,
+            status: (
+              <CBadge color={StatusEnum[status]} className="ms-2">
+                {status}
+              </CBadge>
+            ),
+            action: status === 'PENDING' && renderActionButton(id),
           }
         })
 
@@ -74,29 +142,6 @@ const KolListingTiktok = () => {
 
     fetchData()
   }, [])
-
-  const refetchData = async () => {
-    const { message: fetchedListing } = await getRequestByUri('/tiktok/fetch-listing')
-    const firstConvertedData = convertData(fetchedListing)
-    const finalConvertedData = firstConvertedData.map((item) => {
-      const { avgCpm, totalViews } = item
-      return {
-        ...item,
-        avgCpm: (
-          <CBadge color="primary" className="ms-2">
-            {avgCpm}
-          </CBadge>
-        ),
-        totalViews: (
-          <CBadge color="primary" className="ms-2">
-            {totalViews}
-          </CBadge>
-        ),
-      }
-    })
-
-    setKolList(finalConvertedData)
-  }
 
   const renderLoadingAnimation = () => {
     return (
