@@ -57,6 +57,7 @@ const UpdatePost = () => {
         const convertedDeadline = convertDate(deadlineDate, DateMode.YYYYMMDD)
         const convertedUpload = uploadDate ? convertDate(deadlineDate, DateMode.YYYYMMDD) : null
         const isLinkChecked = postLink ? true : false
+        console.log('ini ', isFreeSlot)
 
         setState({
           ...fetchedDetail,
@@ -64,8 +65,8 @@ const UpdatePost = () => {
           deadlineDate: convertedDeadline,
           uploadDate: convertedUpload,
           isLinkChecked,
-          isFyp: isFyp === 1 || isFyp === null ? false : true,
-          isFreeSlot: isFreeSlot === 1 || isFreeSlot === null ? false : true,
+          isFyp: isFyp !== 2 || isFyp === null ? false : true,
+          isFreeSlot: isFreeSlot !== 2 || isFreeSlot === null ? false : true,
         })
         setPostDetail(fetchedDetail)
       }

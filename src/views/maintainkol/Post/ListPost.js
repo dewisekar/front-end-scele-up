@@ -136,7 +136,7 @@ const ListPost = () => {
           const isFyp = item.isFyp ? item.isFyp : 1
           const isFreeSlot = item.isFreeSlot ? item.isFreeSlot : 1
           const convertedFyp = isFyp === 1 ? 'Belum FYP' : 'FYP'
-          const convertedIsFreeSlot = isFreeSlot === 1 ? 'Tidak' : 'Ya'
+          const convertedIsFreeSlot = isFreeSlot !== 2 ? 'Tidak' : 'Ya'
           const convertedDeadlineDate = new Date(deadlinePost)
           const convertedUploadDate = uploadDate ? new Date(uploadDate) : null
           const cpmStatus = getCpmStatus(parseFloat(cpm))

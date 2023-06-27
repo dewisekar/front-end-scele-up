@@ -124,6 +124,7 @@ const InputNewPost = () => {
       isFreeSlot,
     }
 
+    setIsLoading(true)
     try {
       const { status, postId } = await insertNewPost(payload)
       if (status === ResponseStatus.TRUE) {
@@ -133,8 +134,9 @@ const InputNewPost = () => {
         handleResetForm()
       }
     } catch (err) {
-      console.log(err)
+      console.log('error add new post', err)
     }
+    setIsLoading(false)
   }
 
   const handleSelectedKol = async (id) => {
