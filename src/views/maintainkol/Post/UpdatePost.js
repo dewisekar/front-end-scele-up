@@ -19,6 +19,7 @@ import {
   getRequestByUri,
   getVideoAndUserStats,
   patchRequestByUri,
+  postRequestByUri,
 } from '../../../utils/request-marketing'
 import { URL, PostStatus, DateMode, PythonErrorCode, ResponseStatus } from 'src/constants'
 import { getPostStatus, convertDate } from 'src/utils/pageUtil'
@@ -57,7 +58,6 @@ const UpdatePost = () => {
         const convertedDeadline = convertDate(deadlineDate, DateMode.YYYYMMDD)
         const convertedUpload = uploadDate ? convertDate(deadlineDate, DateMode.YYYYMMDD) : null
         const isLinkChecked = postLink ? true : false
-        console.log('ini ', isFreeSlot)
 
         setState({
           ...fetchedDetail,
@@ -87,13 +87,15 @@ const UpdatePost = () => {
     }
 
     setIsCheckingPostLink(true)
-    let result = await getVideoAndUserStats(postLink)
+    let result = await postRequestByUri('/tiktok/get-video-user-statistic', { url: postLink })
     const { status } = result
+    console.log('ini result', result)
 
     if (
       status === PythonErrorCode.NOT_AVAILABLE ||
       status === PythonErrorCode.FAILED_TO_FETCH ||
       status === PythonErrorCode.EMPTY_DATA ||
+      status === 'false' ||
       postLink === null
     ) {
       setErrorModalMessage({
