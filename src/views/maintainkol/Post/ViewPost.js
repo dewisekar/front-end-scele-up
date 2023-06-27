@@ -14,7 +14,7 @@ import {
   CTableBody,
   CTableDataCell,
 } from '@coreui/react'
-import { tableField, styles, statisticField, postStatisticKey } from './ViewPost.config'
+import { tableField, statisticField, postStatisticKey } from './ViewPost.config'
 import { getRequestByUri, deleteRequestByUri } from '../../../utils/request-marketing'
 import { URL, ColumnSizePercentage, PostStatus } from 'src/constants'
 import { VerticalTableRow, LoadingAnimation } from 'src/components'
@@ -31,9 +31,16 @@ const ViewPost = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isAlertModalShown, setIsAlertModalShown] = useState(false)
   const [alertMessage, setAlertMessage] = useState({})
+  const [isReload, setIsReload] = useState(false)
+  const handlers = { setIsLoading, setAlertMessage, setIsAlertModalShown, setIsReload }
+  const { rawUploadDate } = postDetail
 
   const reloadPage = () => {
     window.location.reload()
+  }
+
+  const closeModal = () => {
+    return isReload ? reloadPage() : setIsAlertModalShown(false)
   }
 
   const deleteStatistic = async (id) => {
@@ -41,6 +48,7 @@ const ViewPost = () => {
     const { message } = await deleteRequestByUri(URL.POST_VIEW + id)
     setAlertMessage({ message, title: 'Hapus Statistik Post' })
 
+    setIsReload(true)
     setIsLoading(false)
     setIsAlertModalShown(true)
   }
@@ -63,7 +71,7 @@ const ViewPost = () => {
 
         const postStatus = PostStatus[getPostStatus(new Date(deadlineDate), convertedUploadDate)]
         const convertedDeadline = convertDate(deadlineDate)
-        const convertedUpload = uploadDate ? convertDate(deadlineDate) : null
+        const convertedUpload = uploadDate ? convertDate(uploadDate) : null
 
         const mappedStatistic = fetchedStatistic.map((data) => {
           const countedStat = countPostStatistic({ ...data, costPerSlot }, postStatisticKey)
@@ -103,6 +111,7 @@ const ViewPost = () => {
           costPerSlot: <RupiahCurrency balance={costPerSlot} />,
           isFyp: convertedIsFyp,
           isFreeSlot: convertedisFreeSlot,
+          rawUploadDate: uploadDate,
         })
         setPostStatistic(mappedStatistic)
         setIsLoading(false)
@@ -174,7 +183,7 @@ const ViewPost = () => {
     return (
       <CRow id="post-detail">
         <CCol xs={12}>
-          <UpdatePostStatistic />
+          <UpdatePostStatistic handlers={handlers} postId={postId} uploadDate={rawUploadDate} />
         </CCol>
         <CCol xs={12}>
           <CCard className="mb-4">
@@ -289,7 +298,7 @@ const ViewPost = () => {
         {renderPostStatistic()}
         <ErrorModal
           isVisible={isAlertModalShown}
-          onClose={reloadPage}
+          onClose={closeModal}
           modalMessage={alertMessage}
         />
       </Suspense>
