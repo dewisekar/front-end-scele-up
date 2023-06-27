@@ -95,7 +95,7 @@ const UpdatePost = () => {
       status === PythonErrorCode.NOT_AVAILABLE ||
       status === PythonErrorCode.FAILED_TO_FETCH ||
       status === PythonErrorCode.EMPTY_DATA ||
-      status === 'false' ||
+      status === false ||
       postLink === null
     ) {
       setErrorModalMessage({
