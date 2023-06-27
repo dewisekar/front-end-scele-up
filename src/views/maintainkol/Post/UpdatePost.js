@@ -99,7 +99,8 @@ const UpdatePost = () => {
       postLink === null
     ) {
       setErrorModalMessage({
-        message: 'Pastikan anda memasukkan link yang benar',
+        message:
+          'Pastikan anda memasukkan link yang benar atau tunggu beberapa saat lagi untuk menunggu akses blok',
         title: 'Link Post Tidak Ditemukan',
       })
       handleErrorModalShow()
