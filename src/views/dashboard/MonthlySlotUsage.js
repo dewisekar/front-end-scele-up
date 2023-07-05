@@ -199,7 +199,7 @@ const MonthlySlotUsage = () => {
               </CRow>
               <CRow className="mb-4">
                 <CCol xs={12}>
-                  <small className="font-weight-bold">Pilih Tahun:</small>
+                  <small className="font-weight-bold">Pilih PIC:</small>
                   <Select
                     placeholder="Select Manager..."
                     styles={{ width: '100% !important' }}
